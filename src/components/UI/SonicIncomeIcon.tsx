@@ -5,6 +5,7 @@ interface SonicIncomeIconProps {
   width?: number;
   height?: number;
 }
+import { SonicLogo } from "@/components/SonicLogo";
 
 export function SonicIncomeIcon({ 
   className = "", 
@@ -13,7 +14,7 @@ export function SonicIncomeIcon({
 }: SonicIncomeIconProps) {
   return (
     <img 
-    //   src="/sonic-income-icon.png" 
+      src="/sonic-income-icon.png" 
       alt="Sonic Income" 
       className={className}
       width={width}

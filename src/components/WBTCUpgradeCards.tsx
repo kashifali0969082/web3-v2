@@ -12,6 +12,7 @@ import {
 // import { useWeb3 } from '@/lib/Web3Provider';
 // import { useToast } from '@/hooks/use-toast';
 import { useToast } from './hooks/use-toast';
+import axios from 'axios';
 
 interface WBTCLevelCardProps {
   level: number;
@@ -47,9 +48,8 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
   useEffect(() => {
     const fetchBitcoinPrice = async () => {
       try {
-        const response = await fetch('/api/price/bitcoin');
-        const data = await response.json();
-        setBtcPrice(data.price);
+        const WBTC = await axios.get('https://min-api.cryptocompare.com/data/price?fsym=WBTC&tsyms=USD');
+        setBtcPrice(WBTC.data.USD);
       } catch (error) {
         console.error("Failed to fetch Bitcoin price:", error);
       }
@@ -202,38 +202,42 @@ export const WBTCUpgradeCards: React.FC = () => {
   ];
 
   return (
-    <Card className="bg-[#271e0b] border-amber-900/50">
-      <CardContent className="p-4 pt-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold flex items-center">
-            <Bitcoin className="h-5 w-5 mr-2 text-amber-500" />
-            AI Agent Levels
-          </h2>
-          <Badge className="bg-amber-600">
-            New Feature
-          </Badge>
+    <Card className="relative bg-[#271e0b] border-amber-900/50 overflow-hidden">
+    {/* Coming Soon Overlay */}
+    <div className="absolute inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center z-10">
+      <span className="text-2xl font-bold text-amber-400">Coming Soon</span>
+    </div>
+  
+    <CardContent className="p-4 pt-4 opacity-30 pointer-events-none">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold flex items-center">
+          <Bitcoin className="h-5 w-5 mr-2 text-amber-500" />
+          AI Agent Levels
+        </h2>
+        <Badge className="bg-amber-600">New Feature</Badge>
+      </div>
+  
+      <p className="text-gray-300 text-sm mb-5 text-center">
+        Upgrade your AI Agent capabilities with Bitcoin-powered technology to enhance productivity and insights.
+      </p>
+  
+      <div className="mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mt-4">
+          {wbtcLevelData.map((data) => (
+            <WBTCLevelCard
+              key={`wbtc-level-${data.level}`}
+              {...data}
+              isActive={userWBTCLevel >= data.level}
+              isCurrentLevel={userWBTCLevel === data.level}
+              onUpgrade={() => handleUpgrade(data.level)}
+              isProcessing={processingLevel === data.level}
+            />
+          ))}
         </div>
-        
-        <p className="text-gray-300 text-sm mb-5 text-center">
-          Upgrade your AI Agent capabilities with Bitcoin-powered technology to enhance productivity and insights.
-        </p>
-        
-        <div className="mb-6">          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
-            {wbtcLevelData.map((data) => (
-              <WBTCLevelCard
-                key={`wbtc-level-${data.level}`}
-                {...data}
-                isActive={userWBTCLevel >= data.level}
-                isCurrentLevel={userWBTCLevel === data.level}
-                onUpgrade={() => handleUpgrade(data.level)}
-                isProcessing={processingLevel === data.level}
-              />
-            ))}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </CardContent>
+  </Card>
+  
   );
 };
 

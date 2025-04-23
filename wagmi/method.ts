@@ -70,6 +70,16 @@ export const TotalIncome2 = async (address: string) => {
 
   return result as [string, string, string, string, bigint, bigint, bigint];
 };
+export const DownlinerFunction = async (address: string) => {
+  const result = await readContract(config, {
+    abi: UserContractAbi,
+    address: UserContract,
+    functionName: "getDownlinersPerLevel",
+    args: [address],
+  });
+  return result;
+};
+
 export const TotalIncome = async (address: string): Promise<DATA> => {
   const result = await readContract(config, {
     abi: UserContractAbi,

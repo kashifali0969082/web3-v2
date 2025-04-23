@@ -76,13 +76,11 @@ export function TeamStats() {
   const [UserIncome, setUserIncome] = useState<bigint>();
   const [userTeamIncome, setUserTeamIncome] = useState<bigint>();
   const [levelMembers, setlevelMembers] = useState([
-    120, 52, 86, 42, 34, 28, 16, 12, 8, 2,
+    0, 0, 0, 0, 0, 0, 0, 0, 10, 1,
   ]);
   const [totalTeamSize, settotalTeamSize] = useState(248);
-  // Get wallet address from account
   const { address } = useAccount();
 
-  // Stabilize address value with useRef to prevent it from changing on re-renders
   const addressRef = useRef<string | undefined>(address);
   useEffect(() => {
     setAddress(urlAddress || "");
@@ -95,16 +93,18 @@ export function TeamStats() {
   const TeamSize = async () => {
     try {
       let resp = await TotalTeamSize(adress);
-      // console.log(numbers);
+      let arrresp = (await DownlinerFunction(adress)) as bigint[];
+      let numbers = arrresp.map((num) => Number(num));
+      if (numbers) {
+        setlevelMembers(numbers);
+      }
+      console.log("this is a array of numbers etting in state", numbers);
       if (typeof resp === "bigint") {
         let num = Number(resp);
         settotalTeamSize(num); // Convert bigint to string
       } else {
         console.error("Value is not a bigint:", resp);
       }
-      let arrresp = (await DownlinerFunction(adress)) as bigint[];
-      let numbers = arrresp.map((num) => Number(num));
-      setlevelMembers(numbers);
     } catch (error) {
       console.log("error while getting team size", error);
     }
@@ -117,66 +117,36 @@ export function TeamStats() {
       console.log("error while getting downline count", error);
     }
   };
-  // Only update the address ref when it actually changes to a new value
   useEffect(() => {
     if (address !== addressRef.current && address !== undefined) {
       addressRef.current = address;
     }
   }, [address]);
 
-  // Stable address value for hooks
   const stableAddress = addressRef.current;
 
-  // Track if this is the test wallet to use cached data
   const isTestWallet = useMemo(() => {
     return stableAddress?.toLowerCase() === TEST_WALLET;
   }, [stableAddress]);
 
-  // Use static data instead of API calls
-  // Static values for demo purposes
+
   const userIdLoading = false;
   const teamSizeLoading = false;
   const statsLoading = false;
   const levelLoading = false;
   const transactionsLoading = false;
 
-  // Get level and isLevel10 flag from the hook
-  // const { level, isLevel10 } = useSonicUserLevel(stableAddress);
-
-  // Static data
-  // const totalTeamSize = 248;
-
-  // Mock transaction data - use correct array format with actual numbers
-  // const levelMembers = [120, 52, 86, 42, 34, 28, 16, 12, 8, 2];
-
-  // First level is the number of direct downlines
-  // const level1Members = 34;
+  
 
   const lastScanTime = Date.now();
   const refetchTransactions = useCallback(() => {
     console.log("Refetch transactions called");
   }, []);
-
-  // Store static transaction data in ref
-  const transactionDataRef = useRef<any>({
-    levelMembers,
-    lastScanTime,
-  });
-
-  // Remove the effect that's potentially causing an infinite loop
-  // We've already set the static data in the ref
-
-  // Use a ref to track initial render
   const isInitialRender = useRef(true);
-
-  // Track if this is the initial load
   const [initialLoad, setInitialLoad] = useState(true);
-
-  // Using separate loading states for different sections
   const summaryLoading =
     userIdLoading || teamSizeLoading || statsLoading || levelLoading;
   const breakdownLoading = transactionsLoading;
-
   const getUserIncome = async () => {
     try {
       let resp = await TotalIncome(adress);
@@ -187,29 +157,18 @@ export function TeamStats() {
       console.log("error while getting income", error);
     }
   };
-  // Initialize component once on mount
   useEffect(() => {
-    // Log on initialization and mark as mounted
     if (!isMounted.current) {
-      // Mark component as mounted
       isMounted.current = true;
-
-      // Log only once on initial load
       if (isTestWallet) {
         console.log("Using cached level data on initial load");
       }
-
-      // Set a timer to clear initialLoad flag after a short delay
       const timer = setTimeout(() => {
-        // Only update state if component is still mounted
         setInitialLoad(false);
       }, 1000);
-
       return () => clearTimeout(timer);
     }
-  }, []); // Empty dependency array for mount-only effect
-
-  // Level icons - memoized to prevent unnecessary re-creation
+  }, []); 
   const levelIcons = useMemo(
     () => [
       <Star key={0} className="h-4 w-4 text-blue-100" />,
@@ -225,19 +184,14 @@ export function TeamStats() {
     ],
     []
   );
-
-  // Use static level stats - no calculation needed since we're using static data
-  const levelStats = useMemo(() => {
-    if (initialLoad) {
-      // Return empty array if still in initial loading state
-      return Array(10).fill(0);
-    }
-
-    console.log("Using static level stats");
-    // Just return the static level data
-    return levelMembers;
-  }, [initialLoad, levelMembers]);
-
+  // const levelStats = useMemo(() => {
+  //   if (initialLoad) {
+  //     return Array(10).fill(0);
+  //   }
+  //   console.log("Using static level stats");
+  //   return levelMembers;
+  // }, [initialLoad, levelMembers]);
+  console.log("this is also updated or not let me check ",levelMembers);
   return (
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader>
@@ -303,12 +257,6 @@ export function TeamStats() {
                 <div className="text-xs sm:text-sm text-gray-400">
                   Odd Refferals
                 </div>
-                {/* {isLevel10 && (
-                  <Badge className="mt-1 sm:mt-2 mx-auto py-1 px-2 sm:py-1.5 sm:px-3 bg-gradient-to-r from-purple-600 to-blue-600 flex items-center gap-1 text-xs">
-                    <Star className="h-3 w-3 sm:h-4 sm:w-4 mr-0.5 sm:mr-1 text-yellow-300" />
-                    Ambassador
-                  </Badge>
-                )} */}
               </div>
 
               <div className="text-center p-3 sm:p-4 bg-green-400/10 rounded-lg">
@@ -331,44 +279,6 @@ export function TeamStats() {
         <div className="mt-6">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-md font-medium">Level Breakdown</h3>
-            {/* <div className="flex items-center gap-2">
-              {lastScanTime > 0 && (
-                <div className="flex items-center text-xs text-gray-400 gap-1">
-                  <Clock className="h-3 w-3" />
-                  <span>
-                    {(() => {
-                      const timeDiff = Date.now() - lastScanTime;
-                      const minutesAgo = Math.floor(timeDiff / (1000 * 60));
-
-                      if (minutesAgo < 60) {
-                        return `Updated ${minutesAgo} min ago`;
-                      } else {
-                        const hoursAgo = Math.floor(minutesAgo / 60);
-                        if (hoursAgo < 24) {
-                          return `Updated ${hoursAgo}h ago`;
-                        } else {
-                          return `Updated ${new Date(
-                            lastScanTime
-                          ).toLocaleDateString()}`;
-                        }
-                      }
-                    })()}
-                  </span>
-                </div>
-              )}
-              <button
-                onClick={() => refetchTransactions()}
-                className="p-1.5 bg-gray-700 hover:bg-gray-600 rounded-full transition-colors"
-                title="Refresh transaction data"
-                disabled={breakdownLoading}
-              >
-                <RefreshCcw
-                  className={`h-3.5 w-3.5 ${
-                    breakdownLoading ? "animate-spin" : ""
-                  }`}
-                />
-              </button>
-            </div> */}
           </div>
 
           {breakdownLoading
@@ -385,7 +295,7 @@ export function TeamStats() {
                   </div>
                 ))
             : // Actual level breakdown when data is loaded
-              levelStats.map((count, idx) => (
+              levelMembers.map((count, idx) => (
                 <div
                   key={idx}
                   className={`mb-4 ${

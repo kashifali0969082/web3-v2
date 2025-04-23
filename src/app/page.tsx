@@ -799,7 +799,7 @@ const HomeDark = () => {
                       </div>
                       <div className="flex items-center justify-end mt-0">
                         <motion.div
-                          className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00a3ff] via-white to-[#ff6b00] bg-clip-text text-transparent"
+                          className="text-3xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#00a3ff] via-white to-[#ff6b00] bg-clip-text text-transparent"
                           animate={{
                             backgroundPosition: ["0%", "100%", "0%"],
                             scale: [1, 1.02, 1],
@@ -899,27 +899,7 @@ const HomeDark = () => {
                       <div className="text-xs text-gray-400">wBTC Price</div>
                     </div>
                     <div className="flex flex-col items-center">
-                      {/* <div className="text-xl font-bold bg-gradient-to-r from-[#f7931a] to-[#f7931a] bg-clip-text text-transparent mb-1 h-7 flex items-center">
-                        {isWbtcPriceLoading ? (
-                          <div className="h-7 w-20 bg-orange-500/20 animate-pulse rounded"></div>
-                        ) : (
-                          <div className="min-w-20">{wbtcFormattedPrice}</div>
-                        )}
-                      </div>
-                      {wbtcPriceChange24h !== null && !isWbtcPriceLoading ? (
-                        <div
-                          className={`px-2 py-0.5 rounded-md text-xs font-medium ${
-                            wbtcPriceChange24h >= 0
-                              ? "bg-green-500/20 text-green-400"
-                              : "bg-red-500/20 text-red-400"
-                          }`}
-                        >
-                          {wbtcPriceChange24h >= 0 ? "+" : ""}
-                          {wbtcPriceChange24h.toFixed(2)}%
-                        </div>
-                      ) : (
-                        <div className="h-5 w-12 bg-transparent">&nbsp;</div>
-                      )} */}
+                    {wbtcPrice}
                     </div>
                   </div>
 

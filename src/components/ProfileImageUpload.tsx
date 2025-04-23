@@ -8,7 +8,7 @@ import { UserCircle, Upload, Check, X, Hash } from "lucide-react";
 import { useToast } from "./hooks/use-toast";
 // import { apiRequest } from "@/lib/queryClient";
 // import { ethers } from "ethers";
-import { apiRequest } from "./lib/queryCLient";
+// import { apiRequest } from "./lib/queryCLient";
 // import { SONIC_MATRIX_ABI, REGISTRATION_ABI } from "@/lib/contracts";
 // import { Badge } from "@/components/ui/badge";
 
@@ -103,22 +103,22 @@ export function ProfileImageUpload({ walletAddress, onImageChange }: ProfileImag
       
       try {
         // Get user data 
-        const userData = await apiRequest<UserData>(`/api/users/wallet/${walletAddress}`);
+        // const userData = await apiRequest<UserData>(`/api/users/wallet/${walletAddress}`);
         
-        if (userData && userData.id) {
-          setUserId(userData.id);
-          setUsername(userData.username || "MarketHacker"); // Set username from DB or default
+        // if (userData && userData.id) {
+        //   setUserId(userData.id);
+        //   setUsername(userData.username || "MarketHacker"); // Set username from DB or default
           
-          // Get profile image
-          const imageData = await apiRequest<ProfileImageData>(`/api/profile/wallet/${walletAddress}`);
+        //   // Get profile image
+        //   // const imageData = await apiRequest<ProfileImageData>(`/api/profile/wallet/${walletAddress}`);
           
-          if (imageData && imageData.image_url) {
-            setImage(imageData.image_url);
-            onImageChange?.(imageData.image_url);
-            // Cache in local storage for offline/fallback access
-            saveLocalStorageImage(walletAddress, imageData.image_url);
-          }
-        }
+        //   // if (imageData && imageData.image_url) {
+        //   //   setImage(imageData.image_url);
+        //   //   onImageChange?.(imageData.image_url);
+        //   //   // Cache in local storage for offline/fallback access
+        //   //   saveLocalStorageImage(walletAddress, imageData.image_url);
+        //   // }
+        // }
       } catch (error) {
         // Just log the error, don't show it to the user
         console.error('Error fetching user data:', error);
@@ -164,19 +164,19 @@ export function ProfileImageUpload({ walletAddress, onImageChange }: ProfileImag
         image_data_length: imageData ? imageData.length : 0
       });
       
-      const response = await apiRequest<ProfileImageData>('/api/profile/image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: userIdToUse,
-          wallet_address: walletAddress,
-          image_data: imageData,
-          content_type: contentType
-        })
-      });
+      // const response = await apiRequest<ProfileImageData>('/api/profile/image', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     user_id: userIdToUse,
+      //     wallet_address: walletAddress,
+      //     image_data: imageData,
+      //     content_type: contentType
+      //   })
+      // });
       
-      console.log('Image upload server response:', response);
-      return response;
+      // console.log('Image upload server response:', response);
+      // return response;
     } catch (error) {
       console.error('Error uploading image to server:', error);
       
@@ -225,27 +225,27 @@ export function ProfileImageUpload({ walletAddress, onImageChange }: ProfileImag
           // Upload to server
           const response = await uploadImageToServer(imageData, file.type);
           
-          if (response && response.image_url) {
-            setImage(response.image_url);
-            onImageChange?.(response.image_url);
+          // if (response && response.image_url) {
+          //   setImage(response.image_url);
+          //   onImageChange?.(response.image_url);
             
-            // Cache in local storage as backup
-            saveLocalStorageImage(walletAddress, response.image_url);
+          //   // Cache in local storage as backup
+          //   saveLocalStorageImage(walletAddress, response.image_url);
             
-            toast({
-              title: "Image uploaded",
-              description: "Your profile image has been updated",
-              variant: "default",
-            });
-          } else {
-            // If server upload fails, still save locally
-            saveLocalStorageImage(walletAddress, imageData);
-            setImage(imageData);
-            onImageChange?.(imageData);
+          //   toast({
+          //     title: "Image uploaded",
+          //     description: "Your profile image has been updated",
+          //     variant: "default",
+          //   });
+          // } else {
+          //   // If server upload fails, still save locally
+          //   saveLocalStorageImage(walletAddress, imageData);
+          //   setImage(imageData);
+          //   onImageChange?.(imageData);
             
-            // Silently use the local image without error notification
-            console.log('Using locally stored image as fallback');
-          }
+          //   // Silently use the local image without error notification
+          //   console.log('Using locally stored image as fallback');
+          // }
         } catch (error) {
           console.error('Error handling image upload:', error);
           

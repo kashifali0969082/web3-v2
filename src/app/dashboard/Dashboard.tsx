@@ -105,6 +105,7 @@ const Dashboard = () => {
   const router = useRouter();
   const [userId, setUserId] = useState<number>(0);
   const [UplinerId, setUplinerId] = useState<number>(0);
+  const { disconnect } = useDisconnect();
 
   const [userName, setUserName] = useState<string>("");
   const [referralLink, setReferralLink] = useState<string>("");
@@ -185,8 +186,9 @@ const Dashboard = () => {
   };
 
   const handleDisconnect = () => {
-    // disconnect();
-    // navigate("/");
+
+    disconnect()
+    router.push('../login')
   };
   const userAdress = async () => {
     try {
@@ -451,10 +453,10 @@ const Dashboard = () => {
             <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
               className="w-full justify-start"
-              // onClick={scrollToWallet}
+              onClick={()=>{router.push(`${window.location.origin}/downlines?Address=${adress}`)}}
             >
-              <Wallet className="h-4 w-4 mr-2" />
-              Wallet
+              <Star className="h-4 w-4 mr-2" />
+              Downlines
             </Button>
             <Button
               variant={activeTab === "swap" ? "secondary" : "ghost"}
@@ -466,10 +468,10 @@ const Dashboard = () => {
             </Button>
             <Button
               variant={activeTab === "levels" ? "secondary" : "ghost"}
-              className="w-full justify-start"
+              className="w-full justify-start "
               // onClick={() => navigate("/levels")}
             >
-              <Star className="h-4 w-4 mr-2" />
+              <Wallet className="h-4 w-4 mr-2" />
               Levels
             </Button>
             <Button
@@ -574,7 +576,7 @@ const Dashboard = () => {
             <Button
               variant="destructive"
               className="w-full justify-start"
-              // onClick={handleDisconnect}
+              onClick={handleDisconnect}
             >
               <LogOut className="h-4 w-4 mr-2" />
               Disconnect

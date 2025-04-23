@@ -549,7 +549,7 @@ const HomeDark = () => {
                 {/* Login and Register Buttons - Desktop */}
                 <div className="hidden md:flex space-x-4">
                   <a
-                    href="/test"
+                    href="/login"
                     className="group relative inline-flex items-center justify-center h-11 px-6 overflow-hidden rounded-lg bg-gradient-to-r from-[#00a3ff] to-[#9333EA] font-medium text-white transition-all duration-300 hover:scale-105"
                   >
                     <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#0096eb] to-[#8023d5] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>

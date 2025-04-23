@@ -78,7 +78,7 @@ const RegisterPage = () => {
             let alreadyregistered = await isUserExsists(wallet);
             if (alreadyregistered) {
               toast.error("user already exsists", {
-                onClose: () => router.push("/test"),
+                onClose: () => router.push("/login"),
                 autoClose: 1500,
               });
               setIsLoading(false);
@@ -88,7 +88,7 @@ const RegisterPage = () => {
                 let reg = await Register(sponsor, name);
                 let txncnfrm = await getTxn(reg);
                 if (txncnfrm) {
-                  router.push("/test");
+                  router.push("/login");
                 }
 
                 // console.log(reg);
@@ -112,7 +112,7 @@ const RegisterPage = () => {
           let alreadyregistered = await isUserExsists(wallet);
           if (alreadyregistered) {
             toast.error("user already exsists", {
-              onClose: () => router.push("/test"), // Redirect when toast closes
+              onClose: () => router.push("/login"), // Redirect when toast closes
               autoClose: 1500, // Delay for 3 seconds
             });
             setIsLoading(false);
@@ -123,7 +123,7 @@ const RegisterPage = () => {
               let reg = await Register(useradress, name);
               let txncnfrm = await getTxn(reg);
               if (txncnfrm) {
-                router.push("/test");
+                router.push("/login");
               }
               // console.log(reg);
 
@@ -257,7 +257,7 @@ const RegisterPage = () => {
             <p className="text-sm text-gray-400">
               Already have an account?
               <a
-                href="/test"
+                href="/login"
                 className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
               >
                 Login here

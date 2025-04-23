@@ -82,6 +82,8 @@ import {
   getUSERLEVEL,
   PurchaseLevel,
   isUserExsists,
+  AdressToID,
+  GetUplinerAdress,
 } from "../../../wagmi/method";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -101,6 +103,8 @@ const Dashboard = () => {
   const [origin, setOrigin] = useState("");
   const [checker, SetCheker] = useState<boolean>(false);
   const router = useRouter();
+  const [userId, setUserId] = useState<number>(0);
+  const [UplinerId, setUplinerId] = useState<number>(0);
 
   const [userName, setUserName] = useState<string>("");
   const [referralLink, setReferralLink] = useState<string>("");
@@ -125,6 +129,7 @@ const Dashboard = () => {
       GetUserLevel();
     }
     getPrices();
+    userAdress();
   }, [adress]);
 
   const getPrices = async () => {
@@ -182,6 +187,19 @@ const Dashboard = () => {
   const handleDisconnect = () => {
     // disconnect();
     // navigate("/");
+  };
+  const userAdress = async () => {
+    try {
+      const userid = await AdressToID(adress);
+      setUserId(userid);
+      const uplinerAdress = await GetUplinerAdress(adress);
+      const upliner = await AdressToID(uplinerAdress);
+      setUplinerId(upliner);
+
+      // const uplinerid=await
+    } catch (error) {
+      console.log("error while getting user adress or upliner id", error);
+    }
   };
 
   // Add YouTube API and player script
@@ -372,36 +390,38 @@ const Dashboard = () => {
         </div>
 
         {/* Profile Image Upload - Now top left under the logo with user info */}
-        {/* {address && ( */}
-        <div className="py-6 px-4 flex flex-col items-center border-b border-gray-800 bg-gray-850/20">
-          <div className="w-24 h-24 mb-3"></div>
+        {adress && (
+          <div className="py-6 px-4 flex flex-col items-center border-b border-gray-800 bg-gray-850/20">
+            <div className="w-24 h-24 mb-3">
+              <ProfileImageUpload 
+                walletAddress={adress}
+                onImageChange={(imageUrl) => console.log("Profile image updated:", imageUrl)}
+              />
+            </div>
 
-          <h3 className="text-lg font-bold text-white mb-3">
-            {/* {userName || formatAddress(address || "")} */}
-          </h3>
+            {/* User name/address display */}
+            {/* <h3 className="text-lg font-bold text-white mb-3">
+              {userName || formatAddress(address || '')}
+            </h3> */}
 
-          {/* Display user ID badge */}
-          <div className="mb-2">
-            <Badge
-              variant="outline"
-              className="text-xs bg-blue-500/10 text-blue-400 border-blue-400/20 flex items-center gap-1 py-1"
+            {/* Display user ID badge */}
+            <div className="mb-2">
+              <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-400/20 flex items-center gap-1 py-1">
+                <Hash className="h-3 w-3" /><span className="ml-1">User ID: {userId}</span>
+              </Badge>
+            </div>
+
+            {/* Update Profile button */}
+            {/* <Button 
+              variant="outline" 
+              size="sm" 
+              className="mt-1 w-32 bg-blue-900/30 text-blue-400 hover:bg-blue-900/50"
             >
-              <Hash className="h-3 w-3" />
-              <span className="ml-1">User ID: {"1"}</span>
-            </Badge>
+              Update Profile
+            </Button> */}
           </div>
-
-          {/* Update Profile button */}
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-1 w-32 bg-blue-900/30 text-blue-400 hover:bg-blue-900/50"
-          >
-            Update Profile
-          </Button>
-        </div>
-        {/* )}/ */}
-
+        )}
+      
         <div className="p-4">
           <nav className="space-y-1">
             <Button

@@ -188,8 +188,14 @@ const Dashboard = () => {
   const handleDisconnect = () => {
 
     disconnect()
-    router.push('../login')
+    router.push('/login')
   };
+  useEffect(()=>{
+if(!isConnected){
+  router.push('/login')
+
+}
+  },[isConnected])
   const userAdress = async () => {
     try {
       const userid = await AdressToID(adress);

@@ -193,7 +193,7 @@ useEffect(()=>{
   };
   useEffect(() => {
     if (!isConnected) {
-      router.push("/login");
+      router.push("/");
     }
   }, [isConnected]);
   const userAdress = async () => {

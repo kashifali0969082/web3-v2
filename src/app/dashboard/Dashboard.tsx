@@ -83,6 +83,7 @@ import {
   PurchaseLevel,
   isUserExsists,
   AdressToID,
+  getUser,
   GetUplinerAdress,
 } from "../../../wagmi/method";
 import { ToastContainer, toast } from "react-toastify";
@@ -111,6 +112,8 @@ const Dashboard = () => {
   const [referralLink, setReferralLink] = useState<string>("");
   const [wbtcPrice, setwbtcPrice] = useState("");
   const [sonicPrice, setsonicPrice] = useState("");
+  const [username, setUsername] = useState<string>("Unknown");
+
   // console.log("------------------------", level);
   useEffect(() => {
     setAddress(urlAddress || "");
@@ -118,6 +121,27 @@ const Dashboard = () => {
   useEffect(() => {
     GetUserLevel();
   }, [updateState]);
+  const getusername = async () => {
+    try {
+      if (!adress || adress.length !== 42 || !adress.startsWith("0x")) {
+        // console.log("Invalid Ethereum address:", adress);
+        return;
+      }
+
+      let resp = await getUser(adress);
+
+      if (!resp) {
+        console.error("getUser() returned undefined.");
+        return;
+      }
+
+      // setUser(resp);
+      setUsername(resp.name || "Unknown User");
+      // setJoinDate(resp.joiningDate ? resp.joiningDate.toString() : "N/A");
+    } catch (error) {
+      console.error("Error while loading user data:", error);
+    }
+  };
   const GetUserLevel = async () => {
     try {
       let resp = await getUSERLEVEL(adress);
@@ -130,6 +154,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (adress != "") {
       GetUserLevel();
+      getusername()
     }
     getPrices();
     userAdress();
@@ -338,142 +363,7 @@ const Dashboard = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   // Add CSS for player controls
-  //   const style = document.createElement("style");
-  //   style.textContent = `
-  //     .player-controls {
-  //       display: flex;
-  //       gap: 10px;
-  //       margin: 10px 0;
-  //     }
-
-  //     .player-controls button {
-  //       padding: 8px 15px;
-  //       background: #ff0000;
-  //       color: white;
-  //       border: none;
-  //       border-radius: 4px;
-  //       cursor: pointer;
-  //     }
-
-  //     .player-controls button:hover {
-  //       background: #cc0000;
-  //     }
-  //   `;
-  //   document.head.appendChild(style);
-
-  //   // Load YouTube API
-  //   const tag = document.createElement("script");
-  //   tag.src = "https://www.youtube.com/iframe_api";
-  //   const firstScriptTag = document.getElementsByTagName("script")[0];
-  //   firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-
-  //   // Define YouTube player functions in window scope
-  //   // @ts-ignore
-  //   window.onYouTubeIframeAPIReady = function () {
-  //     // Always use single player with ID 'youtube-player' regardless of device
-  //     // @ts-ignore - YouTube API types not available
-  //     window.player = new YT.Player("youtube-player", {
-  //       videoId: "",
-  //       playerVars: {
-  //         listType: "playlist",
-  //         list: "PLHw5NbJrajOaVlIKIY2JbT4qUahiWEHJj",
-  //         autoplay: 1,
-  //         mute: 1, // Start muted by default
-  //       },
-  //       events: {
-  //         onReady: onPlayerReady,
-  //         onStateChange: onPlayerStateChange,
-  //       },
-  //     });
-  //   };
-
-  //   function onPlayerReady(event: any) {
-  //     // Setup event listeners for desktop controls only
-  //     document
-  //       .getElementById("mute-btn")
-  //       ?.addEventListener("click", toggleMute);
-  //     document.getElementById("next-btn")?.addEventListener("click", playNext);
-
-  //     // Initialize to muted state
-  //     window.player.mute();
-  //     setIsMuted(true);
-
-  //     // Update button text to match initial state
-  //     if (document.getElementById("mute-btn")) {
-  //       document.getElementById("mute-btn")!.textContent = "Unmute";
-  //     }
-  //   }
-
-  //   function onPlayerStateChange(event: any) {
-  //     // You can add state change handling here if needed
-  //   }
-
-  //   // Using React state variable isMuted instead of local variable
-
-  //   function toggleMute() {
-  //     if (!window.player || typeof window.player.unMute !== "function") {
-  //       console.log("YouTube player not ready");
-  //       return;
-  //     }
-
-  //     setIsMuted((prevMuted) => {
-  //       const newMuted = !prevMuted;
-  //       console.log("Toggle mute. New state:", newMuted);
-
-  //       if (newMuted) {
-  //         console.log("Muting player");
-  //         window.player.mute();
-  //         const muteBtn = document.getElementById("mute-btn");
-  //         if (muteBtn) {
-  //           muteBtn.textContent = "Unmute";
-  //         }
-  //       } else {
-  //         console.log("Unmuting player");
-  //         window.player.unMute();
-  //         const muteBtn = document.getElementById("mute-btn");
-  //         if (muteBtn) {
-  //           muteBtn.textContent = "Mute";
-  //         }
-  //       }
-
-  //       return newMuted;
-  //     });
-  //   }
-
-  //   function playNext() {
-  //     if (!window.player || typeof window.player.nextVideo !== "function")
-  //       return;
-  //     window.player.nextVideo();
-  //   }
-  //   if (typeof window !== "undefined") {
-  //     setOrigin(window.location.origin);
-  //   }
-  //   // Cleanup function
-  //   return () => {
-  //     document.head.removeChild(style);
-  //     // Clean up event listeners - desktop audio controls only
-  //     document
-  //       .getElementById("mute-btn")
-  //       ?.removeEventListener("click", toggleMute);
-  //     document
-  //       .getElementById("next-btn")
-  //       ?.removeEventListener("click", playNext);
-
-  //     // Remove YouTube player
-  //     if (window.player && typeof window.player.destroy === "function") {
-  //       window.player.destroy();
-  //     }
-
-  //     const youtubeScripts = document.querySelectorAll(
-  //       'script[src*="youtube.com/iframe_api"]'
-  //     );
-  //     youtubeScripts.forEach((script) => {
-  //       script.parentNode?.removeChild(script);
-  //     });
-  //   };
-  // }, []);
+  
   useEffect(() => {
     checkerFunction();
   }, [isConnected, address]);
@@ -549,6 +439,16 @@ const Dashboard = () => {
               >
                 <Hash className="h-3 w-3" />
                 <span className="ml-1">User ID: {userId}</span>
+
+              </Badge>
+            </div>
+            <div className="mb-2">
+              <Badge
+                variant="outline"
+                className="text-xs bg-blue-500/10 text-blue-400 border-blue-400/20 flex items-center gap-1 py-1"
+              >
+                <span className="ml-1">Name: {username}</span>
+
               </Badge>
             </div>
 
@@ -576,18 +476,27 @@ const Dashboard = () => {
             <Button
               variant={activeTab === "network" ? "secondary" : "ghost"}
               className="w-full justify-start"
-              // onClick={() => navigate("/network-stats")}
-            >
+              onClick={() =>
+                window.open(
+                  `https://sonicscan.org/address/0xbbcd14b04924f33c303627578708fd4f51d39383`,
+                  "_blank"
+                )
+              }            >
               <Network className="h-4 w-4 mr-2" />
-              Network
+               Registration Contract
+
             </Button>
             <Button
               variant={activeTab === "referrals" ? "secondary" : "ghost"}
               className="w-full justify-start"
-              // onClick={() => navigate("/referral-stats")}
-            >
+              onClick={() =>
+                window.open(
+                  `https://sonicscan.org/address/0xa1c20ac67f805a4aabf94cde9c8dc2903de78926`,
+                  "_blank"
+                )
+              }            >
               <Users className="h-4 w-4 mr-2" />
-              Referrals
+               Stats Contract
             </Button>
             <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}

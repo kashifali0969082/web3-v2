@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import Script from "next/script";
+import React from "react";
 import {
   Brain,
   CheckCircle,
@@ -899,7 +901,7 @@ const HomeDark = () => {
                       <div className="text-xs text-gray-400">wBTC Price</div>
                     </div>
                     <div className="flex flex-col items-center">
-                    {wbtcPrice}
+                      {wbtcPrice}
                     </div>
                   </div>
 
@@ -1418,6 +1420,58 @@ const HomeDark = () => {
               );
             })}
           </div>
+        </div>
+      </div>
+      {/* swap section */}
+      <div className="py-20 relative overflow-hidden">
+        <div className="absolute w-full h-full top-0 left-0 bg-gradient-to-b from-purple-900/5 via-transparent to-blue-900/5 pointer-events-none" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            className="mb-16 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#9333EA] bg-clip-text text-transparent">
+                Currency Swap
+              </span>
+            </h2>
+            <div className="col-span-3 lg:col-span-2 bg-gray-900 border border-gray-700 h-full rounded-lg min-h-[630px] overflow-hidden py-[5px]">
+              <iframe
+                id="iframe-widget"
+                src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.01&amountFiat&backgroundColor=2B2B35&darkMode=true&from=btc&horizontal=false&isFiat=false&lang=en-US&link_id=a32a608282e97b&locales=true&logo=false&primaryColor=f6c511&to=s&toTheMoon=false"
+                style={{
+                  height: "370px",
+                  width: " 100%",
+                  border: "none",
+                }}
+              ></iframe>
+              <Script
+                defer
+                type="text/javascript"
+                src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
+              ></Script>
+
+              <Script src="https://widgets.coingecko.com/gecko-coin-list-widget.js"></Script>
+              {/* <gecko-coin-list-widget locale="en" dark-mode="true" outlined="true" coin-ids="sonic-3,bitcoin,ethereum,binancecoin,ripple,solana,matic-network" initial-currency="usd"></gecko-coin-list-widget> */}
+              <p>
+                {
+                  React.createElement("gecko-coin-list-widget", {
+                    locale: "en",
+                    "dark-mode": "true",
+                    outlined: "true",
+                    "coin-ids":
+                      "sonic-3,bitcoin,ethereum,binancecoin,ripple,solana,matic-network",
+                    "initial-currency": "usd",
+                  }) as any
+                }
+              </p>
+            </div>
+          </motion.div>
+          {/* </div> */}
         </div>
       </div>
 

@@ -815,7 +815,7 @@ useEffect(()=>{
                   {/* Page Header - Mobile Only */}
                   <header className="mb-6 lg:hidden">
                     <div className="flex flex-col items-start">
-                      <div>
+                      <div className="" >
                         <div className="flex items-center justify-between w-full gap-4 bg-gray-900/50 border border-gray-800 rounded-lg p-3 mb-2">
                           <h1 className="text-2xl font-bold bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text text-transparent">
                             Dashboard
@@ -889,7 +889,7 @@ useEffect(()=>{
 
                             {/* Live Stream Button - Moved here */}
                             <button
-                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 flex items-center"
+                              className="  bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 flex items-center"
                               onClick={() => {
                                 // Navigate to the LiveStream page instead of showing modal
                                 window.location.href = "/livestream";
@@ -923,8 +923,10 @@ useEffect(()=>{
                   <div className="lg:hidden mb-4">
                     <div className="bg-gray-800 border border-gray-700 rounded-lg p-2 flex justify-center gap-4 flex-wrap">
                       {/* Mobile Live Stream Button */}
+                      <SummaryStats />
                       <button
-                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center"
+                        className="w-100 px-4 py-2 bg-red-600  justify-center text-white rounded-md hover:bg-red-700 flex items-center"
+                        style={{ width: "100%" }}
                         onClick={() => {
                           // Navigate to the LiveStream page instead of showing modal
                           window.location.href = "/live-stream";

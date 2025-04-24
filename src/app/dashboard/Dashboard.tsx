@@ -106,7 +106,7 @@ const Dashboard = () => {
   const [userId, setUserId] = useState<number>(0);
   const [UplinerId, setUplinerId] = useState<number>(0);
   const { disconnect } = useDisconnect();
-
+  const [updateState, setUpdateState] = useState(true);
   const [userName, setUserName] = useState<string>("");
   const [referralLink, setReferralLink] = useState<string>("");
   const [wbtcPrice, setwbtcPrice] = useState("");
@@ -115,7 +115,9 @@ const Dashboard = () => {
   useEffect(() => {
     setAddress(urlAddress || "");
   }, [urlAddress]);
-
+useEffect(()=>{
+  GetUserLevel();
+},[updateState])
   const GetUserLevel = async () => {
     try {
       let resp = await getUSERLEVEL(adress);
@@ -186,16 +188,14 @@ const Dashboard = () => {
   };
 
   const handleDisconnect = () => {
-
-    disconnect()
-    router.push('/login')
+    disconnect();
+    router.push("/login");
   };
-  useEffect(()=>{
-if(!isConnected){
-  router.push('/login')
-
-}
-  },[isConnected])
+  useEffect(() => {
+    if (!isConnected) {
+      router.push("/login");
+    }
+  }, [isConnected]);
   const userAdress = async () => {
     try {
       const userid = await AdressToID(adress);
@@ -220,7 +220,7 @@ if(!isConnected){
         gap: 10px;
         margin: 10px 0;
       }
-      
+  
       .player-controls button {
         padding: 8px 15px;
         background: #ff0000;
@@ -229,7 +229,7 @@ if(!isConnected){
         border-radius: 4px;
         cursor: pointer;
       }
-      
+  
       .player-controls button:hover {
         background: #cc0000;
       }
@@ -245,7 +245,6 @@ if(!isConnected){
     // Define YouTube player functions in window scope
     // @ts-ignore
     window.onYouTubeIframeAPIReady = function () {
-      // Always use single player with ID 'youtube-player' regardless of device
       // @ts-ignore - YouTube API types not available
       window.player = new YT.Player("youtube-player", {
         videoId: "",
@@ -253,7 +252,7 @@ if(!isConnected){
           listType: "playlist",
           list: "PLHw5NbJrajOaVlIKIY2JbT4qUahiWEHJj",
           autoplay: 1,
-          mute: 1, // Start muted by default
+          mute: 1, // Start muted
         },
         events: {
           onReady: onPlayerReady,
@@ -263,27 +262,25 @@ if(!isConnected){
     };
 
     function onPlayerReady(event: any) {
-      // Setup event listeners for desktop controls only
-      document
-        .getElementById("mute-btn")
-        ?.addEventListener("click", toggleMute);
-      document.getElementById("next-btn")?.addEventListener("click", playNext);
+      const muteBtn = document.getElementById("mute-btn");
+      const nextBtn = document.getElementById("next-btn");
 
-      // Initialize to muted state
+      muteBtn?.addEventListener("click", toggleMute);
+      nextBtn?.addEventListener("click", playNext);
+
+      // Start muted
       window.player.mute();
       setIsMuted(true);
 
-      // Update button text to match initial state
-      if (document.getElementById("mute-btn")) {
-        document.getElementById("mute-btn")!.textContent = "Unmute";
+      // Set button text based on initial state
+      if (muteBtn) {
+        muteBtn.textContent = "Unmute";
       }
     }
 
     function onPlayerStateChange(event: any) {
-      // You can add state change handling here if needed
+      // Add logic here if needed
     }
-
-    // Using React state variable isMuted instead of local variable
 
     function toggleMute() {
       if (!window.player || typeof window.player.unMute !== "function") {
@@ -293,22 +290,14 @@ if(!isConnected){
 
       setIsMuted((prevMuted) => {
         const newMuted = !prevMuted;
-        console.log("Toggle mute. New state:", newMuted);
+        const muteBtn = document.getElementById("mute-btn");
 
         if (newMuted) {
-          console.log("Muting player");
           window.player.mute();
-          const muteBtn = document.getElementById("mute-btn");
-          if (muteBtn) {
-            muteBtn.textContent = "Unmute";
-          }
+          if (muteBtn) muteBtn.textContent = "Unmute";
         } else {
-          console.log("Unmuting player");
           window.player.unMute();
-          const muteBtn = document.getElementById("mute-btn");
-          if (muteBtn) {
-            muteBtn.textContent = "Mute";
-          }
+          if (muteBtn) muteBtn.textContent = "Mute";
         }
 
         return newMuted;
@@ -316,17 +305,19 @@ if(!isConnected){
     }
 
     function playNext() {
-      if (!window.player || typeof window.player.nextVideo !== "function")
-        return;
-      window.player.nextVideo();
+      if (window.player && typeof window.player.nextVideo === "function") {
+        window.player.nextVideo();
+      }
     }
+
     if (typeof window !== "undefined") {
       setOrigin(window.location.origin);
     }
-    // Cleanup function
+
+    // Cleanup
     return () => {
       document.head.removeChild(style);
-      // Clean up event listeners - desktop audio controls only
+
       document
         .getElementById("mute-btn")
         ?.removeEventListener("click", toggleMute);
@@ -334,7 +325,6 @@ if(!isConnected){
         .getElementById("next-btn")
         ?.removeEventListener("click", playNext);
 
-      // Remove YouTube player
       if (window.player && typeof window.player.destroy === "function") {
         window.player.destroy();
       }
@@ -347,6 +337,143 @@ if(!isConnected){
       });
     };
   }, []);
+
+  // useEffect(() => {
+  //   // Add CSS for player controls
+  //   const style = document.createElement("style");
+  //   style.textContent = `
+  //     .player-controls {
+  //       display: flex;
+  //       gap: 10px;
+  //       margin: 10px 0;
+  //     }
+
+  //     .player-controls button {
+  //       padding: 8px 15px;
+  //       background: #ff0000;
+  //       color: white;
+  //       border: none;
+  //       border-radius: 4px;
+  //       cursor: pointer;
+  //     }
+
+  //     .player-controls button:hover {
+  //       background: #cc0000;
+  //     }
+  //   `;
+  //   document.head.appendChild(style);
+
+  //   // Load YouTube API
+  //   const tag = document.createElement("script");
+  //   tag.src = "https://www.youtube.com/iframe_api";
+  //   const firstScriptTag = document.getElementsByTagName("script")[0];
+  //   firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+
+  //   // Define YouTube player functions in window scope
+  //   // @ts-ignore
+  //   window.onYouTubeIframeAPIReady = function () {
+  //     // Always use single player with ID 'youtube-player' regardless of device
+  //     // @ts-ignore - YouTube API types not available
+  //     window.player = new YT.Player("youtube-player", {
+  //       videoId: "",
+  //       playerVars: {
+  //         listType: "playlist",
+  //         list: "PLHw5NbJrajOaVlIKIY2JbT4qUahiWEHJj",
+  //         autoplay: 1,
+  //         mute: 1, // Start muted by default
+  //       },
+  //       events: {
+  //         onReady: onPlayerReady,
+  //         onStateChange: onPlayerStateChange,
+  //       },
+  //     });
+  //   };
+
+  //   function onPlayerReady(event: any) {
+  //     // Setup event listeners for desktop controls only
+  //     document
+  //       .getElementById("mute-btn")
+  //       ?.addEventListener("click", toggleMute);
+  //     document.getElementById("next-btn")?.addEventListener("click", playNext);
+
+  //     // Initialize to muted state
+  //     window.player.mute();
+  //     setIsMuted(true);
+
+  //     // Update button text to match initial state
+  //     if (document.getElementById("mute-btn")) {
+  //       document.getElementById("mute-btn")!.textContent = "Unmute";
+  //     }
+  //   }
+
+  //   function onPlayerStateChange(event: any) {
+  //     // You can add state change handling here if needed
+  //   }
+
+  //   // Using React state variable isMuted instead of local variable
+
+  //   function toggleMute() {
+  //     if (!window.player || typeof window.player.unMute !== "function") {
+  //       console.log("YouTube player not ready");
+  //       return;
+  //     }
+
+  //     setIsMuted((prevMuted) => {
+  //       const newMuted = !prevMuted;
+  //       console.log("Toggle mute. New state:", newMuted);
+
+  //       if (newMuted) {
+  //         console.log("Muting player");
+  //         window.player.mute();
+  //         const muteBtn = document.getElementById("mute-btn");
+  //         if (muteBtn) {
+  //           muteBtn.textContent = "Unmute";
+  //         }
+  //       } else {
+  //         console.log("Unmuting player");
+  //         window.player.unMute();
+  //         const muteBtn = document.getElementById("mute-btn");
+  //         if (muteBtn) {
+  //           muteBtn.textContent = "Mute";
+  //         }
+  //       }
+
+  //       return newMuted;
+  //     });
+  //   }
+
+  //   function playNext() {
+  //     if (!window.player || typeof window.player.nextVideo !== "function")
+  //       return;
+  //     window.player.nextVideo();
+  //   }
+  //   if (typeof window !== "undefined") {
+  //     setOrigin(window.location.origin);
+  //   }
+  //   // Cleanup function
+  //   return () => {
+  //     document.head.removeChild(style);
+  //     // Clean up event listeners - desktop audio controls only
+  //     document
+  //       .getElementById("mute-btn")
+  //       ?.removeEventListener("click", toggleMute);
+  //     document
+  //       .getElementById("next-btn")
+  //       ?.removeEventListener("click", playNext);
+
+  //     // Remove YouTube player
+  //     if (window.player && typeof window.player.destroy === "function") {
+  //       window.player.destroy();
+  //     }
+
+  //     const youtubeScripts = document.querySelectorAll(
+  //       'script[src*="youtube.com/iframe_api"]'
+  //     );
+  //     youtubeScripts.forEach((script) => {
+  //       script.parentNode?.removeChild(script);
+  //     });
+  //   };
+  // }, []);
   useEffect(() => {
     checkerFunction();
   }, [isConnected, address]);
@@ -401,9 +528,11 @@ if(!isConnected){
         {adress && (
           <div className="py-6 px-4 flex flex-col items-center border-b border-gray-800 bg-gray-850/20">
             <div className="w-24 h-24 mb-3">
-              <ProfileImageUpload 
+              <ProfileImageUpload
                 walletAddress={adress}
-                onImageChange={(imageUrl) => console.log("Profile image updated:", imageUrl)}
+                onImageChange={(imageUrl) =>
+                  console.log("Profile image updated:", imageUrl)
+                }
               />
             </div>
 
@@ -414,8 +543,12 @@ if(!isConnected){
 
             {/* Display user ID badge */}
             <div className="mb-2">
-              <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-400/20 flex items-center gap-1 py-1">
-                <Hash className="h-3 w-3" /><span className="ml-1">User ID: {userId}</span>
+              <Badge
+                variant="outline"
+                className="text-xs bg-blue-500/10 text-blue-400 border-blue-400/20 flex items-center gap-1 py-1"
+              >
+                <Hash className="h-3 w-3" />
+                <span className="ml-1">User ID: {userId}</span>
               </Badge>
             </div>
 
@@ -429,7 +562,7 @@ if(!isConnected){
             </Button> */}
           </div>
         )}
-      
+
         <div className="p-4">
           <nav className="space-y-1">
             <Button
@@ -459,7 +592,11 @@ if(!isConnected){
             <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
               className="w-full justify-start"
-              onClick={()=>{router.push(`${window.location.origin}/downlines?Address=${adress}`)}}
+              onClick={() => {
+                router.push(
+                  `${window.location.origin}/downlines?Address=${adress}`
+                );
+              }}
             >
               <Star className="h-4 w-4 mr-2" />
               Downlines
@@ -807,7 +944,7 @@ if(!isConnected){
                   <div className="lg:hidden mb-8">
                     {/* Mobile-only YouTube Video Player */}
                     <div className="mb-6">
-                      <h3 className="text-base font-semibold mb-3 px-1 text-gray-300 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text text-transparent">
+                      <h3 className="text-base font-semibold mb-3 px-1 text-gray-300 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text ">
                         Live Updates
                       </h3>
                       <div className="aspect-video w-full overflow-hidden rounded-lg border border-gray-700 bg-gray-800">
@@ -826,7 +963,7 @@ if(!isConnected){
 
                     {/* Featured Stats - Highlighted key metrics for mobile */}
                     <div className="mb-6">
-                      <h3 className="text-base font-semibold mb-3 px-1 text-gray-300 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text text-transparent">
+                      <h3 className="text-base font-semibold mb-3 px-1 text-gray-300 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text ">
                         Quick Stats
                       </h3>
                       {/* Let the component handle fetching data directly from contract */}
@@ -835,7 +972,7 @@ if(!isConnected){
 
                     {/* Image Cards Grid with animated borders - Mobile */}
                     <div className="mb-6">
-                      <h3 className="text-base font-semibold mb-3 px-1 text-gray-300 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text text-transparent">
+                      <h3 className="text-base font-semibold mb-3 px-1 text-gray-300 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text ">
                         Featured Resources
                       </h3>
                       {/* <ImageCardsGrid /> */}
@@ -898,7 +1035,7 @@ if(!isConnected){
                     {/* Level Upgrade Cards - Moved above Featured Stats */}
                     <div className="mb-8 mt-6 w-full">
                       <ErrorBoundary>
-                        <LevelUpgradeCards currentLevel={level} />
+                        <LevelUpgradeCards currentLevel={level} setUpdateState={setUpdateState} updateState={updateState} />
                       </ErrorBoundary>
                     </div>
 
@@ -927,7 +1064,7 @@ if(!isConnected){
                   {/* Mobile-only Level Upgrade Cards */}
                   <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
-                      <LevelUpgradeCards currentLevel={level} />
+                      <LevelUpgradeCards currentLevel={level} setUpdateState={setUpdateState} updateState={updateState}/>
                     </ErrorBoundary>
                   </div>
 

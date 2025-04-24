@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Card, CardContent } from "./UI/card";
 import { Badge } from "./UI/badge";
 import { Button } from "./UI/button";
+import { Dispatch, SetStateAction } from "react";
+
 import {
   Star,
   Shield,
@@ -123,9 +125,11 @@ const LevelCard: React.FC<LevelCardProps> = ({
 
 type Props = {
   currentLevel: number;
+  updateState:boolean;
+  setUpdateState: Dispatch<SetStateAction<boolean>>; // ✅ correct setter type
 };
 
-export const LevelUpgradeCards: React.FC<Props> = ({ currentLevel }) => {
+export const LevelUpgradeCards: React.FC<Props> = ({ currentLevel,updateState,setUpdateState }) => {
   const { toast } = useToast();
   const [processingLevel, setProcessingLevel] = useState<number | null>(null);
   const [loadingLevel, setLoadingLevel] = useState<number | null>(null);
@@ -247,6 +251,7 @@ export const LevelUpgradeCards: React.FC<Props> = ({ currentLevel }) => {
       setProcessingLevel(Number(level))
       if (isConnected) {
         let resp = await PurchaseLevel(amount, level);
+        setUpdateState(updateState)
         console.log(resp);
       } else {
         // toast.error("Connect wallet to continue");

@@ -506,21 +506,21 @@ const HomeDark = () => {
                   <motion.div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300" />
                 </motion.a>
                 <motion.a
-                  href="/documentation"
+                  href="https://web3sonic.com/documentation"
                   className="text-gray-300 hover:text-[#00a3ff] transition-all duration-300 flex items-center space-x-1 relative group"
                   whileHover={{ y: -2 }}
                 >
                   <span>Getting Started</span>
                   <motion.div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#00a3ff] group-hover:w-full transition-all duration-300" />
                 </motion.a>
-                <motion.a
+                {/* <motion.a
                   href="https://web3sonic.com/dashboard"
                   className="text-gray-300 hover:text-[#00a3ff] transition-all duration-300 flex items-center space-x-1 relative group"
                   whileHover={{ y: -2 }}
                 >
                   <span>Web3 Sonic</span>
                   <motion.div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#00a3ff] group-hover:w-full transition-all duration-300" />
-                </motion.a>
+                </motion.a> */}
               </nav>
 
               {/* Social Links and CTA */}

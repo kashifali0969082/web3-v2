@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest, getQueryFn } from '../lib/queryCLient';
+import {  } from '../lib/queryCLient';
 
 interface PriceResponse {
   price: number;
@@ -35,7 +35,7 @@ export function useSonicPrice() {
   // Fetch price from the server API endpoint - always use KuCoin as the primary source
   const { data, isLoading, error, refetch } = useQuery<PriceResponse>({
     queryKey: ['/api/price/sonic', { kucoin: 'true' }], // Add kucoin parameter to prioritize KuCoin exchange
-    queryFn: getQueryFn({ on401: "returnNull" }),
+    // queryFn: getQueryFn({ on401: "returnNull" }),
     refetchInterval: 15000, // Refetch price more frequently (every 15 seconds)
     staleTime: 5000, // Consider data stale after just 5 seconds for more fresh data
     retry: 3,
@@ -44,7 +44,7 @@ export function useSonicPrice() {
   // Fetch 24h price history to get the change percentage
   const { data: historyData } = useQuery<PriceHistoryResponse>({
     queryKey: ['/api/price/sonic/history'],
-    queryFn: getQueryFn({ on401: "returnNull" }),
+    // queryFn: getQueryFn({ on401: "returnNull" }),
     refetchInterval: 300000, // 5 minutes
     staleTime: 60000, // 1 minute
   });
@@ -122,8 +122,9 @@ export function useSonicPrice() {
   const refreshPrice = async () => {
     // Force a new query with fresh KuCoin data
     try {
-      const freshData = await apiRequest<PriceResponse>('/api/price/sonic?kucoin=true&refresh=true');
-      console.log('Manually refreshed price from KuCoin:', freshData?.price);
+      const freshData =123 
+      // await apiRequest<PriceResponse>('/api/price/sonic?kucoin=true&refresh=true');
+      console.log('Manually refreshed price from KuCoin:', freshData);
       refetch();
       return freshData;
     } catch (err) {

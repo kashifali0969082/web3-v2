@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest, getQueryFn } from '../lib/queryCLient';
+// import { apiRequest, getQueryFn } from '../lib/queryCLient';
 
 interface PriceResponse {
   price: number;
@@ -24,7 +24,7 @@ export function useWbtcPrice() {
   // Fetch price from the server API endpoint
   const { data, isLoading, error, refetch } = useQuery<PriceResponse>({
     queryKey: ['/api/price/wbtc'],
-    queryFn: getQueryFn({ on401: "returnNull" }),
+    // queryFn: getQueryFn({ on401: "returnNull" }),
     refetchInterval: 30000, // Refetch price every 30 seconds
     staleTime: 10000, // Consider data stale after 10 seconds
     retry: 3,
@@ -81,8 +81,9 @@ export function useWbtcPrice() {
   // Function to manually refresh the price
   const refreshPrice = async () => {
     try {
-      const freshData = await apiRequest<PriceResponse>('/api/price/wbtc?refresh=true');
-      console.log('Manually refreshed wBTC price:', freshData?.price);
+      const freshData = 123
+      // await apiRequest<PriceResponse>('/api/price/wbtc?refresh=true');
+      console.log('Manually refreshed wBTC price:', freshData);
       refetch();
       return freshData;
     } catch (err) {

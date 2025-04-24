@@ -115,9 +115,9 @@ const Dashboard = () => {
   useEffect(() => {
     setAddress(urlAddress || "");
   }, [urlAddress]);
-useEffect(()=>{
-  GetUserLevel();
-},[updateState])
+  useEffect(() => {
+    GetUserLevel();
+  }, [updateState]);
   const GetUserLevel = async () => {
     try {
       let resp = await getUSERLEVEL(adress);
@@ -783,7 +783,11 @@ useEffect(()=>{
                       variant="outline"
                       size="sm"
                       className="flex-shrink-0 bg-blue-500/10 text-blue-400 border-blue-400/30 hover:bg-blue-500/20 h-10 px-4 shadow-sm active:scale-95 transition-all duration-200"
-                      // onClick={() => navigate("/referral-stats")}
+                      onClick={() => {
+                        router.push(
+                          `${window.location.origin}/downlines?Address=${adress}`
+                        );
+                      }}
                     >
                       <Users className="h-4 w-4 mr-1.5" />
                       Referrals
@@ -815,7 +819,7 @@ useEffect(()=>{
                   {/* Page Header - Mobile Only */}
                   <header className="mb-6 lg:hidden">
                     <div className="flex flex-col items-start">
-                      <div className="" >
+                      <div className="">
                         <div className="flex items-center justify-between w-full gap-4 bg-gray-900/50 border border-gray-800 rounded-lg p-3 mb-2">
                           <h1 className="text-2xl font-bold bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#f97316] bg-clip-text text-transparent">
                             Dashboard
@@ -1037,7 +1041,11 @@ useEffect(()=>{
                     {/* Level Upgrade Cards - Moved above Featured Stats */}
                     <div className="mb-8 mt-6 w-full">
                       <ErrorBoundary>
-                        <LevelUpgradeCards currentLevel={level} setUpdateState={setUpdateState} updateState={updateState} />
+                        <LevelUpgradeCards
+                          currentLevel={level}
+                          setUpdateState={setUpdateState}
+                          updateState={updateState}
+                        />
                       </ErrorBoundary>
                     </div>
 
@@ -1066,7 +1074,11 @@ useEffect(()=>{
                   {/* Mobile-only Level Upgrade Cards */}
                   <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
-                      <LevelUpgradeCards currentLevel={level} setUpdateState={setUpdateState} updateState={updateState}/>
+                      <LevelUpgradeCards
+                        currentLevel={level}
+                        setUpdateState={setUpdateState}
+                        updateState={updateState}
+                      />
                     </ErrorBoundary>
                   </div>
 

@@ -1475,7 +1475,6 @@ const HomeDark = () => {
         </div>
       </div>
 
-      {/* How It Works Section */}
       <div className="py-20 relative overflow-hidden">
         <div className="absolute w-full h-full top-0 left-0 bg-gradient-to-b from-purple-900/5 via-transparent to-blue-900/5 pointer-events-none" />
 

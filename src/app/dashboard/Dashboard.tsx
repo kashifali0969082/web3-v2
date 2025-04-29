@@ -420,9 +420,9 @@ const Dashboard = () => {
             <div className="w-24 h-24 mb-3">
               <ProfileImageUpload
                 walletAddress={adress}
-                onImageChange={(imageUrl) =>
-                  console.log("Profile image updated:", imageUrl)
-                }
+                // onImageChange={(imageUrl) =>
+                //   // console.log("Profile image updated:", imageUrl)
+                // }
               />
             </div>
 

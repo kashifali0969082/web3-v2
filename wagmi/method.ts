@@ -6,6 +6,10 @@ import {
   registrationContractAbi,
   UserContract,
   UserContractAbi,
+  wbtcAdress,
+  wbtcContractAbi,
+  Web3MLABI,
+  Web3MLMAddress,
 } from "./export";
 import { config } from "./config";
 import { waitForTransactionReceipt } from "wagmi/actions";
@@ -336,4 +340,36 @@ export const Purchase10Level = async (amount: string, level: string) => {
   });
 
   return result;
+};
+
+
+export const ApproveWBTC = async (address: string, amount: string) => {
+  const result = await writeContract(config, {
+    abi: wbtcContractAbi,
+    address: wbtcAdress,
+    functionName: "approve",
+    args: [address,amount],
+    // value: parseEther(amount),
+  });
+  return result;
+};
+export const WbtcLvl1UpFunction = async () => {
+  const result = await writeContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "placeInMatrix",
+    args: [],
+  });
+  return result;
+};
+
+export const WbtcUserFun = async (address: string) => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "users",
+    args: [address],
+  });
+
+  return result ;
 };

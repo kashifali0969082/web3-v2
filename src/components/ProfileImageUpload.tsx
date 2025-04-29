@@ -132,7 +132,7 @@ export function ProfileImageUpload({ walletAddress, onImageChange }: ProfileImag
           const transparentPixel = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
           setImage(transparentPixel);
           onImageChange?.(transparentPixel);
-          console.log("Profile image updated:", transparentPixel);
+          // console.log("Profile image updated:", transparentPixel);
         }
       }
     };

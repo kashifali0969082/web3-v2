@@ -617,7 +617,7 @@ const HomeDark = () => {
                 </a>
 
                 {/* Mobile Login and Register Buttons */}
-                <div className="mt-2 flex gap-2">
+                {/* <div className="mt-2 flex gap-2">
                   <a
                     href="/login"
                     className="flex-1 bg-gradient-to-r from-[#00a3ff] to-[#9333EA] text-white py-3 px-4 rounded-lg font-medium text-center"
@@ -630,7 +630,7 @@ const HomeDark = () => {
                   >
                     Register
                   </a>
-                </div>
+                </div> */}
 
                 {/* Mobile Social Links */}
                 <div className="flex items-center space-x-4 py-2">
@@ -849,49 +849,64 @@ const HomeDark = () => {
               {/* Prices container */}
               <div className="flex flex-col">
                 {/* WEB3 SONIC title - moved to top left as requested */}
-                <div className="block mb-4 text-left order-first">
-                  <motion.h2
-                    className="text-3xl font-extrabold text-left"
-                    animate={{
-                      textShadow: [
-                        "0 0 5px rgba(0, 163, 255, 0)",
-                        "0 0 15px rgba(0, 163, 255, 0.6)",
-                        "0 0 5px rgba(0, 163, 255, 0)",
-                      ],
-                      scale: [1, 1.03, 1],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      scale: {
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                    }}
-                  >
-                    <motion.span
-                      className="bg-gradient-to-r from-[#00a3ff] via-white to-[#ff6b00] bg-clip-text text-transparent"
-                      animate={{ backgroundPosition: ["0%", "100%", "0%"] }}
+                <div className="flex flex-row gap-3">
+                  <div className="block mb-4 text-left order-first">
+                    <motion.h2
+                      className="text-3xl font-extrabold text-left"
+                      animate={{
+                        textShadow: [
+                          "0 0 5px rgba(0, 163, 255, 0)",
+                          "0 0 15px rgba(0, 163, 255, 0.6)",
+                          "0 0 5px rgba(0, 163, 255, 0)",
+                        ],
+                        scale: [1, 1.03, 1],
+                      }}
                       transition={{
-                        duration: 8,
+                        duration: 3,
                         repeat: Infinity,
-                        ease: "linear",
+                        scale: {
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        },
                       }}
                     >
-                      WEB3 SONIC
-                    </motion.span>
-                  </motion.h2>
-                  <motion.p
-                    className="text-sm font-medium text-blue-300 text-left"
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                  >
-                    earn instant rewards in sonic
-                  </motion.p>
+                      <motion.span
+                        className="bg-gradient-to-r from-[#00a3ff] via-white to-[#ff6b00] bg-clip-text text-transparent"
+                        animate={{ backgroundPosition: ["0%", "100%", "0%"] }}
+                        transition={{
+                          duration: 8,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      >
+                        WEB3 SONIC
+                      </motion.span>
+                    </motion.h2>
+                    <motion.p
+                      className="text-sm font-medium text-blue-300 text-left"
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                      earn instant rewards in sonic
+                    </motion.p>
+                  </div>
+                  <div className="mt-2  gap-2">
+                    <a
+                      href="/login"
+                      className="flex-1 bg-gradient-to-r from-[#00a3ff] to-[#9333EA] text-white py-2 px-3 rounded-lg font-medium text-center"
+                    >
+                      Login
+                    </a>
+                    <a
+                      href="/register"
+                      className="flex-1 ml-1 bg-gray-800 border border-blue-500/30 text-white py-2 px-3 rounded-lg font-medium text-center"
+                    >
+                      Register
+                    </a>
+                  </div>
                 </div>
-
                 {/* Mobile: Prices display */}
                 <div className="flex justify-center space-x-6 lg:hidden">
                   {/* wBTC Price - Mobile */}

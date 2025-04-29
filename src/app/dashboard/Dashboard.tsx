@@ -994,8 +994,8 @@ const Dashboard = () => {
                   {/* Mobile-only wBTC Upgrade Cards */}
                   <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
-                      {/* <WBTCUpgradeCards /> */}
-                      cards
+                      <WBTCUpgradeCards />
+                      {/* cards */}
                     </ErrorBoundary>
                   </div>
 

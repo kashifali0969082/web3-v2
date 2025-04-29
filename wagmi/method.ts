@@ -358,7 +358,6 @@ export const WbtcLvl1UpFunction = async () => {
     abi: Web3MLABI,
     address: Web3MLMAddress,
     functionName: "placeInMatrix",
-    args: [],
   });
   return result;
 };

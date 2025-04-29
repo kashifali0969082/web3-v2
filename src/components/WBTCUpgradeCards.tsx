@@ -13,7 +13,7 @@ import {
   WbtcLvl1UpFunction,
   WbtcUserFun,
 } from "../../wagmi/method";
-import { wbtcAdress } from "../../wagmi/export";
+import { wbtcAdress, Web3MLMAddress } from "../../wagmi/export";
 import {
   Bitcoin,
   Shield,
@@ -54,8 +54,8 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
   tagStyle,
   description,
   icon,
-  isActive ,
-  isCurrentLevel ,
+  isActive,
+  isCurrentLevel,
   onUpgrade,
   isProcessing,
 }) => {
@@ -153,49 +153,50 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
           // <div>upgrade</div>
         )}
       </Button> */}
-     <Button
-            variant={isActive ? "outline" : "default"}
-            size="sm"
-            className={`w-full ${
-              isActive
-                ? "border-blue-500 text-blue-400"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-            disabled={isProcessing}
-            onClick={onUpgrade}        >
-            {isProcessing ? (
-              <>
-                <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Processing...
-              </>
-            ) : isActive ? (
-              <>
-                <CheckSquare className="h-3.5 w-3.5 mr-1" />
-                Activated
-              </>
-            ) : (
-              "Upgrade"
-            )}
-          </Button>
+      <Button
+        variant={isActive ? "outline" : "default"}
+        size="sm"
+        className={`w-full ${
+          isActive
+            ? "border-blue-500 text-blue-400"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
+        disabled={isProcessing || isActive}
+        onClick={onUpgrade}
+      >
+        {isProcessing ? (
+          <>
+            <svg
+              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Processing...
+          </>
+        ) : isActive ? (
+          <>
+            <CheckSquare className="h-3.5 w-3.5 mr-1" />
+            Activated
+          </>
+        ) : (
+          "Upgrade"
+        )}
+      </Button>
     </div>
   );
 };
@@ -206,21 +207,22 @@ export const WBTCUpgradeCards: React.FC = () => {
   const [userWBTCLevel, setUserWBTCLevel] = useState<number>(0);
   const [upgradeLoading, setUpgradeLoading] = useState<boolean>(false);
   const [processingLevel, setProcessingLevel] = useState<boolean>(false);
+  const [reload, setReload] = useState<boolean>(false);
   const [adress, setAddress] = useState("");
   const [activated, setActivated] = useState<number>(0);
   const searchParams = useSearchParams();
   const urlAddress = searchParams.get("Address");
   // Handle upgrade button click for a specific level
-  const handleUpgrade = async (targetLevel: number) => {
+  const handleUpgrade = async (targetLevel: number, amount: number) => {
     try {
-      let amount="0.0001"
       setProcessingLevel(true);
       if (targetLevel === 1) {
-        let hash = await ApproveWBTC(wbtcAdress, amount);
+        let hash = await ApproveWBTC(Web3MLMAddress, amount.toString());
         if (hash) {
           let approved = await getTxn(hash);
           if (approved) {
             let final = await WbtcLvl1UpFunction();
+            setReload(!reload);
           }
         }
       }
@@ -235,10 +237,11 @@ export const WBTCUpgradeCards: React.FC = () => {
   }, [urlAddress]);
   useEffect(() => {
     gettingUserVal();
-  }, [adress]);
+  }, [adress, reload]);
   const gettingUserVal = async () => {
     try {
       let resp = (await WbtcUserFun(adress)) as (string | bigint)[];
+      console.log("function is getting desired values",resp);
       setActivated(Number(resp[3]));
     } catch (error) {
       console.log("error while getting data from contract");
@@ -316,9 +319,13 @@ export const WBTCUpgradeCards: React.FC = () => {
               <WBTCLevelCard
                 key={`wbtc-level-${data.level}`}
                 {...data}
-                isActive={activated !== undefined && activated !== 0 && activated >= data.level}
+                isActive={
+                  activated !== undefined &&
+                  activated !== 0 &&
+                  activated >= data.level
+                }
                 // isCurrentLevel={activated}
-                onUpgrade={() => handleUpgrade(data.level)}
+                onUpgrade={() => handleUpgrade(data.level, data.satAmount)}
                 isProcessing={processingLevel}
               />
             ))}

@@ -361,6 +361,15 @@ export const WbtcLvl1UpFunction = async () => {
   });
   return result;
 };
+export const WbtcLvl4to5UpFunction = async (level:string) => {
+  const result = await writeContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "upgradeLevel",
+    args:[level],
+  });
+  return result;
+};
 
 export const WbtcUserFun = async (address: string) => {
   const result = await readContract(config, {

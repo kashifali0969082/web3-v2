@@ -4,7 +4,7 @@ import { Card, CardContent } from "./UI/card";
 // import { Badge } from '@/components/ui/badge';
 import { Badge } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-
+import { WbtcLvl4to5UpFunction } from "../../wagmi/method";
 // import { Button } from '@/components/ui/button';
 import { Button } from "./UI/button";
 import {
@@ -83,6 +83,8 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
+
+  
 
   // Calculate USD value
   const satToBTC = satAmount / 100000000; // 1 BTC = 100,000,000 SAT
@@ -206,7 +208,7 @@ export const WBTCUpgradeCards: React.FC = () => {
   //   const { address } = useWeb3();
   const [userWBTCLevel, setUserWBTCLevel] = useState<number>(0);
   const [upgradeLoading, setUpgradeLoading] = useState<boolean>(false);
-  const [processingLevel, setProcessingLevel] = useState<boolean>(false);
+  const [processingLevel, setProcessingLevel] =  useState<number | null>(null);
   const [reload, setReload] = useState<boolean>(false);
   const [adress, setAddress] = useState("");
   const [activated, setActivated] = useState<number>(0);
@@ -215,7 +217,7 @@ export const WBTCUpgradeCards: React.FC = () => {
   // Handle upgrade button click for a specific level
   const handleUpgrade = async (targetLevel: number, amount: number) => {
     try {
-      setProcessingLevel(true);
+      setProcessingLevel(targetLevel)
       if (targetLevel === 1) {
         let hash = await ApproveWBTC(Web3MLMAddress, amount.toString());
         if (hash) {
@@ -226,10 +228,22 @@ export const WBTCUpgradeCards: React.FC = () => {
           }
         }
       }
-      setProcessingLevel(false);
+      else{
+        let hash = await ApproveWBTC(Web3MLMAddress, amount.toString());
+        if (hash) {
+          let approved = await getTxn(hash);
+          if (approved) {
+            console.log("target level is ",targetLevel);
+            
+            let final = await WbtcLvl4to5UpFunction(targetLevel.toString());
+            setReload(!reload);
+          }
+        }
+      }
+      setProcessingLevel(null)
     } catch (error) {
       console.log("error while upgrading user lvl", error);
-      setProcessingLevel(false);
+      setProcessingLevel(null)
     }
   };
   useEffect(() => {
@@ -259,15 +273,15 @@ export const WBTCUpgradeCards: React.FC = () => {
       description: "Start your wBTC journey with basic blockchain benefits",
       icon: <Bitcoin className="h-4 w-4 text-amber-400" />,
     },
-    // {
-    //   level: 2,
-    //   title: "Train AI Agent",
-    //   satAmount: 100000,
-    //   tag: "Intermediate",
-    //   tagStyle: "bg-amber-600 text-white",
-    //   description: "Unlock enhanced wBTC rewards and bonuses and our AI Agent",
-    //   icon: <Bitcoin className="h-4 w-4 text-amber-400" />
-    // },
+    {
+      level: 2,
+      title: "Train AI Agent",
+      satAmount: 100000,
+      tag: "Intermediate",
+      tagStyle: "bg-amber-600 text-white",
+      description: "Unlock enhanced wBTC rewards and bonuses and our AI Agent",
+      icon: <Bitcoin className="h-4 w-4 text-amber-400" />
+    },
     // {
     //   level: 3,
     //   title: "Upgrade AI Agent",
@@ -326,8 +340,8 @@ export const WBTCUpgradeCards: React.FC = () => {
                 }
                 // isCurrentLevel={activated}
                 onUpgrade={() => handleUpgrade(data.level, data.satAmount)}
-                isProcessing={processingLevel}
-              />
+                isProcessing={processingLevel === data.level}
+                />
             ))}
           </div>
         </div>

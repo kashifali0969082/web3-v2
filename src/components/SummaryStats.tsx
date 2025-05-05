@@ -11,18 +11,28 @@ import {
   BadgeDollarSign,
   Sparkles,
 } from "lucide-react";
-import { TotalTeamSize,TotalIncome,lastUserId,AdressToID,GetUplinerAdress } from "../../wagmi/method";
+import {
+  TotalTeamSize,
+  TotalIncome,
+  lastUserId,
+  AdressToID,
+  GetUplinerAdress,
+  WbtcUserFun,
+} from "../../wagmi/method";
+import axios from "axios";
 export function SummaryStats() {
   const [isLoading, setIsLoading] = useState(false);
   const [teamSize, setteamSize] = useState("0");
   const searchParams = useSearchParams();
-  const [userTeamIncome, setUserTeamIncome] = useState<bigint>();
+  const [userTeamIncome, setUserTeamIncome] = useState<number>();
   const urlAddress = searchParams.get("Address");
   const [adress, setAddress] = useState("");
   const [UserIncome, setUserIncome] = useState<bigint>();
   const [lastReferralId, setLastReferralId] = useState<number>(0);
   const [userId, setUserId] = useState<number>(0);
   const [UplinerId, setUplinerId] = useState<number>(0);
+  const [btcUsd, setbtcUsd] = useState<any>();
+  const [sonicPrice, setsonicPrice] = useState("");
 
   useEffect(() => {
     setAddress(urlAddress || "");
@@ -33,12 +43,38 @@ export function SummaryStats() {
     getLastUser();
     userAdress();
   }, [adress]);
+useEffect(()=>{
+  getPrices()
+},[UserIncome])
+  const getPrices = async () => {
+    try {
+      const Sonic = await axios.get(
+        "https://min-api.cryptocompare.com/data/price?fsym=S&tsyms=USD"
+      );
+      // const WBTC = await axios.get(
+      //   "https://min-api.cryptocompare.com/data/price?fsym=WBTC&tsyms=USD"
+      // );
+      // const SatPrice = await axios.get(
+      //   "https://min-api.cryptocompare.com/data/price?fsym=SAT&tsyms=USD"
+      // );
+      // console.log("----------------wbtc", SatPrice;
+      setsonicPrice(Sonic.data.USD);
+
+      // setwbtcPrice(WBTC.data.USD);
+      console.log("xxx logic", Sonic.data.USD);
+    } catch (error) {
+      console.log("error getting from api", error);
+    }
+  };
   const getUserIncome = async () => {
     try {
       let resp = await TotalIncome(adress);
 
       setUserIncome(resp[2]);
-      setUserTeamIncome(resp[3]);
+      let data = (await WbtcUserFun(adress)) as any;
+      console.log("88888888888888", data);
+
+      setUserTeamIncome(Number(data[4]));
     } catch (error) {
       console.log("error while getting income", error);
     }
@@ -59,7 +95,7 @@ export function SummaryStats() {
   const TeamSize = async () => {
     try {
       let resp = await TotalTeamSize(adress);
-      console.log("response of value is ((((((((((((", resp);
+      // console.log("response of value is ((((((((((((", resp);
 
       if (typeof resp === "bigint") {
         let num = Number(resp);
@@ -83,6 +119,34 @@ export function SummaryStats() {
       console.log("Error while getting last user", error);
     }
   };
+  useEffect(() => {
+    usdtConversionFun();
+  }, [userTeamIncome]);
+  const usdtConversionFun = async () => {
+    try {
+      // Get the current BTC price in USDT
+      const btcPriceRes = await axios.get(
+        "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USDT"
+      );
+      const btcPrice = btcPriceRes.data.USDT;
+
+      // Convert Satoshis to BTC
+      const satoshis: number = userTeamIncome ?? 0; // If userTeamIncome is undefined, default to 0
+      const btc = satoshis / 100_000_000;
+
+      console.log(btc); // Now it's safe to divide by 100_000_000
+
+      // Convert BTC to USDT
+      const usdt = (btc * btcPrice).toFixed(2); // Rounded to 2 decimal places for USDT
+      console.log("xxx", satoshis, btc, usdt);
+
+      setbtcUsd(usdt);
+      // return usdt;
+    } catch (error) {
+      console.error("Error fetching BTC price:", error);
+      return null;
+    }
+  };
   const cards = [
     {
       title: "User ID",
@@ -94,20 +158,20 @@ export function SummaryStats() {
       iconColor: "text-blue-500",
     },
     {
-      title: "User Income",
+      title: "Sonic Income ",
       value: UserIncome
-      ? `${(Number(UserIncome) / 1e18).toFixed(2)} S` // Convert from BigInt & format to 2 decimals
-      : "0.00 S",
+        ? `${(Number((Number(UserIncome) / 1e18)) * Number(sonicPrice)).toFixed(2)} $ || ${Number((Number(UserIncome) / 1e18).toFixed(2))} S` // Convert from BigInt & format to 2 decimals
+        : "0.00 $",
       icon: <Wallet className="h-4 w-4 text-green-500" />,
       bgColor: "bg-green-500/10",
       iconBgColor: "bg-green-500/20",
       iconColor: "text-green-500",
     },
     {
-      title: "Team Income",
-      value: userTeamIncome
-        ? `${(Number(userTeamIncome) / 1e18).toFixed(2)} S` // Convert from BigInt & format to 2 decimals
-        : "0.00 S",
+      title: "Bitcoin Income",
+      value: btcUsd
+        ? `${Number(btcUsd)} $ || ${(userTeamIncome ?? 0) } SAT` // Convert from BigInt & format to 2 decimals
+        : "0 $",
       icon: <Sparkles className="h-4 w-4 text-purple-500" />,
       bgColor: "bg-purple-500/10",
       iconBgColor: "bg-purple-500/20",
@@ -115,7 +179,7 @@ export function SummaryStats() {
     },
     {
       title: "Upliner ID",
-      value:UplinerId,
+      value: UplinerId,
       icon: <UserPlus className="h-4 w-4 text-amber-500" />,
 
       // increase: "+3.4% from last week",
@@ -126,7 +190,10 @@ export function SummaryStats() {
   ];
   // const isLoading=false;
   return (
-    <div style={{width:'100%'}}className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div
+      style={{ width: "100%" }}
+      className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+    >
       {isLoading
         ? // Show skeleton loaders while data is loading
           Array(4)

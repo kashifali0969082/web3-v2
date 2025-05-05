@@ -62,7 +62,7 @@ export function useSonicPrice() {
     // First priority: Check if the price endpoint directly includes 24h change
     if (data?.priceChange24h !== undefined) {
       setPriceChange24h(data.priceChange24h);
-      console.log('Using 24h price change directly from price endpoint:', data.priceChange24h);
+      // console.log('Using 24h price change directly from price endpoint:', data.priceChange24h);
     } 
     // Second priority: Fall back to history data if direct data not available
     else if (historyData?.prices && historyData.prices.length > 0) {
@@ -70,7 +70,7 @@ export function useSonicPrice() {
       const lastPricePoint = historyData.prices[0];
       if (typeof lastPricePoint.change24h === 'number') {
         setPriceChange24h(lastPricePoint.change24h);
-        console.log('Using 24h price change from history data:', lastPricePoint.change24h);
+        // console.log('Using 24h price change from history data:', lastPricePoint.change24h);
       }
     }
   }, [data, historyData]);
@@ -124,7 +124,7 @@ export function useSonicPrice() {
     try {
       const freshData =123 
       // await apiRequest<PriceResponse>('/api/price/sonic?kucoin=true&refresh=true');
-      console.log('Manually refreshed price from KuCoin:', freshData);
+      // console.log('Manually refreshed price from KuCoin:', freshData);
       refetch();
       return freshData;
     } catch (err) {

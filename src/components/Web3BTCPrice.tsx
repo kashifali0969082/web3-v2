@@ -859,7 +859,7 @@
                         
 //                         // Execute the actual sell transaction using the blockchain service
 //                         // We'll use the transferWEB3BTCToUser method in reverse (this is conceptual)
-//                         // In a real implementation, you'd have a dedicated sell/swap method in the contract
+//                         // In a real implementation, you'd have a dedicated sell/ method in the contract
                         
 //                         // First, verify the user has the tokens in their wallet
 //                         const userAddress = await web3BTCService.getConnectedWalletAddress();

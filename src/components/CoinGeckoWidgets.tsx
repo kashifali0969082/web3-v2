@@ -113,15 +113,15 @@ export function CoinGeckoWidgets() {
   useEffect(() => {
     const fetchSonicPrice = async () => {
       try {
-        console.log('Fetching S token price data from API...');
+        // console.log('Fetching S token price data from API...');
         // Try to fetch from S token price API endpoint - use KuCoin specifically
         const response = await fetch('/api/price/sonic?kucoin=true');
         if (response.ok) {
           const data = await response.json();
-          console.log('Received S token price data:', data);
+          // console.log('Received S token price data:', data);
           
           if (data && typeof data.price === 'number') {
-            console.log(`Setting S token price to $${data.price}`);
+            // console.log(`Setting S token price to $${data.price}`);
             setSonicPrice(data.price);
             setSonicChange24h(data.change24h || 2.5);
             
@@ -132,16 +132,16 @@ export function CoinGeckoWidgets() {
           } else {
             console.warn('Invalid price data structure:', data);
             // Make sure we're using our default values since API data is invalid
-            console.log('Using default price of $0.5677');
+            // console.log('Using default price of $0.5677');
           }
         } else {
           console.warn(`API error status: ${response.status}`);
-          console.log('Using fallback S token price data of $0.5677');
+          // console.log('Using fallback S token price data of $0.5677');
           // Keep using default values
         }
       } catch (error) {
         console.error('Error fetching S token price:', error);
-        console.log('Using fallback S token price data of $0.5677');
+        // console.log('Using fallback S token price data of $0.5677');
         // Keep using default values
       }
     };

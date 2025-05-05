@@ -105,7 +105,7 @@ const LiveStreamPage = () => {
             "*"
           );
 
-          console.log("Attempted to pause dashboard YouTube player");
+          // console.log("Attempted to pause dashboard YouTube player");
         }
       } catch (error) {
         console.error("Error attempting to pause dashboard player:", error);
@@ -123,7 +123,7 @@ const LiveStreamPage = () => {
         const data =
           typeof event.data === "string" ? JSON.parse(event.data) : event.data;
         if (data.event === "onReady") {
-          console.log("YouTube player ready on LiveStream page");
+          // console.log("YouTube player ready on LiveStream page");
         }
       } catch (error) {
         // Ignore parsing errors

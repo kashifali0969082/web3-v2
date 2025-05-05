@@ -7,7 +7,7 @@ import { Card, CardContent } from "./card";
 import { TrendingUp } from "lucide-react";
 import { SonicLogo } from "@/components/SonicLogo";
 import { useSearchParams } from "next/navigation";
-import { GetTotalIncome } from "../../../wagmi/method";
+import { getmembers, GetTotalIncome, getTotalTeamSize } from "../../../wagmi/method";
 // import { SonicIncomeIcon } from '@/components/SonicIncomeIcon';
 import { SonicIncomeIcon } from "./SonicIncomeIcon";
 // import { useSonicPoints, useSonicUserIncome } from '@/hooks/use-wagmi';
@@ -159,7 +159,6 @@ export const StatBadge = ({
               >
                 {formattedValue}
               </span>
-         
 
               {/* Subtle glowing effect under the number */}
               <div
@@ -229,7 +228,7 @@ export function StatsBadges({
   const [TotalINC, setTotalINC] = useState<bigint>();
   const [adress, setAddress] = useState("");
   const [userId, setUserId] = useState<number>(0);
-
+  const [teamSize, setTeamSize] = useState<number>(0);
   const { address, isConnected } = useAccount();
   const [UplinerId, setUplinerId] = useState<number>(0);
 
@@ -238,13 +237,26 @@ export function StatsBadges({
   });
   const searchParams = useSearchParams();
   const urlAddress = searchParams.get("Address");
+  const [members, setmembers] = useState<number>(0);
+
   useEffect(() => {
     setAddress(urlAddress || "");
   }, [urlAddress]);
   useEffect(() => {
     GetTotalInc();
     userAdress();
+    getSize();
   }, [adress]);
+  const getSize = async () => {
+    try {
+      let resp = await getTotalTeamSize(adress);
+      let data = await getmembers();
+      setmembers(Number(data));
+      setTeamSize(Number(resp))
+    } catch (error) {
+      console.log("error while catching", error);
+    }
+  };
   const userAdress = async () => {
     try {
       const userid = await AdressToID(adress);
@@ -272,10 +284,19 @@ export function StatsBadges({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatBadge
           type="earnings"
-          title="Sponsor ID"
-          value={UplinerId}
-          subtitle="Sponsor"
+          title="Total Members"
+
+          value={members}
+          subtitle="Team"
         />
+
+{/* <StatBadge
+          type="earnings"
+          title="Total Team"
+          
+          value={teamSize}
+          subtitle="Team"
+        /> */}
 
         <StatBadge
           type="premium"
@@ -292,7 +313,7 @@ export function StatsBadges({
           type="network"
           title="Total Member Payouts"
           // value={sonicPoints}
-          value={TotalINC ? `${Number(TotalINC) / 1e18} S` : "0.00 S"}
+          value={TotalINC ? `${(Number(TotalINC) / 1e18).toFixed(2)} S` : "0.00 S"}
           subtitle="★ Network"
         />
       </div>

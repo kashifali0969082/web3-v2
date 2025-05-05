@@ -52,7 +52,7 @@ export function ProfileImageUpload({ walletAddress, onImageChange }: ProfileImag
     
     // Known address check - immediately set hardcoded values
     if (walletAddress?.toLowerCase() === "0xce737a1352a5fe4626929bb5747c55a02dc307b9".toLowerCase()) {
-      console.log("ProfileImageUpload: Using known data for 0xce737a1352a5fe4626929bb5747c55a02dc307b9");
+      // console.log("ProfileImageUpload: Using known data for 0xce737a1352a5fe4626929bb5747c55a02dc307b9");
       setContractUserId(126);
       setUsername("MarketHacker");
       // Skip any contract calls for known address to eliminate errors
@@ -63,7 +63,7 @@ export function ProfileImageUpload({ walletAddress, onImageChange }: ProfileImag
     setIsLoadingContract(true);
     
     // Simple fallback without actual contract calls
-    console.log("Unknown wallet address - would fetch data from contract in production");
+    // console.log("Unknown wallet address - would fetch data from contract in production");
     setContractUserId(1); // Default value for unknown addresses
     setIsLoadingContract(false);
   }, [walletAddress]);
@@ -153,16 +153,16 @@ export function ProfileImageUpload({ walletAddress, onImageChange }: ProfileImag
       return null;
     }
     
-    console.log(`Attempting to upload image for user ID: ${userIdToUse}, wallet: ${walletAddress}`);
+    // console.log(`Attempting to upload image for user ID: ${userIdToUse}, wallet: ${walletAddress}`);
     
     try {
       // Log the request details to help diagnose issues
-      console.log('Image upload request data:', {
-        user_id: userIdToUse,
-        wallet_address: walletAddress,
-        content_type: contentType,
-        image_data_length: imageData ? imageData.length : 0
-      });
+      // console.log('Image upload request data:', {
+      //   user_id: userIdToUse,
+      //   wallet_address: walletAddress,
+      //   content_type: contentType,
+      //   image_data_length: imageData ? imageData.length : 0
+      // });
       
       // const response = await apiRequest<ProfileImageData>('/api/profile/image', {
       //   method: 'POST',

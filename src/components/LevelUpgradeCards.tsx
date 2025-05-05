@@ -252,7 +252,7 @@ export const LevelUpgradeCards: React.FC<Props> = ({ currentLevel,updateState,se
       if (isConnected) {
         let resp = await PurchaseLevel(amount, level);
         setUpdateState(!updateState)
-        console.log(resp);
+        // console.log(resp);
       } else {
         // toast.error("Connect wallet to continue");
       }

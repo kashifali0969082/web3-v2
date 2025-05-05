@@ -128,7 +128,6 @@ export const getUSERLEVEL = async (address: string) => {
     functionName: "userLevel",
     args: [address],
   });
-  console.log("result as address is----------------------- :", result);
 
   return Number(result);
 
@@ -377,6 +376,85 @@ export const WbtcUserFun = async (address: string) => {
     address: Web3MLMAddress,
     functionName: "users",
     args: [address],
+  });
+
+  return result ;
+};
+export const getTotalTeamSize = async (address: string) => {
+  const result = await readContract(config, {
+    abi: registrationContractAbi,
+    address: registrationContract,
+    functionName: "getTotalTeamSize",
+    args: [address],
+  });
+
+  return result ;
+};
+export const getmembers = async () => {
+  const result = await readContract(config, {
+    abi: registrationContractAbi,
+    address: registrationContract,
+    functionName: "NumberOfUsers",
+    
+  });
+
+  return result ;
+};
+export const wbtcTransactionCount = async () => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "totalTransaction",
+  });
+
+  return result ;
+};
+export const wbtcTotalRaised = async () => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "totalWBTCRaised",
+  });
+  return result ;
+};
+export const wbtcActiveMembers = async () => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "nextUserId",
+  });
+  return result ;
+};
+export const getUserLevelIncome = async (address: string,level:string) => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "getUserLevelIncome",
+    args: [address,level],
+
+  });
+
+  return result ;
+};
+export const getUserHierarchy = async (address: string,level:string) => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "getUserHierarchy",
+    args: [address,level],
+
+  });
+
+  return result ;
+};
+
+
+export const getCompletedMatrixCount = async (address: string,level:string) => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "getCompletedMatrixCount",
+    args: [address,level],
   });
 
   return result ;

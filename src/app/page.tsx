@@ -69,10 +69,10 @@ const HomeDark = () => {
       const WBTC = await axios.get(
         "https://min-api.cryptocompare.com/data/price?fsym=WBTC&tsyms=USD"
       );
-      console.log("----------------wbtc", WBTC.data.USD);
+      // console.log("----------------wbtc", WBTC.data.USD);
       setsonicPrice(Sonic.data.USD);
       setwbtcPrice(WBTC.data.USD);
-      console.log("----------------sonic", Sonic.data.USD);
+      // console.log("----------------sonic", Sonic.data.USD);
     } catch (error) {
       console.log("error getting from api", error);
     }
@@ -1454,7 +1454,10 @@ const HomeDark = () => {
                 Currency Swap
               </span>
             </h2>
-            <div className="col-span-3 lg:col-span-2 bg-gray-900 border border-gray-700 h-full rounded-lg min-h-[630px] overflow-hidden py-[5px]">
+            <div className="w-full flex flex-col md:flex-row  items-center gap-2 p-2 col-span-3 lg:col-span-2 bg-gray-900 border border-gray-700 h-full rounded-lg overflow-hidden py-[5px]">
+            <div className="w-full md:w-1/2 my-auto">
+
+            
               <iframe
                 id="iframe-widget"
                 src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.01&amountFiat&backgroundColor=2B2B35&darkMode=true&from=btc&horizontal=false&isFiat=false&lang=en-US&link_id=a32a608282e97b&locales=true&logo=false&primaryColor=f6c511&to=s&toTheMoon=false"
@@ -1464,6 +1467,10 @@ const HomeDark = () => {
                   border: "none",
                 }}
               ></iframe>
+              </div>
+              <div className="w-full md:w-1/2 my-auto" >
+
+            
               <Script
                 defer
                 type="text/javascript"
@@ -1484,6 +1491,7 @@ const HomeDark = () => {
                   }) as any
                 }
               </p>
+              </div>
             </div>
           </motion.div>
           {/* </div> */}

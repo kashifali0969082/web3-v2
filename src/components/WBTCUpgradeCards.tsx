@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "./UI/card";
 // import { Badge } from '@/components/ui/badge';
 import { Badge } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { WbtcLvl4to5UpFunction } from "../../wagmi/method";
 // import { Button } from '@/components/ui/button';
 import { Button } from "./UI/button";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
   ApproveWBTC,
   getTxn,
@@ -61,7 +62,14 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
 }) => {
   // State to store Bitcoin price
   const [btcPrice, setBtcPrice] = useState<number>(0);
-
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlAddress = searchParams.get("Address");
+    const [adress, setAddress] = useState("");
+  
+  useEffect(() => {
+      setAddress(urlAddress || "");
+    }, [urlAddress]);
   // Fetch the current Bitcoin price on component mount
   useEffect(() => {
     const fetchBitcoinPrice = async () => {
@@ -155,7 +163,7 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
           // <div>upgrade</div>
         )}
       </Button> */}
-      <Button
+      {/* <Button
         variant={isActive ? "outline" : "default"}
         size="sm"
         className={`w-full ${
@@ -191,14 +199,73 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
             Processing...
           </>
         ) : isActive ? (
-          <>
+          <div  onClick={() =>
+            router.push(
+              `${window.location.origin}/active-matrix?Address=${adress}`
+            )
+          } >
+
             <CheckSquare className="h-3.5 w-3.5 mr-1" />
             Activated
-          </>
+          </div>
         ) : (
           "Upgrade"
         )}
-      </Button>
+      </Button> */}
+      <Button
+  variant={isActive ? "outline" : "default"}
+  size="sm"
+  className={`w-full ${
+    isActive
+      ? "border-blue-500 text-blue-400"
+      : "bg-blue-600 hover:bg-blue-700"
+  }`}
+  disabled={isProcessing} // ❗️Only disable when processing
+  onClick={() => {
+    if (isProcessing) return;
+    if (isActive) {
+      router.push(
+        `${window.location.origin}/active-matrix?Address=${adress}`
+      );
+    } else {
+      onUpgrade();
+    }
+  }}
+>
+  {isProcessing ? (
+    <>
+      <svg
+        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      Processing...
+    </>
+  ) : isActive ? (
+    <>
+      <CheckSquare className="h-3.5 w-3.5 mr-1" />
+      Activated
+    </>
+  ) : (
+    "Upgrade"
+  )}
+</Button>
+
     </div>
   );
 };
@@ -210,6 +277,7 @@ export const WBTCUpgradeCards: React.FC = () => {
   const [upgradeLoading, setUpgradeLoading] = useState<boolean>(false);
   const [processingLevel, setProcessingLevel] =  useState<number | null>(null);
   const [reload, setReload] = useState<boolean>(false);
+
   const [adress, setAddress] = useState("");
   const [activated, setActivated] = useState<number>(0);
   const searchParams = useSearchParams();
@@ -229,11 +297,12 @@ export const WBTCUpgradeCards: React.FC = () => {
         }
       }
       else{
+        console.log("target level is ",targetLevel);
+        console.log("amount is ",amount);
         let hash = await ApproveWBTC(Web3MLMAddress, amount.toString());
         if (hash) {
           let approved = await getTxn(hash);
           if (approved) {
-            console.log("target level is ",targetLevel);
             
             let final = await WbtcLvl4to5UpFunction(targetLevel.toString());
             setReload(!reload);
@@ -255,10 +324,10 @@ export const WBTCUpgradeCards: React.FC = () => {
   const gettingUserVal = async () => {
     try {
       let resp = (await WbtcUserFun(adress)) as (string | bigint)[];
-      console.log("function is getting desired values",resp);
+      // console.log("function is getting desired values",resp);
       setActivated(Number(resp[3]));
     } catch (error) {
-      console.log("error while getting data from contract");
+      // console.log("error while getting data from contract");
     }
   };
 
@@ -282,33 +351,33 @@ export const WBTCUpgradeCards: React.FC = () => {
       description: "Unlock enhanced wBTC rewards and bonuses and our AI Agent",
       icon: <Bitcoin className="h-4 w-4 text-amber-400" />
     },
-    // {
-    //   level: 3,
-    //   title: "Upgrade AI Agent",
-    //   satAmount: 500000,
-    //   tag: "Advanced",
-    //   tagStyle: "bg-amber-600 text-white",
-    //   description: "Access exclusive wBTC features and higher rewards",
-    //   icon: <Bitcoin className="h-4 w-4 text-amber-400" />
-    // },
-    // {
-    //   level: 4,
-    //   title: "Automate AI Agent",
-    //   satAmount: 1000000,
-    //   tag: "Expert",
-    //   tagStyle: "bg-amber-600 text-white",
-    //   description: "Premium wBTC benefits with maximum earning potential",
-    //   icon: <Bitcoin className="h-4 w-4 text-amber-400" />
-    // },
-    // {
-    //   level: 5,
-    //   title: "Enhance AI Agent",
-    //   satAmount: 10000000,
-    //   tag: "Master",
-    //   tagStyle: "bg-amber-600 text-white",
-    //   description: "Master wBTC level with elite blockchain privileges",
-    //   icon: <Bitcoin className="h-4 w-4 text-amber-400" />
-    // }
+    {
+      level: 3,
+      title: "Upgrade AI Agent",
+      satAmount: 500000,
+      tag: "Advanced",
+      tagStyle: "bg-amber-600 text-white",
+      description: "Access exclusive wBTC features and higher rewards",
+      icon: <Bitcoin className="h-4 w-4 text-amber-400" />
+    },
+    {
+      level: 4,
+      title: "Automa AI Agent",
+      satAmount: 1000000,
+      tag: "Expert",
+      tagStyle: "bg-amber-600 text-white",
+      description: "Premium wBTC benefits with maximum earning potential",
+      icon: <Bitcoin className="h-4 w-4 text-amber-400" />
+    },
+    {
+      level: 5,
+      title: "Enhance AI Agent",
+      satAmount: 10000000,
+      tag: "Master",
+      tagStyle: "bg-amber-600 text-white",
+      description: "Master wBTC level with elite blockchain privileges",
+      icon: <Bitcoin className="h-4 w-4 text-amber-400" />
+    }
   ];
 
   return (

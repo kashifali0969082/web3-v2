@@ -115,9 +115,9 @@ const Dashboard = () => {
   const [username, setUsername] = useState<string>("Unknown");
 
   // console.log("------------------------", level);
-  useEffect(() => {
-    setAddress(urlAddress || "");
-  }, [urlAddress]);
+    useEffect(() => {
+      setAddress(urlAddress || "");
+    }, [urlAddress]);
   useEffect(() => {
     GetUserLevel();
   }, [updateState]);
@@ -154,7 +154,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (adress != "") {
       GetUserLevel();
-      getusername()
+      getusername();
     }
     getPrices();
     userAdress();
@@ -168,10 +168,13 @@ const Dashboard = () => {
       const WBTC = await axios.get(
         "https://min-api.cryptocompare.com/data/price?fsym=WBTC&tsyms=USD"
       );
-      console.log("----------------wbtc", WBTC.data.USD);
+      // const SatPrice = await axios.get(
+      //   "https://min-api.cryptocompare.com/data/price?fsym=SAT&tsyms=USD"
+      // );
+      // console.log("----------------wbtc", SatPrice;
       setsonicPrice(Sonic.data.USD);
       setwbtcPrice(WBTC.data.USD);
-      console.log("----------------sonic", Sonic.data.USD);
+      // console.log("----------------sonic", Sonic.data.USD);
     } catch (error) {
       console.log("error getting from api", error);
     }
@@ -363,7 +366,6 @@ const Dashboard = () => {
     };
   }, []);
 
-  
   useEffect(() => {
     checkerFunction();
   }, [isConnected, address]);
@@ -391,7 +393,7 @@ const Dashboard = () => {
   const renderSidebar = () => {
     return (
       <aside
-        className={`bg-gray-900 border-r border-gray-800 h-full fixed lg:relative w-64 ${
+        className={`bg-gray-900 border-r border-gray-800 h-full overflow-auto fixed lg:relative w-64 ${
           isMobileMenuOpen ? "block" : "hidden"
         } lg:block z-50`}
       >
@@ -439,7 +441,6 @@ const Dashboard = () => {
               >
                 <Hash className="h-3 w-3" />
                 <span className="ml-1">User ID: {userId}</span>
-
               </Badge>
             </div>
             <div className="mb-2">
@@ -448,7 +449,6 @@ const Dashboard = () => {
                 className="text-xs bg-blue-500/10 text-blue-400 border-blue-400/20 flex items-center gap-1 py-1"
               >
                 <span className="ml-1">Name: {username}</span>
-
               </Badge>
             </div>
 
@@ -474,29 +474,16 @@ const Dashboard = () => {
               Dashboard
             </Button>
             <Button
-              variant={activeTab === "network" ? "secondary" : "ghost"}
-              className="w-full justify-start"
+              variant="ghost"
+              className="w-full justify-start text-gray-400"
               onClick={() =>
-                window.open(
-                  `https://sonicscan.org/address/0xbbcd14b04924f33c303627578708fd4f51d39383`,
-                  "_blank"
+                router.push(
+                  `${window.location.origin}/active-matrix?Address=${adress}`
                 )
-              }            >
+              }
+            >
               <Network className="h-4 w-4 mr-2" />
-               Registration Contract
-
-            </Button>
-            <Button
-              variant={activeTab === "referrals" ? "secondary" : "ghost"}
-              className="w-full justify-start"
-              onClick={() =>
-                window.open(
-                  `https://sonicscan.org/address/0xa1c20ac67f805a4aabf94cde9c8dc2903de78926`,
-                  "_blank"
-                )
-              }            >
-              <Users className="h-4 w-4 mr-2" />
-               Stats Contract
+              Matrix Visualization
             </Button>
             <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
@@ -511,6 +498,47 @@ const Dashboard = () => {
               Downlines
             </Button>
             <Button
+              variant={activeTab === "network" ? "secondary" : "ghost"}
+              className="w-full justify-start"
+              onClick={() =>
+                window.open(
+                  `https://sonicscan.org/address/0x85b572e9706C46bB3C5dd9C1037910AC6b33B0A7`,
+                  "_blank"
+                )
+              }
+            >
+              <Network className="h-4 w-4 mr-2" />
+              Registration Contract
+            </Button>
+            <Button
+              variant={activeTab === "referrals" ? "secondary" : "ghost"}
+              className="w-full justify-start"
+              onClick={() =>
+                window.open(
+                  `https://sonicscan.org/address/0xa1c20ac67f805a4aabf94cde9c8dc2903de78926`,
+                  "_blank"
+                )
+              }
+            >
+              <Users className="h-4 w-4 mr-2" />
+              Sonic Contract
+            </Button>
+
+            <Button
+              variant={activeTab === "referrals" ? "secondary" : "ghost"}
+              className="w-full justify-start"
+              onClick={() =>
+                window.open(
+                  `https://sonicscan.org/address/0xDA7Db3b5006D266D1D3DE9Cb48C558727B5ab90e`,
+                  "_blank"
+                )
+              }
+            >
+              <Wallet className="h-4 w-4 mr-2" />
+              Bitcoin Contract
+            </Button>
+
+            <Button
               variant={activeTab === "swap" ? "secondary" : "ghost"}
               className="w-full justify-start"
               onClick={() => setOpenOceanModalOpen(true)}
@@ -518,21 +546,20 @@ const Dashboard = () => {
               <ArrowUpDown className="h-4 w-4 mr-2" />
               Swap
             </Button>
-            <Button
+
+            {/* <Button
               variant={activeTab === "levels" ? "secondary" : "ghost"}
               className="w-full justify-start "
               // onClick={() => navigate("/levels")}
             >
               <Wallet className="h-4 w-4 mr-2" />
               Levels
-            </Button>
+            </Button> */}
             <Button
               variant={activeTab === "livestream" ? "secondary" : "ghost"}
               className="w-full justify-start"
-              onClick={() => {
-                // Navigate to the LiveStream page instead of showing modal
-                window.location.href = "/live-stream";
-              }}
+              onClick={() => window.location.href = "https://web3sonic.com/live-stream"}
+
             >
               <Youtube className="h-4 w-4 mr-2" />
               Live Stream
@@ -577,14 +604,7 @@ const Dashboard = () => {
               <Zap className="h-4 w-4 mr-2" />
               GrimFace AI
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-gray-400"
-              // onClick={() => navigate("/matrix")}
-            >
-              <Network className="h-4 w-4 mr-2" />
-              Matrix Visualization
-            </Button>
+
             <Button
               variant="ghost"
               className="w-full justify-start text-gray-400"
@@ -611,6 +631,7 @@ const Dashboard = () => {
             <Button
               variant="ghost"
               className="w-full justify-start text-gray-400"
+              onClick={() => window.open("https://web3sonic.com/documentation")}
             >
               <MessageSquare className="h-4 w-4 mr-2" />
               Support
@@ -624,7 +645,7 @@ const Dashboard = () => {
             </Button>
           </nav>
 
-          <div className="absolute bottom-4 left-0 w-full px-4">
+          <div className=" bottom-4 left-0 w-full px-4">
             <Button
               variant="destructive"
               className="w-full justify-start"
@@ -803,10 +824,8 @@ const Dashboard = () => {
                             {/* Live Stream Button - Moved here */}
                             <button
                               className="  bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 flex items-center"
-                              onClick={() => {
-                                // Navigate to the LiveStream page instead of showing modal
-                                window.location.href = "/livestream";
-                              }}
+                              onClick={() => window.location.href = "https://web3sonic.com/live-stream"}
+
                             >
                               <VideoIcon className="h-4 w-4 mr-1" />
                               <span className="relative flex h-2 w-2 mr-1">
@@ -840,10 +859,8 @@ const Dashboard = () => {
                       <button
                         className="w-100 px-4 py-2 bg-red-600  justify-center text-white rounded-md hover:bg-red-700 flex items-center"
                         style={{ width: "100%" }}
-                        onClick={() => {
-                          // Navigate to the LiveStream page instead of showing modal
-                          window.location.href = "/live-stream";
-                        }}
+                        onClick={() => window.location.href = "https://web3sonic.com/live-stream"}
+
                       >
                         <VideoIcon className="h-4 w-4 mr-1" />
                         <span className="relative flex h-2 w-2 mr-1">
@@ -1011,6 +1028,9 @@ const Dashboard = () => {
                       <CardContent className="pt-2">
                         <TradeSonicButton className="w-full bg-blue-600 hover:bg-blue-500 h-10" />
                       </CardContent>
+                      {/* <CardContent>
+                        
+                      </CardContent> */}
                     </Card>
                   </div>
 
@@ -1365,10 +1385,10 @@ const Dashboard = () => {
 
                       {/* WEB3 BTC Price Projection with Benefits Section - Second Priority */}
                       <div className="w-full px-1 sm:px-0">
-                        <ErrorBoundary>
+                        {/* <ErrorBoundary>
                           web3 btc price
-                          {/* <Web3BTCPrice /> */}
-                        </ErrorBoundary>
+                          <Web3BTCPrice />
+                        </ErrorBoundary> */}
                       </div>
 
                       {/* Matrix Levels Display - Third Priority */}
@@ -1431,17 +1451,102 @@ const Dashboard = () => {
                       <div className="w-full mb-4">
                         <Card className="bg-gray-800 border-gray-700">
                           <CardHeader className="pb-3">
-                            <CardTitle className="text-lg">
+                            <CardTitle className="text-lg mb-2">
                               Trade Sonic Token
                             </CardTitle>
                             <CardDescription>
                               Direct trading via OpenOcean DEX
                             </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            <TradeSonicButton className="w-full bg-blue-600 hover:bg-blue-500" />
+                            <div>
+                              {/* <a
+                                href="https://swap.matrixbnb.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <img
+                                  src="https://assets.cdn.filesafe.space/sc2wM9qjh4FmcUD5WVtJ/media/678536591fc9eafe9b64f470.jpeg"
+                                  alt="HTML tutorial"
+                                  style={{ width: "100%", height: "100%" }}
+                                />
+                              </a> */}
 
-                            {/* OmniMiner iframe - desktop only */}
+                              {/* <iframe
+                                id="iframe-widget"
+                                src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.01&amountFiat&backgroundColor=2B2B35&darkMode=true&from=btc&horizontal=false&isFiat=false&lang=en-US&link_id=a32a608282e97b&locales=true&logo=false&primaryColor=f6c511&to=s&toTheMoon=false"
+                                style={{
+                                  height: "356px",
+                                  width: "100%",
+                                  border: "none",
+                                }}
+                                title="ChangeNow Widget"
+                              ></iframe> */}
+                              {/* <iframe
+                                id="iframe-widget"
+                                src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.01&amountFiat&backgroundColor=2B2B35&darkMode=true&from=btc&horizontal=false&isFiat=false&lang=en-US&link_id=a32a608282e97b&locales=true&logo=false&primaryColor=f6c511&to=s&toTheMoon=false"
+                                style={{
+                                  height: "370px",
+                                  width: " 100%",
+                                  border: "none",
+                                }}
+                              ></iframe> */}
+
+                              <TradeSonicButton className="w-full bg-blue-600 mb-4 hover:bg-blue-500" />
+
+                              <script
+                                defer
+                                type="text/javascript"
+                                src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
+                              ></script>
+
+                              <script src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
+                              {/* <gecko-coin-price-chart-widget
+                                  locale="en"
+                                  dark-mode="true"
+                                  outlined="true"
+                                  coin-id="sonic-3"
+                                  initial-currency="usd"
+                                  width="100%"
+                                ></gecko-coin-price-chart-widget> */}
+                              {
+                                React.createElement("gecko-coin-list-widget", {
+                                  locale: "en",
+                                  "dark-mode": "true",
+                                  outlined: "true",
+                                  "coin-ids":
+                                    "sonic-3,bitcoin,ethereum,binancecoin,ripple,solana,matic-network",
+                                  "initial-currency": "usd",
+                                }) as any
+                              }
+                              <script src="https://widgets.coingecko.com/gecko-coin-list-widget.js"></script>
+                              {/* <gecko-coin-list-widget
+                                  locale="en"
+                                  dark-mode="true"
+                                  outlined="true"
+                                  coin-ids="bitcoin,ethereum,binancecoin,solana,ripple"
+                                  initial-currency="usd"
+                                ></gecko-coin-list-widget> */}
+
+                              <script src="https://widgets.coingecko.com/gecko-coin-converter-widget.js"></script>
+                              {/* <gecko-coin-converter-widget
+                                  locale="en"
+                                  dark-mode="true"
+                                  outlined="true"
+                                  coin-id="sonic-3"
+                                  initial-currency="usd"
+                                  width="100%"
+                                ></gecko-coin-converter-widget> */}
+
+                              <iframe
+                                width="100%"
+                                height="590"
+                                src="https://widget.openocean.finance?p=JTIzMTcxMjJCJTI0KiUyNCUyMzIyMjAzNyUyNColMjQlMjMxNzEyMmIlMjQqJTI0JTIzMjkyNzNEJTI0KiUyNCUyM2ZmZiUyNColMjQlMjM4QzdGOEMlMjQqJTI0JTIzRjhBRTEwJTI0KiUyNCUyM2ZmZmZmZiUyNColMjQlMjMzMzMxNDclMjQqJTI0JTIzYjFhN2IxJTI0KiUyNCUyMzQ3OWE0YiUyNColMjQlMjNGN0IyMjklMjQqJTI0T3Blbk9jZWFuJTI0KiUyNFJvYm90byUyNColMjQlMjQqJTI0V2ViMyUyMEJUQyUyNColMjQweENlNzM3QTEzNTJBNUZlNDYyNjkyOWJiNTc0N0M1NWEwMkRDMzA3YjklMjQqJTI0MSUyNColMjRzb25pYyUyNColMjRTJTI0KiUyNFVTREMuZSUyNColMjQ="
+                                title="OpenOcean Widget"
+                                style={{ border: "none" }}
+                              ></iframe>
+                            </div>
+                          </CardHeader>
+                          {/* <CardContent className="space-y-4">
+
                             <div className="w-full rounded-lg overflow-hidden border border-gray-700 mt-4 hidden lg:block">
                               <div className="bg-gray-800 p-3 border-b border-gray-700">
                                 <h4 className="text-sm font-medium text-white">
@@ -1458,7 +1563,7 @@ const Dashboard = () => {
                             </div>
 
                             {/* Mobile notice */}
-                            <div className="lg:hidden w-full rounded-lg overflow-hidden border border-gray-700 mt-4 p-4 bg-gray-900">
+                          {/* <div className="lg:hidden w-full rounded-lg overflow-hidden border border-gray-700 mt-4 p-4 bg-gray-900">
                               <div className="flex flex-col items-center justify-center text-center space-y-2">
                                 <h4 className="text-sm font-medium text-white">
                                   OmniMiner Platform
@@ -1468,8 +1573,8 @@ const Dashboard = () => {
                                   platform.
                                 </p>
                               </div>
-                            </div>
-                          </CardContent>
+                            </div> */}
+                          {/* </CardContent> */}
                         </Card>
                       </div>
 

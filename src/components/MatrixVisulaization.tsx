@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User,  ArrowRight, ChevronUp, ChevronDown } from 'lucide-react';

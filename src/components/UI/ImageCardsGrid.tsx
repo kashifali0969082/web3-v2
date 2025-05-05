@@ -442,7 +442,7 @@ const AnimatedBorderCard = React.memo<AnimatedBorderCardProps>(({ card, index, o
                       // Try fallback image first
                       const imgElement = e.target as HTMLImageElement;
                       if (imgElement.src !== fallbackImageSrc) {
-                        console.log(`Trying fallback for: ${card.title}`);
+                        // console.log(`Trying fallback for: ${card.title}`);
                         imgElement.src = fallbackImageSrc;
                       } else {
                         // If fallback also fails, show error state

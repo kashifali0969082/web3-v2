@@ -173,7 +173,7 @@ export function SonicChart({
         
         setIsLoading(false);
         setHasError(false);
-        console.log('TradingView chart created successfully');
+        // console.log('TradingView chart created successfully');
       } catch (error) {
         console.error('Error creating TradingView widget:', error);
         setHasError(true);

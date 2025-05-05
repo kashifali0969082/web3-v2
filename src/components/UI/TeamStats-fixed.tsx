@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { TotalIncome } from "../../../wagmi/method";
+import { getmembers, getTotalTeamSize, TotalIncome } from "../../../wagmi/method";
 // import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
@@ -75,6 +75,9 @@ export function TeamStats() {
   const urlAddress = searchParams.get("Address");
   const [UserIncome, setUserIncome] = useState<bigint>();
   const [userTeamIncome, setUserTeamIncome] = useState<bigint>();
+  const [members, setmembers] = useState<number>(0);
+  const [teamSize, setTeamSize] = useState<number>(0);
+
   const [levelMembers, setlevelMembers] = useState([
     0, 0, 0, 0, 0, 0, 0, 0, 10, 1,
   ]);
@@ -93,12 +96,15 @@ export function TeamStats() {
   const TeamSize = async () => {
     try {
       let resp = await TotalTeamSize(adress);
+      let respg = await getTotalTeamSize(adress);
+      setTeamSize(Number(respg))
+
       let arrresp = (await DownlinerFunction(adress)) as bigint[];
       let numbers = arrresp.map((num) => Number(num));
       if (numbers) {
         setlevelMembers(numbers);
       }
-      console.log("this is a array of numbers etting in state", numbers);
+      // console.log("this is a array of numbers etting in state", numbers);
       if (typeof resp === "bigint") {
         let num = Number(resp);
         settotalTeamSize(num); // Convert bigint to string
@@ -129,18 +135,15 @@ export function TeamStats() {
     return stableAddress?.toLowerCase() === TEST_WALLET;
   }, [stableAddress]);
 
-
   const userIdLoading = false;
   const teamSizeLoading = false;
   const statsLoading = false;
   const levelLoading = false;
   const transactionsLoading = false;
 
-  
-
   const lastScanTime = Date.now();
   const refetchTransactions = useCallback(() => {
-    console.log("Refetch transactions called");
+    // console.log("Refetch transactions called");
   }, []);
   const isInitialRender = useRef(true);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -150,7 +153,8 @@ export function TeamStats() {
   const getUserIncome = async () => {
     try {
       let resp = await TotalIncome(adress);
-
+      let data = await getmembers();
+      setmembers(Number(data));
       setUserIncome(resp[2]);
       setUserTeamIncome(resp[3]);
     } catch (error) {
@@ -161,14 +165,14 @@ export function TeamStats() {
     if (!isMounted.current) {
       isMounted.current = true;
       if (isTestWallet) {
-        console.log("Using cached level data on initial load");
+        // console.log("Using cached level data on initial load");
       }
       const timer = setTimeout(() => {
         setInitialLoad(false);
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, []); 
+  }, []);
   const levelIcons = useMemo(
     () => [
       <Star key={0} className="h-4 w-4 text-blue-100" />,
@@ -191,7 +195,7 @@ export function TeamStats() {
   //   console.log("Using static level stats");
   //   return levelMembers;
   // }, [initialLoad, levelMembers]);
-  console.log("this is also updated or not let me check ",levelMembers);
+  // console.log("this is also updated or not let me check ",levelMembers);
   return (
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader>
@@ -264,11 +268,13 @@ export function TeamStats() {
                   <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
                 </div>
                 <div className="text-xl sm:text-2xl font-bold">
-                  {(Number(UserIncome) / 1e18).toFixed(2)} S
+                  {/* {(Number(UserIncome) / 1e18).toFixed(2)}  */}
+                  {/* {members} */}
+                  {teamSize}
                 </div>
 
                 <div className="text-xs sm:text-sm text-gray-400">
-                  User Income
+                Total Team
                 </div>
               </div>
             </>
@@ -330,7 +336,7 @@ export function TeamStats() {
                         </span>
                         {idx === 9 && (
                           <span className="ml-1 sm:ml-2 text-xs text-yellow-300 hidden sm:inline">
-                            ★ You are here
+                            {/* ★ You are here */}
                           </span>
                         )}
                       </span>

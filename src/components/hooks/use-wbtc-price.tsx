@@ -83,7 +83,7 @@ export function useWbtcPrice() {
     try {
       const freshData = 123
       // await apiRequest<PriceResponse>('/api/price/wbtc?refresh=true');
-      console.log('Manually refreshed wBTC price:', freshData);
+      // console.log('Manually refreshed wBTC price:', freshData);
       refetch();
       return freshData;
     } catch (err) {

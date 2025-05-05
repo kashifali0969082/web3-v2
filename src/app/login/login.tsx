@@ -81,7 +81,7 @@ const LoginPage = () => {
         });
       }
     } else {
-      console.log("else condition is working");
+      // console.log("else condition is working");
       let idtoadr = (await IdtoAdress(wallet)) as string[];
       // console.log("llllllllllllllllllllllllllllllllllllllllll", idtoadr[1]);
       let userExists = await isUserExsists(idtoadr[1].toString());

@@ -139,7 +139,9 @@ const HomeDark = () => {
       color: "text-green-400",
       bgColor: "bg-green-400/10",
       borderColor: "border-green-400/30",
-      videoId: "0huMhts-5m0",
+      // videoId: "0huMhts-5m0",
+      videoId: "K_V3qrEMoXw",
+
     },
     {
       title: "Web3 Sonic Smart Contract",
@@ -149,7 +151,7 @@ const HomeDark = () => {
       color: "text-purple-400",
       bgColor: "bg-purple-400/10",
       borderColor: "border-purple-400/30",
-      videoId: "oH6n5s36TAU",
+      videoId: "KGmkaYOceFU",
     },
     {
       title: "Web3 Sonic AI Powered Marketing",
@@ -159,7 +161,7 @@ const HomeDark = () => {
       color: "text-yellow-400",
       bgColor: "bg-yellow-400/10",
       borderColor: "border-yellow-400/30",
-      videoId: "Y_I0cMG0QTE",
+      videoId: "r3p3HhTUhcA",
     },
   ];
 

@@ -459,3 +459,13 @@ export const getCompletedMatrixCount = async (address: string,level:string) => {
 
   return result ;
 };
+export const getCompletedMatrixDetails = async (address: string,level:string,matrixID:string) => {
+  const result = await readContract(config, {
+    abi: Web3MLABI,
+    address: Web3MLMAddress,
+    functionName: "getCompletedMatrixDetails",
+    args: [address,level,matrixID],
+  });
+
+  return result ;
+};

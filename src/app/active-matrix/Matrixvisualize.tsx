@@ -703,8 +703,8 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
         alt="Web3 Sonic Header"
         className="w-full object-cover"
         style={{
-          height: "auto",
-          maxWidth: "100%",
+          // height: "720px",
+          // maxWidth: "100%",
           display: "block",
           filter: "drop-shadow(0 0 20px rgba(0, 163, 255, 0.3))",
         }}
@@ -846,10 +846,10 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
               {getMembershipTierName(activeMembershipLevel)} Membership Matrix
             </h2>
             <h1 className="text-2xl font-bold border-[3px] rounded-full p-4">
-              {lvlnum !== activeMembershipLevel ? (
-                <>Not Activated</>
-              ) : (
+              { activeMembershipLevel<= lvlnum ? (
                 <>Activated</>
+              ) : (
+                <>Not Activated</>
               )}
             </h1>
 

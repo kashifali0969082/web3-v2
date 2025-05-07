@@ -51,6 +51,7 @@ import {
   Droplet,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Component } from "lucide-react";
 
 import { Button } from "@/components/UI/button";
 import {
@@ -115,9 +116,17 @@ const Dashboard = () => {
   const [username, setUsername] = useState<string>("Unknown");
 
   // console.log("------------------------", level);
-    useEffect(() => {
+  useEffect(() => {
+    if (adress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+        setAddress(urlAddress || "");
+      } else {
+        setAddress("");
+      }
+    } else {
       setAddress(urlAddress || "");
-    }, [urlAddress]);
+    }
+  }, [urlAddress]);
   useEffect(() => {
     GetUserLevel();
   }, [updateState]);
@@ -473,18 +482,7 @@ const Dashboard = () => {
               <BarChart3 className="h-4 w-4 mr-2" />
               Dashboard
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-gray-400"
-              onClick={() =>
-                router.push(
-                  `${window.location.origin}/active-matrix?Address=${adress}`
-                )
-              }
-            >
-              <Network className="h-4 w-4 mr-2" />
-              Matrix Visualization
-            </Button>
+
             <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
               className="w-full justify-start"
@@ -495,8 +493,35 @@ const Dashboard = () => {
               }}
             >
               <Star className="h-4 w-4 mr-2" />
-              Downlines
+              Sonic matrix
             </Button>
+
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-gray-400"
+              onClick={() =>
+                router.push(
+                  `${window.location.origin}/active-matrix?Address=${adress}`
+                )
+              }
+            >
+              <Network className="h-4 w-4 mr-2" />
+              Active matrix
+            </Button>
+
+            <Button
+              variant={activeTab === "wallet" ? "secondary" : "ghost"}
+              className="w-full justify-start"
+              onClick={() => {
+                router.push(
+                  `${window.location.origin}/comp-matrix?Address=${adress}`
+                );
+              }}
+            >
+              <Component className="h-4 w-4 mr-2" />
+              Completed Matrix
+            </Button>
+
             <Button
               variant={activeTab === "network" ? "secondary" : "ghost"}
               className="w-full justify-start"
@@ -515,7 +540,7 @@ const Dashboard = () => {
               className="w-full justify-start"
               onClick={() =>
                 window.open(
-                  `https://sonicscan.org/address/0xa1c20ac67f805a4aabf94cde9c8dc2903de78926`,
+                  `https://sonicscan.org/address/0x4c8D50538287c7f437c5A494a9788B4e3731F026`,
                   "_blank"
                 )
               }
@@ -544,7 +569,7 @@ const Dashboard = () => {
               onClick={() => setOpenOceanModalOpen(true)}
             >
               <ArrowUpDown className="h-4 w-4 mr-2" />
-              Swap
+              Swap WBTC
             </Button>
 
             {/* <Button
@@ -558,20 +583,21 @@ const Dashboard = () => {
             <Button
               variant={activeTab === "livestream" ? "secondary" : "ghost"}
               className="w-full justify-start"
-              onClick={() => window.location.href = "https://web3sonic.com/live-stream"}
-
+              onClick={() =>
+                (window.location.href = "https://web3sonic.com/live-stream")
+              }
             >
               <Youtube className="h-4 w-4 mr-2" />
               Live Stream
             </Button>
-            <Button
+            {/* <Button
               variant={activeTab === "game" ? "secondary" : "ghost"}
               className="w-full justify-start"
               // onClick={() => navigate("/game")}
             >
               <Droplet className="h-4 w-4 mr-2" />
               Web3 Game
-            </Button>
+            </Button> */}
           </nav>
 
           <Separator className="my-6 bg-gray-800" />
@@ -636,13 +662,13 @@ const Dashboard = () => {
               <MessageSquare className="h-4 w-4 mr-2" />
               Support
             </Button>
-            <Button
+            {/* <Button
               variant="ghost"
               className="w-full justify-start text-gray-400"
             >
               <HelpCircle className="h-4 w-4 mr-2" />
               Help
-            </Button>
+            </Button> */}
           </nav>
 
           <div className=" bottom-4 left-0 w-full px-4">
@@ -824,8 +850,10 @@ const Dashboard = () => {
                             {/* Live Stream Button - Moved here */}
                             <button
                               className="  bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 flex items-center"
-                              onClick={() => window.location.href = "https://web3sonic.com/live-stream"}
-
+                              onClick={() =>
+                                (window.location.href =
+                                  "https://web3sonic.com/live-stream")
+                              }
                             >
                               <VideoIcon className="h-4 w-4 mr-1" />
                               <span className="relative flex h-2 w-2 mr-1">
@@ -859,8 +887,10 @@ const Dashboard = () => {
                       <button
                         className="w-100 px-4 py-2 bg-red-600  justify-center text-white rounded-md hover:bg-red-700 flex items-center"
                         style={{ width: "100%" }}
-                        onClick={() => window.location.href = "https://web3sonic.com/live-stream"}
-
+                        onClick={() =>
+                          (window.location.href =
+                            "https://web3sonic.com/live-stream")
+                        }
                       >
                         <VideoIcon className="h-4 w-4 mr-1" />
                         <span className="relative flex h-2 w-2 mr-1">

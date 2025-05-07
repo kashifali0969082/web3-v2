@@ -23,7 +23,7 @@ import {
   Recycle,
   ArrowUpRight,
 } from "lucide-react";
-
+import { ArrowLeft } from "lucide-react";
 // import { Button } from '@/components/ui/button';
 import { Button } from "@/components/UI/button";
 import { Card, CardContent } from "@/components/UI/card";
@@ -37,6 +37,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
 import {
   AdressToID,
   getCompletedMatrixCount,
+  getCompletedMatrixDetails,
   getUserHierarchy,
   getUserLevelIncome,
   WbtcUserFun,
@@ -201,6 +202,18 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const [RecyclerID, setRecyclerID] = useState<number>(1);
   const [UsdtConvPrice, setUsdtConvPrice] = useState<any>();
   const [lvlnum, setlvlnum] = useState<number>(0);
+  const [selected, setSelected] = useState("");
+  const [selectedMat, setSelectedMat] = useState("");
+  const [matrixes, setmatrixes] = useState<number>();
+  const router = useRouter();
+
+  // const selectorFunction = (e: any) => {
+  //   if (selected === "") {
+  //     console.log("select level first");
+  //   } else {
+  //     setSelectedMat(e.target.value);
+  //   }
+  // };
   const usdtConversionFun = async () => {
     try {
       // Get the current BTC price in USDT
@@ -223,13 +236,58 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       return null;
     }
   };
+  const chunkAddresses = (arr:any, size = 3) => {
+    const result = [];
+    const padAddress = "0x0000000000000000000000000000000000000000";
+
+    for (let i = 0; i < arr.length; i += size) {
+      const chunk = arr.slice(i, i + size);
+  
+      while (chunk.length < size) {
+        chunk.push(padAddress);
+      }
+  
+      result.push(chunk);
+    }
+  
+    console.log("datax",result);
+    
+    return result;
+  };
+  const Selectedheirarchy = async () => {
+    try {
+      const val = Number(selectedMat) - 1;
+
+      let resp:any = await getCompletedMatrixDetails(
+        adress,
+        selected,
+        val.toString()
+      );
+   let x=   chunkAddresses(resp?.level2)
+   let trydata={
+    level1:resp.level1,
+    level2:x,
+   }
+   console.log("trydata : ",trydata);
+   
+      getterfunction(trydata);
+
+      // setmatrixes(Number(resp));
+      console.log("level fun", resp);
+
+      // console.log(array);
+    } catch (error) {
+      console.log("error level getting maxcount", error);
+    }
+  };
+  useEffect(() => {
+    Selectedheirarchy();
+  }, [selectedMat]);
   useEffect(() => {
     usdtConversionFun();
   }, [nonZeroUserCount]);
-
   // Example usage:
   // convertSatoshisToUSD(5000); // Example: converts 5,000 sats to USD with 2 decimals
-
   useEffect(() => {
     setAddress(urlAddress || "");
   }, [urlAddress, activeMembershipLevel]);
@@ -240,10 +298,8 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     }
   }, [adress, activeMembershipLevel]);
   useEffect(() => {
-    if (adress) {
-      matrixCount();
-    }
-  }, [adress, activeMembershipLevel]);
+    matrixCount();
+  }, [selected]);
   const getactivation = async () => {
     try {
       let resp = (await WbtcUserFun(adress)) as any[];
@@ -261,6 +317,8 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
         adress,
         activeMembershipLevel.toString()
       );
+      console.log("level val", val);
+
       getterfunction(val);
     } catch (error) {
       console.log("error while getting datta");
@@ -271,6 +329,8 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     activeMembershipLevel
   );
   const getterfunction = async (val: any) => {
+    // console.log("level val",val);
+
     try {
       // const formatted = [];
       let count = 0;
@@ -288,6 +348,8 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
           }
         }
       }
+      console.log("level count", count);
+
       settotaluser(count);
       // console.log("Total non-empty addresses:", count);
       // for (let i = 0; i < val.level1.length; i++) {
@@ -327,25 +389,20 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       console.log("error while getting the id from adress", error);
     }
   };
-
   const matrixCount = async () => {
-    const array: number[] = [];
     try {
-      for (let i = 1; i < 6; i++) {
-        let resp = await getCompletedMatrixCount(adress, i.toString());
-        array.push(Number(resp));
-      }
-      setallFive(array);
+      let resp = await getCompletedMatrixCount(adress, selected);
+      setmatrixes(Number(resp));
+      console.log("resp kash", resp);
+
       // console.log(array);
     } catch (error) {
       console.log("error while getting maxcount", error);
     }
   };
-
   // Toggle between active matrix and completed matrix
   const [showCompletedMatrix, setShowCompletedMatrix] = useState(false);
   console.log("Recycler is here is ", RecyclerID);
-
   // Track completed cycles for each membership level
   const [completedCycles, setCompletedCycles] = useState({
     1: 0, // Bronze
@@ -354,7 +411,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     4: 0, // Platinum
     5: 0, // Diamond
   });
-
   // Generate matrix data for each membership level (1-5)
   const generateMatrixData = (
     membershipLevel: number,
@@ -492,7 +548,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       },
     ];
   };
-
   console.log(
     "form arr is here",
     formArr,
@@ -586,7 +641,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     const newMatrixData = generateMatrixData(1, false); // 1 is just a sample `membershipLevel`
     setMatrixData(newMatrixData);
   }, [Earned]); // Depend on `earned` state, so the effect runs when it changes
-
   // useEffect(()=>{
   //   testFun()
   // },[formArr])
@@ -599,7 +653,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       status: pos.status === "empty" ? "filled" : pos.status,
     }));
   };
-
   // Create matrix data for all 5 membership levels (active matrices)
   const allActiveMatrixData = [
     generateMatrixData(1),
@@ -608,7 +661,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     generateMatrixData(4),
     generateMatrixData(5),
   ];
-
   // Create completed matrix data for all 5 membership levels
   const allCompletedMatrixData = [
     generateCompletedMatrix(1),
@@ -617,12 +669,10 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     generateCompletedMatrix(4),
     generateCompletedMatrix(5),
   ];
-
   // Current matrix data based on selected membership level and active/completed toggle
   const [matrixData, setMatrixData] = useState<MatrixPosition[]>(
     allActiveMatrixData[activeMembershipLevel - 1]
   );
-
   // Update matrix data when active membership level or view mode changes
   useEffect(() => {
     const dataSource = showCompletedMatrix
@@ -639,10 +689,8 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     (pos) => pos.status === "filled"
   ).length;
   const percentageFilled = Math.round((totaluser / totalMembers) * 100);
-
   // Calculate income statistics based on filled positions
   const payoutPerPosition = getMembershipPayout(activeMembershipLevel);
-
   // Count positions that pay directly to YOU
   const directPayPositions = matrixData.filter(
     (pos) =>
@@ -652,16 +700,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
         // Positions 1 & 3 in each triangle of Level 2 pay YOU directly
         (pos.level === 2 && (pos.corner === 1 || pos.corner === 3)))
   ).length;
-
-  // Calculate total direct earnings potential
-  const totalDirectEarnings = directPayPositions * payoutPerPosition;
-
-  // Calculate maximum potential earnings for a complete matrix
-  // Total direct pay positions = 6 positions (1 from Level 1 + 5 from Level 2, excluding position 12 which triggers recycle)
-  const maxDirectPayPositions = 6; // 1 from Level 1 + 5 from Level 2 (excluding position 12 which triggers recycle)
-  const maxPotentialEarnings = maxDirectPayPositions * payoutPerPosition;
-
-  // Function to navigate to next or previous membership level
   const navigateMembershipLevel = (direction: "prev" | "next") => {
     if (direction === "prev" && activeMembershipLevel > 1) {
       setActiveMembershipLevel(activeMembershipLevel - 1);
@@ -669,8 +707,10 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       setActiveMembershipLevel(activeMembershipLevel + 1);
     }
   };
-
   const membershipColor = getMembershipColor(activeMembershipLevel);
+  console.log("level number", lvlnum);
+  console.log("level selected", selected);
+  console.log("level ", selectedMat);
 
   return (
     <div
@@ -695,7 +735,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
         </>
       )}
 
-        {/* <Image src={img} alt="Logo"/> */}
+      {/* <Image src={img} alt="Logo"/> */}
       {/* Page content */}
       <div className={`${embedded ? "" : "container mx-auto px-4 py-12"}`}>
         {/* Only show the header in standalone mode */}
@@ -980,7 +1020,71 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             </CardContent>
           </Card>
         </div> */}
+         <div
+              onClick={() => {
+                router.push(
+                  `${window.location.origin}/dashboard?Address=${adress}`
+                );
+              }}
+            >
+              <ArrowLeft />
+            </div>
+        <div className="flex justify-center items-center" >
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#9333EA] bg-clip-text text-transparent">
+                Completed Matrix
+              </h1>
+        </div>
+        <div className="flex justify-center items-center gap-3 p-3" >
+          <select
+            className=" border p-2 rounded-xs "
+            aria-label="Default select example"
+            value={selected}
+            onChange={(e) => setSelected(e.target.value)}
+          >
+            <option className="bg-black text-white" value="" disabled>
+              Select level
+            </option>
+            {Array.from({ length: lvlnum }, (_, i) => (
+              <option className="bg-black text-white"  key={i + 1} value={i + 1}>
+                Level {i + 1}
+              </option>
+            ))}
+          </select>
+          <select
+            className=" border p-2 rounded-xs "
+            aria-label="Default select example"
+            value={selectedMat}
+            // onChange={(e) => setSelectedMat(e.target.value)}
+            onChange={(e) => setSelectedMat(e.target.value)}
+          >
+            {selected !== "" ? (
+              <>
+                {matrixes !== 0 ? (
+                  <>
+                    <option className="bg-black text-white" value="" disabled>
+                      Select Matrix
+                    </option>
+                    {Array.from({ length: matrixes ?? 0 }, (_, i) => (
+                      <option className="bg-black text-white" key={i + 1} value={i + 1}>
+                        matrix {i + 1}
+                      </option>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <option>no matrix on this level</option>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <option>select level first</option>
+              </>
+            )}
+          </select>
+        </div>
         {/* Matrix visualization */}
+
         <div className="mb-10">
           <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg border border-gray-700 p-6">
             <div className="flex items-center justify-between mb-6">

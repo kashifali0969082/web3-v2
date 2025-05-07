@@ -221,6 +221,7 @@ useEffect(()=>{
                   <h3 className="text-sm font-medium text-gray-400 mb-1">
                     {card.title}
                   </h3>
+                  <br />
                   <div className="text-2xl font-bold mb-1">{card.value}</div>
                 </div>
                 <div className={`p-2 rounded-full ${card.iconBgColor}`}>

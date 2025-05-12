@@ -328,7 +328,7 @@ export const WBTCUpgradeCards: React.FC = () => {
     },
     {
       level: 4,
-      title: "Automa AI Agent",
+      title: "Automate AI Agent",
       satAmount: 1000000,
       tag: "Expert",
       tagStyle: "bg-amber-600 text-white",

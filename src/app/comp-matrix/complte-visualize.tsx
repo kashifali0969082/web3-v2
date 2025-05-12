@@ -291,24 +291,9 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   // Example usage:
   // convertSatoshisToUSD(5000); // Example: converts 5,000 sats to USD with 2 decimals
   useEffect(() => {
-    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
-      console.log(" owner ----------------- firstif");
-      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
-        console.log("owner ---------------- snd if");
-        setAddress(urlAddress || "");
-        return;
-      } else {
-        console.log("owner else condition");
-        setAddress("");
-        return;
-      }
-    } else {
       setAddress(urlAddress || "");
-    }
   }, [urlAddress,activeMembershipLevel]);
-  // useEffect(() => {
-  //   setAddress(urlAddress || "");
-  // }, [urlAddress, activeMembershipLevel]);
+  
   useEffect(() => {
     if (adress) {
       GetALLDataOnSpecLeve();
@@ -328,16 +313,26 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     }
   };
   const GetALLDataOnSpecLeve = async () => {
-    try {
-      // let val = await getUserLevelIncome(adress, activeMembershipLevel.toString());
-      // setEarned(Number(val))
-      let val = await getUserHierarchy(
-        adress,
-        activeMembershipLevel.toString()
-      );
-      console.log("level val", val);
+    try { 
+      // let val = await getUserHierarchy(
+      //   adress,
+      //   activeMembershipLevel.toString()
+      // );
 
-      getterfunction(val);
+      // getterfunction(val);
+      let resp:any = await getCompletedMatrixDetails(
+        adress,
+        "1",
+        "0"
+      );
+   let x=   chunkAddresses(resp?.level2)
+   let trydata={
+    level1:resp.level1,
+    level2:x,
+   }
+   console.log("trydata : ",trydata);
+   
+      getterfunction(trydata);
     } catch (error) {
       console.log("error while getting datta");
     }

@@ -117,19 +117,19 @@ const Dashboard = () => {
 
   console.log("owner urladress",urlAddress,adress);
   useEffect(() => {
-    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
-      console.log(" owner ----------------- firstif");
-      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
-        console.log("owner ---------------- snd if");
+    if (urlAddress === address || address==="0xb893d029d1DA24D4DEe3c93aa23E41A0BFc413e9" || address==="0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      // console.log(" owner ----------------- firstif");
+      // if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      //   console.log("owner ---------------- snd if");
         setAddress(urlAddress || "");
         return;
-      } else {
-        console.log("owner else condition");
-        setAddress("");
-        return;
-      }
-    } else {
-      setAddress(urlAddress || "");
+      // }
+      //  else {
+      //   console.log("owner else condition");
+      //   setAddress("");
+      //   return;
+      // }
+    // }
     }
   }, [urlAddress]);
   useEffect(() => {

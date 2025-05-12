@@ -204,6 +204,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const [RecyclerID, setRecyclerID] = useState<number>(1);
   const [UsdtConvPrice, setUsdtConvPrice] = useState<any>();
   const [lvlnum, setlvlnum] = useState<number>(0);
+  const [virID,setVirID]=useState<any>()
   const router = useRouter();
 
   const usdtConversionFun = async () => {
@@ -267,6 +268,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const getactivation = async () => {
     try {
       let resp = (await WbtcUserFun(adress)) as any[];
+      setVirID(Number(resp[2]))
       setlvlnum(Number(resp[3]));
       console.log("dash", resp[3]);
     } catch (error) {
@@ -716,7 +718,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
         </>
       )}
       <img
-        src="https://storage.googleapis.com/msgsndr/sc2wM9qjh4FmcUD5WVtJ/media/6816b219afecc592fc0357f8.png"
+        src="https://storage.googleapis.com/msgsndr/sc2wM9qjh4FmcUD5WVtJ/media/681b895728a2ef91fd59e36c.png"
         alt="Web3 Sonic Header"
         className="w-full object-cover"
         style={{
@@ -862,6 +864,11 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             <h2 className="text-2xl font-bold">
               {getMembershipTierName(activeMembershipLevel)} Membership Matrix
             </h2>
+            <h3 className="text-xl font-bold  p-4">
+           Virtual ID : {
+virID
+           }
+            </h3>
             <h1 className="text-2xl font-bold border-[3px] rounded-full p-4">
               { activeMembershipLevel<= lvlnum ? (
                 <>Activated</>

@@ -38,20 +38,20 @@ export default function Downlines() {
   const urlAddress = searchParams.get("Address");
 
   useEffect(() => {
-    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
-      console.log(" owner ----------------- firstif");
-      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
-        console.log("owner ---------------- snd if");
-        setAddress(urlAddress || "");
-        return;
-      } else {
-        console.log("owner else condition");
-        setAddress("");
-        return;
-      }
-    } else {
+    // if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+    //   console.log(" owner ----------------- firstif");
+    //   if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+    //     console.log("owner ---------------- snd if");
+    //     setAddress(urlAddress || "");
+    //     return;
+    //   } else {
+    //     console.log("owner else condition");
+    //     setAddress("");
+    //     return;
+    //   }
+    // } else {
       setAddress(urlAddress || "");
-    }
+    // }
   }, [urlAddress]);
 
   useEffect(() => {

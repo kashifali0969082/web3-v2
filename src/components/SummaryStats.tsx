@@ -18,6 +18,7 @@ import {
   AdressToID,
   GetUplinerAdress,
   WbtcUserFun,
+  OLDWbtcUserFun,
 } from "../../wagmi/method";
 import axios from "axios";
 export function SummaryStats() {
@@ -91,8 +92,9 @@ useEffect(()=>{
       setUserIncome(resp[2]);
       let data = (await WbtcUserFun(adress)) as any;
       console.log("88888888888888", data);
-
-      setUserTeamIncome(Number(data[4]));
+let olddata=(await OLDWbtcUserFun(adress)) as any;
+let val=Number(olddata[4])+Number(data[4])
+      setUserTeamIncome(val);
     } catch (error) {
       console.log("error while getting income", error);
     }

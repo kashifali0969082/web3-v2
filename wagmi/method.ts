@@ -8,6 +8,8 @@ import {
   UserContractAbi,
   wbtcAdress,
   wbtcContractAbi,
+  WBTCOLD,
+  WBTCOLDABI,
   Web3MLABI,
   Web3MLMAddress,
 } from "./export";
@@ -374,6 +376,16 @@ export const WbtcUserFun = async (address: string) => {
   const result = await readContract(config, {
     abi: Web3MLABI,
     address: Web3MLMAddress,
+    functionName: "users",
+    args: [address],
+  });
+
+  return result ;
+};
+export const OLDWbtcUserFun = async (address: string) => {
+  const result = await readContract(config, {
+    abi: WBTCOLDABI,
+    address: WBTCOLD,
     functionName: "users",
     args: [address],
   });

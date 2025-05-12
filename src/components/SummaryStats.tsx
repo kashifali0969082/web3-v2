@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 export const dynamic = "force-dynamic";
 import { useSearchParams } from "next/navigation";
-
+import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { Card } from "./UI/card";
 import { Skeleton } from "./UI/skeleton";
 import {
@@ -33,10 +33,28 @@ export function SummaryStats() {
   const [UplinerId, setUplinerId] = useState<number>(0);
   const [btcUsd, setbtcUsd] = useState<any>();
   const [sonicPrice, setsonicPrice] = useState("");
+  const { address, isConnected } = useAccount();
 
   useEffect(() => {
-    setAddress(urlAddress || "");
+    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      console.log(" owner ----------------- firstif");
+      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+        console.log("owner ---------------- snd if");
+        setAddress(urlAddress || "");
+        return;
+      } else {
+        console.log("owner else condition");
+        setAddress("");
+        return;
+      }
+    } else {
+      setAddress(urlAddress || "");
+    }
   }, [urlAddress]);
+
+  // useEffect(() => {
+  //   setAddress(urlAddress || "");
+  // }, [urlAddress]);
   useEffect(() => {
     TeamSize();
     getUserIncome();

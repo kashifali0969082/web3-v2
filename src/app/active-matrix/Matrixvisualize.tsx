@@ -42,6 +42,7 @@ import {
   WbtcUserFun,
 } from "../../../wagmi/method";
 import { ArrowLeft } from "lucide-react";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
 
 // Types for matrix positions
 interface MatrixPosition {
@@ -186,6 +187,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const [activeMembershipLevel, setActiveMembershipLevel] = useState(1);
   const searchParams = useSearchParams();
   const urlAddress = searchParams.get("Address");
+    const { address, isConnected } = useAccount();
   const [adress, setAddress] = useState("");
   const [formArr, setFormArr] = useState<any>(
     []
@@ -232,7 +234,22 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
 
   // Example usage:
   // convertSatoshisToUSD(5000); // Example: converts 5,000 sats to USD with 2 decimals
-
+  // useEffect(() => {
+  //   if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+  //     console.log(" owner ----------------- firstif");
+  //     if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+  //       console.log("owner ---------------- snd if");
+  //       setAddress(urlAddress || "");
+  //       return;
+  //     } else {
+  //       console.log("owner else condition");
+  //       setAddress("");
+  //       return;
+  //     }
+  //   } else {
+  //     setAddress(urlAddress || "");
+  //   }
+  // }, [urlAddress,activeMembershipLevel]);
   useEffect(() => {
     setAddress(urlAddress || "");
   }, [urlAddress, activeMembershipLevel]);

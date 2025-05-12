@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { User } from "lucide-react";
@@ -12,6 +12,8 @@ import {
   TEstDownlineCount,
   TotalIncome2,
 } from "../../../wagmi/method";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
+
 type DownlineDataInterface = {
   address: string;
   downlines: string; // Direct count as string
@@ -24,6 +26,8 @@ export default function Downlines() {
   const [downlinesData, setDownlinesData] = useState<DownlineDataInterface[]>(
     []
   );
+  const { address, isConnected } = useAccount();
+
   const router = useRouter();
   const colors = ["#007bff", "rgb(255 164 7)", "#28a745", "#e83e8c"];
   const getRandomColor = () =>
@@ -34,7 +38,20 @@ export default function Downlines() {
   const urlAddress = searchParams.get("Address");
 
   useEffect(() => {
-    setAddress(urlAddress || "");
+    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      console.log(" owner ----------------- firstif");
+      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+        console.log("owner ---------------- snd if");
+        setAddress(urlAddress || "");
+        return;
+      } else {
+        console.log("owner else condition");
+        setAddress("");
+        return;
+      }
+    } else {
+      setAddress(urlAddress || "");
+    }
   }, [urlAddress]);
 
   useEffect(() => {
@@ -106,35 +123,36 @@ export default function Downlines() {
       <div className="topBar">
         <h2 style={{ paddingTop: "20px" }}> Downlines Overview</h2>
       </div>
-   
-      <div className="researchSection" >
-      <div
-        onClick={() => {
-          router.push(`${window.location.origin}/dashboard?Address=${adress}`);
-        }}
-      >
-        <ArrowLeft />
+
+      <div className="researchSection">
+        <div
+          onClick={() => {
+            router.push(
+              `${window.location.origin}/dashboard?Address=${adress}`
+            );
+          }}
+        >
+          <ArrowLeft />
+        </div>
+        <div
+          style={{
+            marginTop: "0px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <input
+            style={{ width: "100%" }}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            type="search"
+            placeholder="Search by ID or Name..."
+          />
+        </div>
       </div>
-      <div
-        
-        style={{
-          marginTop: "0px",
-          width:"100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <input
-          style={{ width: "100%" }}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          type="search"
-          placeholder="Search by ID or Name..."
-        />
-      </div>
-      </div>
-    
+
       <div className="customGridContainer">
         {filteredDownlines.length > 0 ? (
           filteredDownlines.map((downline) => (

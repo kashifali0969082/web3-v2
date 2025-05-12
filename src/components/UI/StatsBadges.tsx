@@ -16,7 +16,6 @@ import { useSonicPrice } from "../hooks/use-sonic-price";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { AdressToID, GetUplinerAdress } from "../../../wagmi/method";
 import { UserRound } from "lucide-react";
-
 interface StatBadgeProps {
   type: "earnings" | "network" | "premium";
   title: string;
@@ -239,9 +238,28 @@ export function StatsBadges({
   const urlAddress = searchParams.get("Address");
   const [members, setmembers] = useState<number>(0);
 
+
   useEffect(() => {
-    setAddress(urlAddress || "");
+    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      console.log(" owner ----------------- firstif");
+      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+        console.log("owner ---------------- snd if");
+        setAddress(urlAddress || "");
+        return;
+      } else {
+        console.log("owner else condition");
+        setAddress("");
+        return;
+      }
+    } else {
+      setAddress(urlAddress || "");
+    }
   }, [urlAddress]);
+
+
+  // useEffect(() => {
+  //   setAddress(urlAddress || "");
+  // }, [urlAddress]);
   useEffect(() => {
     GetTotalInc();
     userAdress();

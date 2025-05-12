@@ -26,6 +26,7 @@ import {
 import { ArrowLeft } from "lucide-react";
 // import { Button } from '@/components/ui/button';
 import { Button } from "@/components/UI/button";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { Card, CardContent } from "@/components/UI/card";
 import {
   Tooltip,
@@ -206,6 +207,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const [selectedMat, setSelectedMat] = useState("");
   const [matrixes, setmatrixes] = useState<number>();
   const router = useRouter();
+  const { address, isConnected } = useAccount();
 
   // const selectorFunction = (e: any) => {
   //   if (selected === "") {
@@ -289,8 +291,24 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   // Example usage:
   // convertSatoshisToUSD(5000); // Example: converts 5,000 sats to USD with 2 decimals
   useEffect(() => {
-    setAddress(urlAddress || "");
-  }, [urlAddress, activeMembershipLevel]);
+    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      console.log(" owner ----------------- firstif");
+      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+        console.log("owner ---------------- snd if");
+        setAddress(urlAddress || "");
+        return;
+      } else {
+        console.log("owner else condition");
+        setAddress("");
+        return;
+      }
+    } else {
+      setAddress(urlAddress || "");
+    }
+  }, [urlAddress,activeMembershipLevel]);
+  // useEffect(() => {
+  //   setAddress(urlAddress || "");
+  // }, [urlAddress, activeMembershipLevel]);
   useEffect(() => {
     if (adress) {
       GetALLDataOnSpecLeve();

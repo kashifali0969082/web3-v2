@@ -95,7 +95,7 @@ const Dashboard = () => {
   // const [loadingLevel, setLoadingLevel] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [adress, setAddress] = useState("");
+  const [adress, setAddress] = useState("xxx");
   const [isLoading, setIsLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [openOceanModalOpen, setOpenOceanModalOpen] = useState(false);
@@ -115,13 +115,18 @@ const Dashboard = () => {
   const [sonicPrice, setsonicPrice] = useState("");
   const [username, setUsername] = useState<string>("Unknown");
 
-  // console.log("------------------------", level);
+  console.log("owner urladress",urlAddress,adress);
   useEffect(() => {
-    if (adress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      console.log(" owner ----------------- firstif");
       if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+        console.log("owner ---------------- snd if");
         setAddress(urlAddress || "");
+        return;
       } else {
+        console.log("owner else condition");
         setAddress("");
+        return;
       }
     } else {
       setAddress(urlAddress || "");
@@ -554,7 +559,7 @@ const Dashboard = () => {
               className="w-full justify-start"
               onClick={() =>
                 window.open(
-                  `https://sonicscan.org/address/0xDA7Db3b5006D266D1D3DE9Cb48C558727B5ab90e`,
+                  `https://sonicscan.org/address/0x6E7764F7CC7D396fC466B2D0d595273163455CeB`,
                   "_blank"
                 )
               }

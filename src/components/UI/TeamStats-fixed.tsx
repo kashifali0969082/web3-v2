@@ -5,7 +5,11 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { getmembers, getTotalTeamSize, TotalIncome } from "../../../wagmi/method";
+import {
+  getmembers,
+  getTotalTeamSize,
+  TotalIncome,
+} from "../../../wagmi/method";
 // import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
@@ -86,8 +90,24 @@ export function TeamStats() {
 
   const addressRef = useRef<string | undefined>(address);
   useEffect(() => {
-    setAddress(urlAddress || "");
+    if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+      console.log(" owner ----------------- firstif");
+      if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+        console.log("owner ---------------- snd if");
+        setAddress(urlAddress || "");
+        return;
+      } else {
+        console.log("owner else condition");
+        setAddress("");
+        return;
+      }
+    } else {
+      setAddress(urlAddress || "");
+    }
   }, [urlAddress]);
+  // useEffect(() => {
+  //   setAddress(urlAddress || "");
+  // }, [urlAddress]);
   useEffect(() => {
     GetDownLineCount();
     getUserIncome();
@@ -97,7 +117,7 @@ export function TeamStats() {
     try {
       let resp = await TotalTeamSize(adress);
       let respg = await getTotalTeamSize(adress);
-      setTeamSize(Number(respg))
+      setTeamSize(Number(respg));
 
       let arrresp = (await DownlinerFunction(adress)) as bigint[];
       let numbers = arrresp.map((num) => Number(num));
@@ -274,7 +294,7 @@ export function TeamStats() {
                 </div>
 
                 <div className="text-xs sm:text-sm text-gray-400">
-                Total Team
+                  Total Team
                 </div>
               </div>
             </>

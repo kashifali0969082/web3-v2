@@ -7,7 +7,7 @@ import { Card, CardContent } from "./card";
 import { TrendingUp } from "lucide-react";
 import { SonicLogo } from "@/components/SonicLogo";
 import { useSearchParams } from "next/navigation";
-import { getmembers, GetTotalIncome, getTotalTeamSize } from "../../../wagmi/method";
+import { getmembers, GetTotalIncome, getTotalTeamSize, wbtcActiveMembers, wbtcTotalRaised } from "../../../wagmi/method";
 // import { SonicIncomeIcon } from '@/components/SonicIncomeIcon';
 import { SonicIncomeIcon } from "./SonicIncomeIcon";
 // import { useSonicPoints, useSonicUserIncome } from '@/hooks/use-wagmi';
@@ -230,14 +230,14 @@ export function StatsBadges({
   const [teamSize, setTeamSize] = useState<number>(0);
   const { address, isConnected } = useAccount();
   const [UplinerId, setUplinerId] = useState<number>(0);
-
+const [wbtcusers, setwbtcusers] = useState<number>(0)
   const { data, isError, isLoading } = useBalance({
     address, // Fetch balance for connected wallet
   });
   const searchParams = useSearchParams();
   const urlAddress = searchParams.get("Address");
   const [members, setmembers] = useState<number>(0);
-
+const [WbtcEArned, setWbtcEArned] = useState<number>(0)
 
   useEffect(() => {
     if (urlAddress === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
@@ -267,6 +267,10 @@ export function StatsBadges({
   }, [adress]);
   const getSize = async () => {
     try {
+      let totalWBTC=await wbtcTotalRaised();
+      setWbtcEArned(Number(totalWBTC))
+      let totalWBTCUser= await wbtcActiveMembers()
+      setwbtcusers(Number(totalWBTCUser)-1)
       let resp = await getTotalTeamSize(adress);
       let data = await getmembers();
       setmembers(Number(data));
@@ -302,7 +306,7 @@ export function StatsBadges({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatBadge
           type="earnings"
-          title="Total Members"
+          title="Sonic Members"
 
           value={members}
           subtitle="Team"
@@ -316,7 +320,7 @@ export function StatsBadges({
           subtitle="Team"
         /> */}
 
-        <StatBadge
+        {/* <StatBadge
           type="premium"
           title="Wallet balance"
           value={
@@ -325,13 +329,27 @@ export function StatsBadges({
               : "0.00 S"
           }
           subtitle="Balance"
-        />
+        /> */}
 
         <StatBadge
           type="network"
-          title="Total Member Payouts"
+          title="Sonic Payouts"
           // value={sonicPoints}
           value={TotalINC ? `${(Number(TotalINC) / 1e18).toFixed(2)} S` : "0.00 S"}
+          subtitle="★ Network"
+        />
+        <StatBadge
+          type="earnings"
+          title="WBTC Members"
+
+          value={wbtcusers}
+          subtitle="Team"
+        />
+               <StatBadge
+          type="network"
+          title="WBTC Payouts"
+          // value={sonicPoints}
+          value={WbtcEArned ? `${WbtcEArned} Sat` : "0.00 Sat"}
           subtitle="★ Network"
         />
       </div>

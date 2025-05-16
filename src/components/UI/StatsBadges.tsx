@@ -303,7 +303,7 @@ const [WbtcEArned, setWbtcEArned] = useState<number>(0)
   };
   return (
     <div className="relative">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatBadge
           type="earnings"
           title="Sonic Members"

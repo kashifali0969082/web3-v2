@@ -567,7 +567,19 @@ const Dashboard = () => {
               <Wallet className="h-4 w-4 mr-2" />
               Bitcoin Contract
             </Button>
-
+            <Button
+              variant={activeTab === "network" ? "secondary" : "ghost"}
+              className="w-full justify-start"
+              onClick={() =>
+                window.open(
+                  `https://bzillion.club/signup/AUZI397GT`,
+                  "_blank"
+                )
+              }
+            >
+              <Network className="h-4 w-4 mr-2" />
+              Start Building
+            </Button>
             <Button
               variant={activeTab === "swap" ? "secondary" : "ghost"}
               className="w-full justify-start"

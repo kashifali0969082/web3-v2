@@ -90,6 +90,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import NewYearCountdown from "@/components/UI/Counter";
 const Dashboard = () => {
   const [level, setLevel] = useState<number>(0);
   // const [loadingLevel, setLoadingLevel] = useState<number | null>(null);
@@ -115,21 +116,25 @@ const Dashboard = () => {
   const [sonicPrice, setsonicPrice] = useState("");
   const [username, setUsername] = useState<string>("Unknown");
 
-  console.log("owner urladress",urlAddress,adress);
+  console.log("owner urladress", urlAddress, adress);
   useEffect(() => {
-    if (urlAddress === address || address==="0xb893d029d1DA24D4DEe3c93aa23E41A0BFc413e9" || address==="0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
+    if (
+      urlAddress === address ||
+      address === "0xb893d029d1DA24D4DEe3c93aa23E41A0BFc413e9" ||
+      address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9"
+    ) {
       // console.log(" owner ----------------- firstif");
       // if (address === "0xCe737A1352A5Fe4626929bb5747C55a02DC307b9") {
       //   console.log("owner ---------------- snd if");
-        setAddress(urlAddress || "");
-        return;
+      setAddress(urlAddress || "");
+      return;
       // }
       //  else {
       //   console.log("owner else condition");
       //   setAddress("");
       //   return;
       // }
-    // }
+      // }
     }
   }, [urlAddress]);
   useEffect(() => {
@@ -571,10 +576,7 @@ const Dashboard = () => {
               variant={activeTab === "network" ? "secondary" : "ghost"}
               className="w-full justify-start"
               onClick={() =>
-                window.open(
-                  `https://bzillion.club/signup/AUZI397GT`,
-                  "_blank"
-                )
+                window.open(`https://bzillion.club/signup/AUZI397GT`, "_blank")
               }
             >
               <Network className="h-4 w-4 mr-2" />
@@ -1028,6 +1030,18 @@ const Dashboard = () => {
                         <WBTCUpgradeCards />
                         {/* cards */}
                       </ErrorBoundary>
+                    </div>
+
+                    <div className="mb-8 w-full">
+                      <Card className="relative bg-[#271e0b] border-amber-900/50 overflow-hidden">
+                        <CardContent className="p-4 pt-4 pointer-cursor">
+                          <div className="mb-6">
+                            <div className="flex justify-center gap-2 mt-4">
+                              <NewYearCountdown/>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
                     </div>
 
                     {/* Improved Badges for Total Income, Team Income, and Sonic Points */}

@@ -1,4 +1,4 @@
-export const UserContract = "0x4c8D50538287c7f437c5A494a9788B4e3731F026";
+export const UserContract = "0x67Bd6B550a05900B688C351006789cE31054f940";
 export const UserContractAbi = [
   {
     inputs: [
@@ -63,6 +63,25 @@ export const UserContractAbi = [
       },
     ],
     name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "oldAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newAddress",
+        type: "address",
+      },
+    ],
+    name: "RegistrationContractUpdated",
     type: "event",
   },
   {
@@ -368,6 +387,13 @@ export const UserContractAbi = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "address", name: "_newAddress", type: "address" }],
+    name: "updateRegistrationAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "address", name: "", type: "address" }],
     name: "userLevel",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
@@ -434,7 +460,7 @@ export const UserContractAbi = [
   },
 ];
 export const registrationContract =
-  "0x85b572e9706C46bB3C5dd9C1037910AC6b33B0A7";
+  "0x1EB2F315eA3d4888000818F750975B7C5010A987";
 export const registrationContractAbi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
@@ -791,6 +817,16 @@ export const registrationContractAbi = [
     type: "function",
   },
   {
+    inputs: [
+      { internalType: "uint256", name: "Id", type: "uint256" },
+      { internalType: "address", name: "_newAddress", type: "address" },
+    ],
+    name: "updateIDs",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "string", name: "", type: "string" }],
     name: "userIds",
     outputs: [{ internalType: "address", name: "", type: "address" }],
@@ -830,7 +866,7 @@ export const registrationContractAbi = [
     type: "function",
   },
 ];
-export const Level10Contract = "0x4c8D50538287c7f437c5A494a9788B4e3731F026";
+export const Level10Contract = "0x67Bd6B550a05900B688C351006789cE31054f940";
 export const Level10ContractAbi = [
   {
     inputs: [
@@ -895,6 +931,25 @@ export const Level10ContractAbi = [
       },
     ],
     name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "oldAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newAddress",
+        type: "address",
+      },
+    ],
+    name: "RegistrationContractUpdated",
     type: "event",
   },
   {
@@ -1195,6 +1250,13 @@ export const Level10ContractAbi = [
       },
     ],
     name: "transferUsers",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_newAddress", type: "address" }],
+    name: "updateRegistrationAddress",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

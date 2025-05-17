@@ -1,7 +1,9 @@
-// components/NewYearCountdown.tsx
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
+// === Types ===
 interface TimeDisplayValuesType {
   days: number;
   hours: number;
@@ -14,22 +16,15 @@ interface CounterType {
   label: string;
 }
 
-document.documentElement.style.setProperty("--color-bg", "#22262E");
-document.documentElement.style.setProperty("--color-heading", "#798EB0");
-document.documentElement.style.setProperty("--color-counter", "#8973FD");
-document.documentElement.style.setProperty("--font-family-heading", "Mukta");
-
+// === Styled Components ===
 const AppStyled = styled.div`
   background-image: linear-gradient(15deg, #1a1a1a, var(--color-bg));
   color: var(--color-text);
-  display: flex;
-`;
+  display: flex;`;
 
 const ContainerStyled = styled.section`
   margin: auto;
   padding: 1rem;
-
-
 `;
 
 const WrapperStyled = styled.div`
@@ -87,29 +82,29 @@ const CounterStyled = styled.div`
   }
 `;
 
+// === Utility ===
 const generateTimeDisplay = (): TimeDisplayValuesType => {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const juneFirst = new Date(`June 1, ${currentYear} 00:00:00`);
-    const nowTime = now.getTime();
-    const targetTime = juneFirst.getTime();
-  
-    const runway = targetTime - nowTime;
-  
-    if (runway <= 0) {
-      // Return all zeros if June 1st has passed
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-  
-    return {
-      days: Math.floor(runway / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((runway % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-      minutes: Math.floor((runway % (1000 * 60 * 60)) / (1000 * 60)),
-      seconds: Math.floor((runway % (1000 * 60)) / 1000),
-    };
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const juneFirst = new Date(`May 31, ${currentYear} 00:00:00`);
+  const nowTime = now.getTime();
+  const targetTime = juneFirst.getTime();
+
+  const runway = targetTime - nowTime;
+
+  if (runway <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  return {
+    days: Math.floor(runway / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((runway % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    minutes: Math.floor((runway % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds: Math.floor((runway % (1000 * 60)) / 1000),
   };
-  
-  
+};
+
+// === Components ===
 const Counter = ({ displayValue, label }: CounterType) => (
   <CounterStyled>
     <h2>{label}</h2>
@@ -122,7 +117,15 @@ const NewYearCountdown = () => {
     generateTimeDisplay
   );
 
-  React.useEffect(() => {
+  // ✅ Ensure this runs only in the browser
+  useEffect(() => {
+    document.documentElement.style.setProperty("--color-bg", "#22262E");
+    document.documentElement.style.setProperty("--color-heading", "#798EB0");
+    document.documentElement.style.setProperty("--color-counter", "#8973FD");
+    document.documentElement.style.setProperty("--font-family-heading", "Mukta");
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setTimeDisplay(generateTimeDisplay());
     }, 1000);
@@ -133,7 +136,7 @@ const NewYearCountdown = () => {
     <AppStyled>
       <ContainerStyled>
         <DateStyled>
-          <h1>🎉 Book USDC level today for free 🎉</h1>
+          <h1>🎉 Book USDC level Now for free 🎉</h1>
         </DateStyled>
         <WrapperStyled>
           <Counter displayValue={timeDisplay.days} label="Days" />

@@ -537,7 +537,7 @@ const Dashboard = () => {
               className="w-full justify-start"
               onClick={() =>
                 window.open(
-                  `https://sonicscan.org/address/0x85b572e9706C46bB3C5dd9C1037910AC6b33B0A7`,
+                  `https://sonicscan.org/address/0x1EB2F315eA3d4888000818F750975B7C5010A987`,
                   "_blank"
                 )
               }
@@ -550,7 +550,7 @@ const Dashboard = () => {
               className="w-full justify-start"
               onClick={() =>
                 window.open(
-                  `https://sonicscan.org/address/0x4c8D50538287c7f437c5A494a9788B4e3731F026`,
+                  `https://sonicscan.org/address/0x67Bd6B550a05900B688C351006789cE31054f940`,
                   "_blank"
                 )
               }
@@ -1073,6 +1073,12 @@ const Dashboard = () => {
                   <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
                       <WBTCUpgradeCards />
+                      {/* cards */}
+                    </ErrorBoundary>
+                  </div>
+                  <div className="lg:hidden w-full mb-6">
+                    <ErrorBoundary>
+                      <NewYearCountdown/>
                       {/* cards */}
                     </ErrorBoundary>
                   </div>

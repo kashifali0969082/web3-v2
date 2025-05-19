@@ -717,7 +717,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
           />
         </>
       )}
-      <img
+      {/* <img
         src="https://storage.googleapis.com/msgsndr/sc2wM9qjh4FmcUD5WVtJ/media/681b895728a2ef91fd59e36c.png"
         alt="Web3 Sonic Header"
         className="w-full object-cover"
@@ -727,7 +727,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
           display: "block",
           filter: "drop-shadow(0 0 20px rgba(0, 163, 255, 0.3))",
         }}
-      />
+      /> */}
       {/* <Image src={img} alt="Logo"/> */}
       {/* Page content */}
       <div className={`${embedded ? "" : "container mx-auto px-4 py-12"}`}>

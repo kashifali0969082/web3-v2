@@ -79,6 +79,7 @@ import ImageCardsGrid from "@/components/UI/ImageCardsGrid";
 import LevelUpgradeCards from "@/components/LevelUpgradeCards";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import WBTCUpgradeCards from "@/components/WBTCUpgradeCards";
+import UsdcUpgradeCard from "@/components/UsdcUpgradeCard";
 import {
   getUSERLEVEL,
   PurchaseLevel,
@@ -519,6 +520,20 @@ const Dashboard = () => {
               Active matrix
             </Button>
 
+
+               {/* <Button
+              variant="ghost"
+              className="w-full justify-start text-gray-400"
+              onClick={() =>
+                router.push(
+                  `${window.location.origin}/USDC-active-matrix?Address=${adress}`
+                )
+              }
+            >
+              <Network className="h-4 w-4 mr-2" />
+              USDC Active matrix
+            </Button> */}
+
             <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
               className="w-full justify-start"
@@ -531,6 +546,18 @@ const Dashboard = () => {
               <Component className="h-4 w-4 mr-2" />
               Completed Matrix
             </Button>
+                 {/* <Button
+              variant={activeTab === "wallet" ? "secondary" : "ghost"}
+              className="w-full justify-start"
+              onClick={() => {
+                router.push(
+                  `${window.location.origin}/Usdc-completed?Address=${adress}`
+                );
+              }}
+            >
+              <Component className="h-4 w-4 mr-2" />
+              USDC Matrix
+            </Button> */}
 
             <Button
               variant={activeTab === "network" ? "secondary" : "ghost"}
@@ -571,6 +598,19 @@ const Dashboard = () => {
             >
               <Wallet className="h-4 w-4 mr-2" />
               Bitcoin Contract
+            </Button>
+              <Button
+              variant={activeTab === "referrals" ? "secondary" : "ghost"}
+              className="w-full justify-start"
+              onClick={() =>
+                window.open(
+                  `https://sonicscan.org/address/0x890C6e064Bb4aC4AAdD37f6b838F03e1Aa473A58`,
+                  "_blank"
+                )
+              }
+            >
+              <Wallet className="h-4 w-4 mr-2" />
+              USDC Contract
             </Button>
             <Button
               variant={activeTab === "network" ? "secondary" : "ghost"}
@@ -642,6 +682,9 @@ const Dashboard = () => {
               Sonic Points
             </Button>
             <Button
+            onClick={() =>
+                window.open("https://web3sonic.com/grimface-scale", "_blank")
+              }
               variant="ghost"
               className="w-full justify-start text-purple-400 hover:text-purple-300"
               // onClick={() => navigate("/grimface-scale")}
@@ -1033,15 +1076,9 @@ const Dashboard = () => {
                     </div>
 
                     <div className="mb-8 w-full">
-                      <Card className="relative bg-[#271e0b] border-amber-900/50 overflow-hidden">
-                        <CardContent className="p-4 pt-4 pointer-cursor">
-                          <div className="mb-6">
-                            <div className="flex justify-center gap-2 mt-4">
-                              <NewYearCountdown/>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <ErrorBoundary>
+                        <UsdcUpgradeCard />
+                      </ErrorBoundary>
                     </div>
 
                     {/* Improved Badges for Total Income, Team Income, and Sonic Points */}
@@ -1078,7 +1115,12 @@ const Dashboard = () => {
                   </div>
                   <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
-                      <NewYearCountdown/>
+                      <UsdcUpgradeCard />
+                    </ErrorBoundary>
+                  </div>
+                  <div className="lg:hidden w-full mb-6">
+                    <ErrorBoundary>
+                      <NewYearCountdown />
                       {/* cards */}
                     </ErrorBoundary>
                   </div>

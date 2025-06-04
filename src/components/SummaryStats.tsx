@@ -19,6 +19,7 @@ import {
   GetUplinerAdress,
   WbtcUserFun,
   OLDWbtcUserFun,
+  USDCUserFun,
 } from "../../wagmi/method";
 import axios from "axios";
 export function SummaryStats() {
@@ -26,6 +27,8 @@ export function SummaryStats() {
   const [teamSize, setteamSize] = useState("0");
   const searchParams = useSearchParams();
   const [userTeamIncome, setUserTeamIncome] = useState<number>();
+  const [userUSDCTeamIncome, setUSDCUserTeamIncome] = useState<number>();
+
   const urlAddress = searchParams.get("Address");
   const [adress, setAddress] = useState("");
   const [UserIncome, setUserIncome] = useState<bigint>();
@@ -59,12 +62,13 @@ export function SummaryStats() {
   useEffect(() => {
     TeamSize();
     getUserIncome();
+    getUSDCUserIncome()
     getLastUser();
     userAdress();
   }, [adress]);
-useEffect(()=>{
-  getPrices()
-},[UserIncome])
+  useEffect(() => {
+    getPrices();
+  }, [UserIncome]);
   const getPrices = async () => {
     try {
       const Sonic = await axios.get(
@@ -91,10 +95,21 @@ useEffect(()=>{
 
       setUserIncome(resp[2]);
       let data = (await WbtcUserFun(adress)) as any;
-      console.log("88888888888888", data);
-let olddata=(await OLDWbtcUserFun(adress)) as any;
-let val=Number(olddata[4])+Number(data[4])
+      let olddata = (await OLDWbtcUserFun(adress)) as any;
+      let val = Number(olddata[4]) + Number(data[4]);
       setUserTeamIncome(val);
+    } catch (error) {
+      console.log("error while getting income", error);
+    }
+  };
+    const getUSDCUserIncome = async () => {
+    try {
+      let resp = await TotalIncome(adress);
+
+      setUserIncome(resp[2]);
+      let data = (await USDCUserFun(adress)) as any;
+      let val =  Number(data[4]);
+      setUSDCUserTeamIncome(val);
     } catch (error) {
       console.log("error while getting income", error);
     }
@@ -180,7 +195,9 @@ let val=Number(olddata[4])+Number(data[4])
     {
       title: "Sonic Income ",
       value: UserIncome
-        ? `${(Number((Number(UserIncome) / 1e18)) * Number(sonicPrice)).toFixed(2)} $ || ${Number((Number(UserIncome) / 1e18).toFixed(2))} S` // Convert from BigInt & format to 2 decimals
+        ? `${(Number(Number(UserIncome) / 1e18) * Number(sonicPrice)).toFixed(
+            2
+          )} $ || ${Number((Number(UserIncome) / 1e18).toFixed(2))} S` // Convert from BigInt & format to 2 decimals
         : "0.00 $",
       icon: <Wallet className="h-4 w-4 text-green-500" />,
       bgColor: "bg-green-500/10",
@@ -190,7 +207,7 @@ let val=Number(olddata[4])+Number(data[4])
     {
       title: "Bitcoin Income",
       value: btcUsd
-        ? `${Number(btcUsd)} $ || ${(userTeamIncome ?? 0) } SAT` // Convert from BigInt & format to 2 decimals
+        ? `${Number(btcUsd)} $ || ${userTeamIncome ?? 0} SAT` // Convert from BigInt & format to 2 decimals
         : "0 $",
       icon: <Sparkles className="h-4 w-4 text-purple-500" />,
       bgColor: "bg-purple-500/10",
@@ -198,8 +215,9 @@ let val=Number(olddata[4])+Number(data[4])
       iconColor: "text-purple-500",
     },
     {
-      title: "Upliner ID",
-      value: UplinerId,
+      title: "Usdc Income",
+      value: userUSDCTeamIncome? `${userUSDCTeamIncome} $` // Convert from BigInt & format to 2 decimals
+        : "0 $",
       icon: <UserPlus className="h-4 w-4 text-amber-500" />,
 
       // increase: "+3.4% from last week",
@@ -236,7 +254,52 @@ let val=Number(olddata[4])+Number(data[4])
               key={i}
               className={`p-6 bg-gray-800 border-gray-700 ${card.bgColor}`}
             >
-              <div className="flex justify-between items-start">
+              {card.title === "User ID" ? (
+                <div>
+                  <div className="flex justify-between items-start">
+                    <div style={{width:"80%"}} >
+                      <div className="flex justify-between items-center" >
+                        <h3 className="text-sm font-medium text-gray-400 mb-1">
+                          {card.title}
+                        </h3>
+                        <h3 className="text-sm font-medium text-gray-400 mb-1">
+                          Upline Id
+                        </h3>
+                      </div>
+                      <br />
+                      <div className="flex justify-between items-center">
+                        <div className="text-2xl font-bold mb-1">
+                          {card.value}
+                        </div>
+                        <div className="text-2xl font-bold mb-1">
+                          {UplinerId}
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`p-2 rounded-full ${card.iconBgColor}`}>
+                      <div className={`p-1 rounded-full ${card.iconColor}`}>
+                        {card.icon}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">
+                      {card.title}
+                    </h3>
+                    <br />
+                    <div className="text-2xl font-bold mb-1">{card.value}</div>
+                  </div>
+                  <div className={`p-2 rounded-full ${card.iconBgColor}`}>
+                    <div className={`p-1 rounded-full ${card.iconColor}`}>
+                      {card.icon}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {/* <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-sm font-medium text-gray-400 mb-1">
                     {card.title}
@@ -249,7 +312,7 @@ let val=Number(olddata[4])+Number(data[4])
                     {card.icon}
                   </div>
                 </div>
-              </div>
+              </div> */}
             </Card>
           ))}
     </div>

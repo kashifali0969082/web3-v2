@@ -4,6 +4,10 @@ import {
   Level10ContractAbi,
   registrationContract,
   registrationContractAbi,
+  UsdcAbi,
+  USDCAdress,
+  USDCMLMABI,
+  USDCMLMAddress,
   UserContract,
   UserContractAbi,
   wbtcAdress,
@@ -14,6 +18,7 @@ import {
   Web3MLMAddress,
 } from "./export";
 import { config } from "./config";
+import { parseUnits } from "ethers";
 import { waitForTransactionReceipt } from "wagmi/actions";
 import { parseEther } from "viem";
 import { isAddress } from "viem";
@@ -254,6 +259,16 @@ export const AdressToID = async (adress: string) => {
 
   return result as number;
 };
+export const USDCAdressToID = async (adress: string) => {
+  const result = await readContract(config, {
+    abi: registrationContractAbi,
+    address: registrationContract,
+    functionName: "AddressToCountId",
+    args: [adress],
+  });
+
+  return result as number;
+};
 export const GetUplinerAdress = async (adress: string) => {
   const result = await readContract(config, {
     abi: registrationContractAbi,
@@ -354,10 +369,32 @@ export const ApproveWBTC = async (address: string, amount: string) => {
   });
   return result;
 };
+export const ApproveUSDC = async (address: string, amount: string) => {
+  console.log("val ",amount,address);
+  
+  const finalizedAmount=parseUnits(amount, 6)
+  console.log("xxxxxxxxxxxxxxxxxxxxxxxxxx",finalizedAmount);
+  const result = await writeContract(config, {
+    abi: UsdcAbi,
+    address: USDCAdress,
+    functionName: "approve",
+    args: [address,finalizedAmount],
+    // value: parseEther(amount),
+  });
+  return result;
+};
 export const WbtcLvl1UpFunction = async () => {
   const result = await writeContract(config, {
     abi: Web3MLABI,
     address: Web3MLMAddress,
+    functionName: "placeInMatrix",
+  });
+  return result;
+};
+export const USDCLvl1UpFunction = async () => {
+  const result = await writeContract(config, {
+    abi: USDCMLMABI,
+    address: USDCMLMAddress,
     functionName: "placeInMatrix",
   });
   return result;
@@ -371,7 +408,15 @@ export const WbtcLvl4to5UpFunction = async (level:string) => {
   });
   return result;
 };
-
+export const USDCLvl4to5UpFunction = async (level:string) => {
+  const result = await writeContract(config, {
+    abi: USDCMLMABI,
+    address: USDCMLMAddress,
+    functionName: "upgradeLevel",
+    args:[level],
+  });
+  return result;
+};
 export const WbtcUserFun = async (address: string) => {
   const result = await readContract(config, {
     abi: Web3MLABI,
@@ -380,6 +425,15 @@ export const WbtcUserFun = async (address: string) => {
     args: [address],
   });
 
+  return result ;
+};
+export const USDCUserFun = async (address: string) => {
+  const result = await readContract(config, {
+    abi: USDCMLMABI,
+    address: USDCMLMAddress,
+    functionName: "users",
+    args: [address],
+  });
   return result ;
 };
 export const OLDWbtcUserFun = async (address: string) => {
@@ -459,6 +513,17 @@ export const getUserHierarchy = async (address: string,level:string) => {
 
   return result ;
 };
+export const USDCgetUserHierarchy = async (address: string,level:string) => {
+  const result = await readContract(config, {
+    abi: USDCMLMABI,
+    address: USDCMLMAddress,
+    functionName: "getUserHierarchy",
+    args: [address,level],
+
+  });
+
+  return result ;
+};
 
 
 export const getCompletedMatrixCount = async (address: string,level:string) => {
@@ -471,10 +536,30 @@ export const getCompletedMatrixCount = async (address: string,level:string) => {
 
   return result ;
 };
+export const USDCgetCompletedMatrixCount = async (address: string,level:string) => {
+  const result = await readContract(config, {
+    abi: USDCMLMABI,
+    address: USDCMLMAddress,
+    functionName: "getCompletedMatrixCount",
+    args: [address,level],
+  });
+
+  return result ;
+};
 export const getCompletedMatrixDetails = async (address: string,level:string,matrixID:string) => {
   const result = await readContract(config, {
     abi: Web3MLABI,
     address: Web3MLMAddress,
+    functionName: "getCompletedMatrixDetails",
+    args: [address,level,matrixID],
+  });
+
+  return result ;
+};
+export const USDCgetCompletedMatrixDetails = async (address: string,level:string,matrixID:string) => {
+  const result = await readContract(config, {
+    abi: USDCMLMABI,
+    address: USDCMLMAddress,
     functionName: "getCompletedMatrixDetails",
     args: [address,level,matrixID],
   });

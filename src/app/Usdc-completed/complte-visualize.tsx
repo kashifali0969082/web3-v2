@@ -36,12 +36,12 @@ import {
 } from "@/components/UI/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
 import {
-  AdressToID,
-  getCompletedMatrixCount,
-  getCompletedMatrixDetails,
+  USDCAdressToID,
+  USDCgetCompletedMatrixCount,
+  USDCgetCompletedMatrixDetails,
   getUserHierarchy,
   getUserLevelIncome,
-  WbtcUserFun,
+  USDCUserFun,
 } from "../../../wagmi/method";
 
 // Types for matrix positions
@@ -110,15 +110,15 @@ const getMembershipColor = (level: number) => {
 const getMembershipTierName = (level: number) => {
   switch (level) {
     case 1:
-      return "Bronze";
+      return "Spark";
     case 2:
-      return "Silver";
+      return "Pulse";
     case 3:
-      return "Gold";
+      return "Surge";
     case 4:
-      return "Platinum";
+      return "Velocity";
     case 5:
-      return "Diamond";
+      return "Apex";
     default:
       return "Unknown";
   }
@@ -182,7 +182,7 @@ interface MatrixVisualizationProps {
   embedded?: boolean;
 }
 
-const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
+const USDCMatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const { toast } = useToast();
   const [activeMembershipLevel, setActiveMembershipLevel] = useState(1);
   const searchParams = useSearchParams();
@@ -238,40 +238,40 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       return null;
     }
   };
-  const chunkAddresses = (arr: any, size = 3) => {
+  const chunkAddresses = (arr:any, size = 3) => {
     const result = [];
     const padAddress = "0x0000000000000000000000000000000000000000";
 
     for (let i = 0; i < arr.length; i += size) {
       const chunk = arr.slice(i, i + size);
-
+  
       while (chunk.length < size) {
         chunk.push(padAddress);
       }
-
+  
       result.push(chunk);
     }
-
-    console.log("datax", result);
-
+  
+    console.log("datax",result);
+    
     return result;
   };
   const Selectedheirarchy = async () => {
     try {
       const val = Number(selectedMat) - 1;
 
-      let resp: any = await getCompletedMatrixDetails(
+      let resp:any = await USDCgetCompletedMatrixDetails(
         adress,
         selected,
         val.toString()
       );
-      let x = chunkAddresses(resp?.level2);
-      let trydata = {
-        level1: resp.level1,
-        level2: x,
-      };
-      console.log("trydata : ", trydata);
-
+   let x=   chunkAddresses(resp?.level2)
+   let trydata={
+    level1:resp.level1,
+    level2:x,
+   }
+   console.log("trydata : ",trydata);
+   
       getterfunction(trydata);
 
       // setmatrixes(Number(resp));
@@ -291,9 +291,9 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   // Example usage:
   // convertSatoshisToUSD(5000); // Example: converts 5,000 sats to USD with 2 decimals
   useEffect(() => {
-    setAddress(urlAddress || "");
-  }, [urlAddress, activeMembershipLevel]);
-
+      setAddress(urlAddress || "");
+  }, [urlAddress,activeMembershipLevel]);
+  
   useEffect(() => {
     if (adress) {
       GetALLDataOnSpecLeve();
@@ -305,7 +305,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   }, [selected]);
   const getactivation = async () => {
     try {
-      let resp = (await WbtcUserFun(adress)) as any[];
+      let resp = (await USDCUserFun(adress)) as any[];
       setlvlnum(Number(resp[3]));
       console.log("dash", resp[3]);
     } catch (error) {
@@ -313,21 +313,25 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     }
   };
   const GetALLDataOnSpecLeve = async () => {
-    try {
+    try { 
       // let val = await getUserHierarchy(
       //   adress,
       //   activeMembershipLevel.toString()
       // );
 
       // getterfunction(val);
-      let resp: any = await getCompletedMatrixDetails(adress, "1", "0");
-      let x = chunkAddresses(resp?.level2);
-      let trydata = {
-        level1: resp.level1,
-        level2: x,
-      };
-      console.log("trydata : ", trydata);
-
+      let resp:any = await USDCgetCompletedMatrixDetails(
+        adress,
+        "1",
+        "0"
+      );
+   let x=   chunkAddresses(resp?.level2)
+   let trydata={
+    level1:resp.level1,
+    level2:x,
+   }
+   console.log("trydata : ",trydata);
+   
       getterfunction(trydata);
     } catch (error) {
       console.log("error while getting datta");
@@ -391,7 +395,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   console.log("----------", Earned);
   const adrToId = async (value: string) => {
     try {
-      let resp = await AdressToID(value);
+      let resp = await USDCAdressToID(value);
       let val = Number(resp);
       return val;
     } catch (error) {
@@ -400,7 +404,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   };
   const matrixCount = async () => {
     try {
-      let resp = await getCompletedMatrixCount(adress, selected);
+      let resp = await USDCgetCompletedMatrixCount(adress, selected);
       setmatrixes(Number(resp));
       console.log("resp kash", resp);
 
@@ -747,6 +751,20 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       {/* <Image src={img} alt="Logo"/> */}
       {/* Page content */}
       <div className={`${embedded ? "" : "container mx-auto px-4 py-12"}`}>
+        {/* Only show the header in standalone mode */}
+        {/* {!embedded && (
+          // <div className="mb-8 text-center">
+          //   <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#9333EA] bg-clip-text text-transparent">
+          //     3 x 2 Matrix Visualization
+          //   </h1>
+          //   <p className="text-gray-400 max-w-2xl mx-auto">
+          //     Track your matrix progress as you advance through membership
+          //     levels. Each membership tier has its own 3 x 2 matrix
+          //     configuration with intelligent payment routing.
+          //   </p>
+          // </div>
+        )} */}
+        {/* Membership level navigation */}
         <div className="flex justify-center items-center mb-8 gap-4">
           {/* <Button
             variant="outline"
@@ -757,7 +775,87 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             <ChevronLeft className="h-4 w-4" />
           </Button> */}
 
-        
+          {/* <Tabs
+            defaultValue={activeMembershipLevel.toString()}
+            className="w-full max-w-xl"
+            onValueChange={(value: any) =>
+              setActiveMembershipLevel(parseInt(value))
+            }
+          >
+            <TabsList className="grid grid-cols-5 w-full">
+              <TabsTrigger
+                value="1"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 1 ? "text-green-500" : ""
+                }`}
+              >
+                <span>Bronze</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(1).toLocaleString()} SAT
+                </span>
+                <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(1))}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="2"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 2 ? "text-blue-500" : ""
+                }`}
+              >
+                <span>Silver</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(2).toLocaleString()} SAT
+                </span>
+                <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(2))}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="3"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 3 ? "text-purple-500" : ""
+                }`}
+              >
+                <span>Gold</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(3).toLocaleString()} SAT
+                </span>
+                <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(3))}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="4"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 4 ? "text-pink-500" : ""
+                }`}
+              >
+                <span>Platinum</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(4).toLocaleString()} SAT
+                </span>
+                <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(4))}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="5"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 5 ? "text-amber-500" : ""
+                }`}
+              >
+                <span>Diamond</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(5).toLocaleString()} SAT
+                </span>
+                <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(5))}
+                </span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs> */}
+
           {/* <Button
             variant="outline"
             size="icon"
@@ -935,21 +1033,21 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             </CardContent>
           </Card>
         </div> */}
-        <div
-          onClick={() => {
-            router.push(
-              `${window.location.origin}/dashboard?Address=${adress}`
-            );
-          }}
-        >
-          <ArrowLeft />
+         <div
+              onClick={() => {
+                router.push(
+                  `${window.location.origin}/dashboard?Address=${adress}`
+                );
+              }}
+            >
+              <ArrowLeft />
+            </div>
+        <div className="flex justify-center items-center" >
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#9333EA] bg-clip-text text-transparent">
+                Completed Matrix
+              </h1>
         </div>
-        <div className="flex justify-center items-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#9333EA] bg-clip-text text-transparent">
-            Completed Matrix
-          </h1>
-        </div>
-        <div className="flex justify-center items-center gap-3 p-3">
+        <div className="flex justify-center items-center gap-3 p-3" >
           <select
             className=" border p-2 rounded-xs "
             aria-label="Default select example"
@@ -960,7 +1058,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
               Select level
             </option>
             {Array.from({ length: lvlnum }, (_, i) => (
-              <option className="bg-black text-white" key={i + 1} value={i + 1}>
+              <option className="bg-black text-white"  key={i + 1} value={i + 1}>
                 Level {i + 1}
               </option>
             ))}
@@ -980,11 +1078,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                       Select Matrix
                     </option>
                     {Array.from({ length: matrixes ?? 0 }, (_, i) => (
-                      <option
-                        className="bg-black text-white"
-                        key={i + 1}
-                        value={i + 1}
-                      >
+                      <option className="bg-black text-white" key={i + 1} value={i + 1}>
                         matrix {i + 1}
                       </option>
                     ))}
@@ -1056,11 +1150,11 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             {/* Level 1 Matrix - 3 triangles */}
             <div className="mb-12">
               <h3 className="text-lg font-medium text-gray-300 mb-6 text-center">
-                {activeMembershipLevel === 1 && "Bronze"}
-                {activeMembershipLevel === 2 && "Silver"}
-                {activeMembershipLevel === 3 && "Gold"}
-                {activeMembershipLevel === 4 && "Platinum"}
-                {activeMembershipLevel === 5 && "Diamond"} Level 1 Matrix
+                {activeMembershipLevel === 1 && "Spark"}
+                {activeMembershipLevel === 2 && "Pulse"}
+                {activeMembershipLevel === 3 && "Surge"}
+                {activeMembershipLevel === 4 && "Velocity"}
+                {activeMembershipLevel === 5 && "Apex"} Level 1 Matrix
                 (Loading Phase)
               </h3>
               <div className="flex justify-around items-center flex-wrap">
@@ -1111,11 +1205,11 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             {/* Level 2 Matrix - 3 inverted triangles */}
             <div>
               <h3 className="text-lg font-medium text-gray-300 mb-6 text-center">
-                {activeMembershipLevel === 1 && "Bronze"}
-                {activeMembershipLevel === 2 && "Silver"}
-                {activeMembershipLevel === 3 && "Gold"}
-                {activeMembershipLevel === 4 && "Platinum"}
-                {activeMembershipLevel === 5 && "Diamond"} Level 2 Matrix
+                {activeMembershipLevel === 1 && "Spark"}
+                {activeMembershipLevel === 2 && "Pulse"}
+                {activeMembershipLevel === 3 && "Surge"}
+                {activeMembershipLevel === 4 && "Velocity"}
+                {activeMembershipLevel === 5 && "Apex"} Level 2 Matrix
                 (Payout Phase)
               </h3>
               <div className="flex justify-around items-center flex-wrap">
@@ -1779,4 +1873,4 @@ const PositionNode: React.FC<PositionNodeProps> = ({
   );
 };
 
-export default MatrixVisualize;
+export default USDCMatrixVisualize;

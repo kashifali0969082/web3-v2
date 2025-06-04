@@ -349,7 +349,7 @@ const [WbtcEArned, setWbtcEArned] = useState<number>(0)
           type="network"
           title="WBTC Payouts"
           // value={sonicPoints}
-          value={WbtcEArned ? `${WbtcEArned} Sat` : "0.00 Sat"}
+          value={WbtcEArned ? `${WbtcEArned} SAT` : "0.00 SAT"}
           subtitle="★ Network"
         />
       </div>

@@ -23,10 +23,9 @@ import {
   Recycle,
   ArrowUpRight,
 } from "lucide-react";
-import { ArrowLeft } from "lucide-react";
+
 // import { Button } from '@/components/ui/button';
 import { Button } from "@/components/UI/button";
-import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { Card, CardContent } from "@/components/UI/card";
 import {
   Tooltip,
@@ -36,13 +35,14 @@ import {
 } from "@/components/UI/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
 import {
-  AdressToID,
-  getCompletedMatrixCount,
-  getCompletedMatrixDetails,
-  getUserHierarchy,
+  USDCAdressToID,
+  USDCgetCompletedMatrixCount,
+  USDCgetUserHierarchy,
   getUserLevelIncome,
-  WbtcUserFun,
+  USDCUserFun,
 } from "../../../wagmi/method";
+import { ArrowLeft } from "lucide-react";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
 
 // Types for matrix positions
 interface MatrixPosition {
@@ -110,15 +110,15 @@ const getMembershipColor = (level: number) => {
 const getMembershipTierName = (level: number) => {
   switch (level) {
     case 1:
-      return "Bronze";
+      return "Spark";
     case 2:
-      return "Silver";
+      return "Pulse";
     case 3:
-      return "Gold";
+      return "Surge";
     case 4:
-      return "Platinum";
+      return "Velocity";
     case 5:
-      return "Diamond";
+      return "Apex";
     default:
       return "Unknown";
   }
@@ -128,15 +128,15 @@ const getMembershipTierName = (level: number) => {
 const getMembershipPayout = (level: number) => {
   switch (level) {
     case 1:
-      return 10000; // Bronze - 10K Satoshi
+      return 25; // Bronze - 10K Satoshi
     case 2:
-      return 100000; // Silver - 100K Satoshi
+      return 250; // Silver - 100K Satoshi
     case 3:
-      return 500000; // Gold - 500K Satoshi
+      return 2500 ; // Gold - 500K Satoshi
     case 4:
-      return 1000000; // Platinum - 1M Satoshi
+      return 5000; // Platinum - 1M Satoshi
     case 5:
-      return 10000000; // Diamond - 10M Satoshi
+      return 25000; // Diamond - 10M Satoshi
     default:
       return 0;
   }
@@ -146,15 +146,15 @@ const getMembershipPayout = (level: number) => {
 const getMembershipCost = (level: number) => {
   switch (level) {
     case 1:
-      return 10000; // Bronze - 10K Satoshi
+      return 25; // Bronze - 10K Satoshi
     case 2:
-      return 100000; // Silver - 100K Satoshi
+      return 250; // Silver - 100K Satoshi
     case 3:
-      return 500000; // Gold - 500K Satoshi
+      return 2500; // Gold - 500K Satoshi
     case 4:
-      return 1000000; // Platinum - 1M Satoshi
+      return 5000; // Platinum - 1M Satoshi
     case 5:
-      return 10000000; // Diamond - 10M Satoshi
+      return 25000; // Diamond - 10M Satoshi
     default:
       return 0;
   }
@@ -182,11 +182,12 @@ interface MatrixVisualizationProps {
   embedded?: boolean;
 }
 
-const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
+const USDCactiveMatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const { toast } = useToast();
   const [activeMembershipLevel, setActiveMembershipLevel] = useState(1);
   const searchParams = useSearchParams();
   const urlAddress = searchParams.get("Address");
+    const { address, isConnected } = useAccount();
   const [adress, setAddress] = useState("");
   const [formArr, setFormArr] = useState<any>(
     []
@@ -203,19 +204,10 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const [RecyclerID, setRecyclerID] = useState<number>(1);
   const [UsdtConvPrice, setUsdtConvPrice] = useState<any>();
   const [lvlnum, setlvlnum] = useState<number>(0);
-  const [selected, setSelected] = useState("");
-  const [selectedMat, setSelectedMat] = useState("");
-  const [matrixes, setmatrixes] = useState<number>();
+  const [virID,setVirID]=useState<any>()
   const router = useRouter();
-  const { address, isConnected } = useAccount();
+console.log("kashif",formArr);
 
-  // const selectorFunction = (e: any) => {
-  //   if (selected === "") {
-  //     console.log("select level first");
-  //   } else {
-  //     setSelectedMat(e.target.value);
-  //   }
-  // };
   const usdtConversionFun = async () => {
     try {
       // Get the current BTC price in USDT
@@ -238,62 +230,14 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       return null;
     }
   };
-  const chunkAddresses = (arr: any, size = 3) => {
-    const result = [];
-    const padAddress = "0x0000000000000000000000000000000000000000";
-
-    for (let i = 0; i < arr.length; i += size) {
-      const chunk = arr.slice(i, i + size);
-
-      while (chunk.length < size) {
-        chunk.push(padAddress);
-      }
-
-      result.push(chunk);
-    }
-
-    console.log("datax", result);
-
-    return result;
-  };
-  const Selectedheirarchy = async () => {
-    try {
-      const val = Number(selectedMat) - 1;
-
-      let resp: any = await getCompletedMatrixDetails(
-        adress,
-        selected,
-        val.toString()
-      );
-      let x = chunkAddresses(resp?.level2);
-      let trydata = {
-        level1: resp.level1,
-        level2: x,
-      };
-      console.log("trydata : ", trydata);
-
-      getterfunction(trydata);
-
-      // setmatrixes(Number(resp));
-      console.log("level fun", resp);
-
-      // console.log(array);
-    } catch (error) {
-      console.log("error level getting maxcount", error);
-    }
-  };
-  useEffect(() => {
-    Selectedheirarchy();
-  }, [selectedMat]);
   useEffect(() => {
     usdtConversionFun();
   }, [nonZeroUserCount]);
-  // Example usage:
-  // convertSatoshisToUSD(5000); // Example: converts 5,000 sats to USD with 2 decimals
+
+ 
   useEffect(() => {
     setAddress(urlAddress || "");
   }, [urlAddress, activeMembershipLevel]);
-
   useEffect(() => {
     if (adress) {
       GetALLDataOnSpecLeve();
@@ -301,11 +245,14 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     }
   }, [adress, activeMembershipLevel]);
   useEffect(() => {
-    matrixCount();
-  }, [selected]);
+    if (adress) {
+      matrixCount();
+    }
+  }, [adress, activeMembershipLevel]);
   const getactivation = async () => {
     try {
-      let resp = (await WbtcUserFun(adress)) as any[];
+      let resp = (await USDCUserFun(adress)) as any[];
+      setVirID(Number(resp[2]))
       setlvlnum(Number(resp[3]));
       console.log("dash", resp[3]);
     } catch (error) {
@@ -314,21 +261,13 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   };
   const GetALLDataOnSpecLeve = async () => {
     try {
-      // let val = await getUserHierarchy(
-      //   adress,
-      //   activeMembershipLevel.toString()
-      // );
-
-      // getterfunction(val);
-      let resp: any = await getCompletedMatrixDetails(adress, "1", "0");
-      let x = chunkAddresses(resp?.level2);
-      let trydata = {
-        level1: resp.level1,
-        level2: x,
-      };
-      console.log("trydata : ", trydata);
-
-      getterfunction(trydata);
+      // let val = await getUserLevelIncome(adress, activeMembershipLevel.toString());
+      // setEarned(Number(val))
+      let val = await USDCgetUserHierarchy(
+        adress,
+        activeMembershipLevel.toString()
+      );
+      getterfunction(val);
     } catch (error) {
       console.log("error while getting datta");
     }
@@ -338,8 +277,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     activeMembershipLevel
   );
   const getterfunction = async (val: any) => {
-    // console.log("level val",val);
-
     try {
       // const formatted = [];
       let count = 0;
@@ -357,8 +294,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
           }
         }
       }
-      console.log("level count", count);
-
       settotaluser(count);
       // console.log("Total non-empty addresses:", count);
       // for (let i = 0; i < val.level1.length; i++) {
@@ -371,17 +306,21 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
 
       for (let i = 0; i < val.level1.length; i++) {
         const level1Id = await adrToId(val.level1[i]);
+console.log("kashif loop",val.level1[i]);
 
         // Map each level2 address to its ID
         const level2Ids = await Promise.all(
           val.level2[i].map((addr: string) => adrToId(addr))
         );
+console.log("kashif lvl1ID",level1Id);
 
         formatted.push({
           level1: Number(level1Id) ?? 0,
           level2: level2Ids.map((id) => id ?? 0),
         });
       }
+      console.log("kashif",formatted);
+      
       setEarned(formatted[0].level1);
       setFormArr(formatted);
     } catch (error) {
@@ -391,27 +330,33 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   console.log("----------", Earned);
   const adrToId = async (value: string) => {
     try {
-      let resp = await AdressToID(value);
+      let resp = await USDCAdressToID(value);
       let val = Number(resp);
       return val;
     } catch (error) {
       console.log("error while getting the id from adress", error);
     }
   };
-  const matrixCount = async () => {
-    try {
-      let resp = await getCompletedMatrixCount(adress, selected);
-      setmatrixes(Number(resp));
-      console.log("resp kash", resp);
 
+
+  const matrixCount = async () => {
+    const array: number[] = [];
+    try {
+      for (let i = 1; i < 6; i++) {
+        let resp = await USDCgetCompletedMatrixCount(adress, i.toString());
+        array.push(Number(resp));
+      }
+      setallFive(array);
       // console.log(array);
     } catch (error) {
       console.log("error while getting maxcount", error);
     }
   };
+
   // Toggle between active matrix and completed matrix
   const [showCompletedMatrix, setShowCompletedMatrix] = useState(false);
   console.log("Recycler is here is ", RecyclerID);
+
   // Track completed cycles for each membership level
   const [completedCycles, setCompletedCycles] = useState({
     1: 0, // Bronze
@@ -420,6 +365,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     4: 0, // Platinum
     5: 0, // Diamond
   });
+
   // Generate matrix data for each membership level (1-5)
   const generateMatrixData = (
     membershipLevel: number,
@@ -557,6 +503,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       },
     ];
   };
+
   console.log(
     "form arr is here",
     formArr,
@@ -650,6 +597,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     const newMatrixData = generateMatrixData(1, false); // 1 is just a sample `membershipLevel`
     setMatrixData(newMatrixData);
   }, [Earned]); // Depend on `earned` state, so the effect runs when it changes
+
   // useEffect(()=>{
   //   testFun()
   // },[formArr])
@@ -662,6 +610,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       status: pos.status === "empty" ? "filled" : pos.status,
     }));
   };
+
   // Create matrix data for all 5 membership levels (active matrices)
   const allActiveMatrixData = [
     generateMatrixData(1),
@@ -670,6 +619,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     generateMatrixData(4),
     generateMatrixData(5),
   ];
+
   // Create completed matrix data for all 5 membership levels
   const allCompletedMatrixData = [
     generateCompletedMatrix(1),
@@ -678,10 +628,12 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     generateCompletedMatrix(4),
     generateCompletedMatrix(5),
   ];
+
   // Current matrix data based on selected membership level and active/completed toggle
   const [matrixData, setMatrixData] = useState<MatrixPosition[]>(
     allActiveMatrixData[activeMembershipLevel - 1]
   );
+
   // Update matrix data when active membership level or view mode changes
   useEffect(() => {
     const dataSource = showCompletedMatrix
@@ -698,8 +650,10 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
     (pos) => pos.status === "filled"
   ).length;
   const percentageFilled = Math.round((totaluser / totalMembers) * 100);
+
   // Calculate income statistics based on filled positions
   const payoutPerPosition = getMembershipPayout(activeMembershipLevel);
+
   // Count positions that pay directly to YOU
   const directPayPositions = matrixData.filter(
     (pos) =>
@@ -709,6 +663,16 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
         // Positions 1 & 3 in each triangle of Level 2 pay YOU directly
         (pos.level === 2 && (pos.corner === 1 || pos.corner === 3)))
   ).length;
+
+  // Calculate total direct earnings potential
+  const totalDirectEarnings = directPayPositions * payoutPerPosition;
+
+  // Calculate maximum potential earnings for a complete matrix
+  // Total direct pay positions = 6 positions (1 from Level 1 + 5 from Level 2, excluding position 12 which triggers recycle)
+  const maxDirectPayPositions = 6; // 1 from Level 1 + 5 from Level 2 (excluding position 12 which triggers recycle)
+  const maxPotentialEarnings = maxDirectPayPositions * payoutPerPosition;
+
+  // Function to navigate to next or previous membership level
   const navigateMembershipLevel = (direction: "prev" | "next") => {
     if (direction === "prev" && activeMembershipLevel > 1) {
       setActiveMembershipLevel(activeMembershipLevel - 1);
@@ -716,10 +680,9 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       setActiveMembershipLevel(activeMembershipLevel + 1);
     }
   };
+
   const membershipColor = getMembershipColor(activeMembershipLevel);
-  console.log("level number", lvlnum);
-  console.log("level selected", selected);
-  console.log("level ", selectedMat);
+  console.log("active level is ", lvlnum, activeMembershipLevel);
 
   return (
     <div
@@ -743,43 +706,199 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
           />
         </>
       )}
-
+      {/* <img
+        src="https://storage.googleapis.com/msgsndr/sc2wM9qjh4FmcUD5WVtJ/media/681b895728a2ef91fd59e36c.png"
+        alt="Web3 Sonic Header"
+        className="w-full object-cover"
+        style={{
+          // height: "720px",
+          // maxWidth: "100%",
+          display: "block",
+          filter: "drop-shadow(0 0 20px rgba(0, 163, 255, 0.3))",
+        }}
+      /> */}
       {/* <Image src={img} alt="Logo"/> */}
       {/* Page content */}
       <div className={`${embedded ? "" : "container mx-auto px-4 py-12"}`}>
+        {/* Only show the header in standalone mode */}
+        {!embedded && (
+          <>
+            <div
+              onClick={() => {
+                router.push(
+                  `${window.location.origin}/dashboard?Address=${adress}`
+                );
+              }}
+            >
+              <ArrowLeft />
+            </div>
+            <div className="mb-8 text-center">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#9333EA] bg-clip-text text-transparent">
+                3 x 2 USDC Matrix Visualization
+              </h1>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Track your matrix progress as you advance through membership
+                levels. Each membership tier has its own 3 x 2 matrix
+                configuration with intelligent payment routing.
+              </p>
+            </div>
+          </>
+        )}
+        {/* Membership level navigation */}
         <div className="flex justify-center items-center mb-8 gap-4">
-          {/* <Button
+          <Button
             variant="outline"
             size="icon"
             onClick={() => navigateMembershipLevel("prev")}
             disabled={activeMembershipLevel === 1}
           >
             <ChevronLeft className="h-4 w-4" />
-          </Button> */}
+          </Button>
 
-        
-          {/* <Button
+          <Tabs
+            defaultValue={activeMembershipLevel.toString()}
+            className="w-full max-w-xl"
+            onValueChange={(value: any) =>
+              setActiveMembershipLevel(parseInt(value))
+            }
+          >
+            <TabsList className="grid grid-cols-5 w-full">
+              <TabsTrigger
+                value="1"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 1 ? "text-green-500" : ""
+                }`}
+              >
+                <span>Spark</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(1).toLocaleString()} $
+                </span>
+                {/* <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(1))}
+                </span> */}
+              </TabsTrigger>
+              <TabsTrigger
+                value="2"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 2 ? "text-blue-500" : ""
+                }`}
+              >
+                <span>Pulse</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(2).toLocaleString()} $
+                </span>
+                {/* <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(2))}
+                </span> */}
+              </TabsTrigger>
+              <TabsTrigger
+                value="3"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 3 ? "text-purple-500" : ""
+                }`}
+              >
+                <span>Surge</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(3).toLocaleString()} $
+                </span>
+                {/* <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(3))}
+                </span> */}
+              </TabsTrigger>
+              <TabsTrigger
+                value="4"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 4 ? "text-pink-500" : ""
+                }`}
+              >
+                <span>Velocity</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(4).toLocaleString()} $
+                </span>
+                {/* <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(4))}
+                </span> */}
+              </TabsTrigger>
+              <TabsTrigger
+                value="5"
+                className={`flex flex-col ${
+                  activeMembershipLevel === 5 ? "text-amber-500" : ""
+                }`}
+              >
+                <span>Apex</span>
+                <span className="text-xs opacity-75">
+                  {getMembershipCost(5).toLocaleString()} $
+                </span>
+                {/* <span className="text-[10px] opacity-75">
+                  ${satToUSD(getMembershipCost(5))}
+                </span> */}
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          <Button
             variant="outline"
             size="icon"
             onClick={() => navigateMembershipLevel("next")}
             disabled={activeMembershipLevel === 5}
           >
             <ChevronRight className="h-4 w-4" />
-          </Button> */}
+          </Button>
         </div>
         {/* Membership level banner */}
-        {/* <div
+        <div
           className={`mb-8 p-4 rounded-lg bg-gradient-to-r ${membershipColor.bg} text-white`}
         >
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-2xl font-bold">
               {getMembershipTierName(activeMembershipLevel)} Membership Matrix
             </h2>
+            <h3 className="text-xl font-bold  p-4">
+           Virtual ID : {
+virID
+           }
+            </h3>
             <h1 className="text-2xl font-bold border-[3px] rounded-full p-4">
-              {lvlnum === 0 ? <>Not Activated</> : <>Activated</>}
+              { activeMembershipLevel<= lvlnum ? (
+                <>Activated</>
+              ) : (
+                <>Not Activated</>
+              )}
             </h1>
 
-            
+            {/* Matrix Type Toggle
+            <div className="flex items-center space-x-2">
+              <span
+                className={`text-sm font-medium ${
+                  !showCompletedMatrix ? "text-white" : "text-white/60"
+                }`}
+              >
+                Active
+              </span>
+              <button
+                onClick={() => setShowCompletedMatrix(!showCompletedMatrix)}
+                className={`w-14 h-7 rounded-full flex items-center p-1 transition ${
+                  showCompletedMatrix
+                    ? "bg-purple-600 justify-end"
+                    : "bg-blue-600 justify-start"
+                }`}
+              >
+                <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center text-[10px] font-bold">
+                  {showCompletedMatrix ? (
+                    <RefreshCw className="h-3 w-3 text-purple-600" />
+                  ) : (
+                    <Zap className="h-3 w-3 text-blue-600" />
+                  )}
+                </div>
+              </button>
+              <span
+                className={`text-sm font-medium ${
+                  showCompletedMatrix ? "text-white" : "text-white/60"
+                }`}
+              >
+                Completed
+              </span>
+            </div> */}
           </div>
 
           <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-4 mt-2">
@@ -799,11 +918,11 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             </div>
             <div className="bg-white/20 rounded-full px-4 py-1 text-sm font-medium">
               Cost: {getMembershipCost(activeMembershipLevel).toLocaleString()}{" "}
-              SAT
-              <span className="text-xs ml-1 opacity-75">
+              $
+              {/* <span className="text-xs ml-1 opacity-75">
                 ({satToWBTC(getMembershipCost(activeMembershipLevel))} wBTC / $
                 {satToUSD(getMembershipCost(activeMembershipLevel))} USD)
-              </span>
+              </span> */}
             </div>
             <div className="bg-yellow-900/30 border border-yellow-700/30 rounded-full px-4 py-1 text-sm text-yellow-300">
               <span className="inline-flex items-center">
@@ -812,9 +931,9 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
               </span>
             </div>
           </div>
-        </div> */}
+        </div>
         {/* Statistics cards */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border border-gray-700">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
@@ -868,14 +987,14 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm font-medium">
-                    Bitcoin Earned
+                    USDC Earned
                   </p>
                   <h3 className="text-2xl font-bold">
                     {nonZeroUserCount *
                       getMembershipPayout(activeMembershipLevel)}
-                    <span className="text-lg"> SAT</span>
+                    <span className="text-lg"> $</span>
                   </h3>
-                  <div className="text-xs text-blue-300 mt-1">
+                  {/* <div className="text-xs text-blue-300 mt-1">
                     {(
                       (nonZeroUserCount *
                         getMembershipPayout(activeMembershipLevel)) /
@@ -883,7 +1002,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                     ).toFixed(8)}
                     wBTC ($
                     {UsdtConvPrice} USD )
-                  </div>
+                  </div> */}
                 </div>
                 <div
                   className={`p-3 rounded-full bg-opacity-10 ${membershipColor.text}`}
@@ -893,8 +1012,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
               </div>
               <div className="mt-4 text-gray-400 text-sm">
                 <span className={membershipColor.text}>{totaluser}</span>{" "}
-                positions paying {payoutPerPosition.toLocaleString()} SAT (
-                {satToWBTC(payoutPerPosition)} wBTC) each
+                positions paying {payoutPerPosition.toLocaleString()}$  each
               </div>
             </CardContent>
           </Card>
@@ -908,12 +1026,12 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                   </p>
                   <h3 className="text-2xl font-bold">
                     {maxPotentialEarnings.toLocaleString()}{" "}
-                    <span className="text-lg">SAT</span>
+                    <span className="text-lg">$</span>
                   </h3>
-                  <div className="text-xs text-blue-300 mt-1">
+                  {/* <div className="text-xs text-blue-300 mt-1">
                     {satToWBTC(maxPotentialEarnings)} wBTC ($
                     {satToUSD(maxPotentialEarnings)} USD)
-                  </div>
+                  </div> */}
                 </div>
                 <div
                   className={`p-3 rounded-full bg-opacity-10 ${membershipColor.text}`}
@@ -925,85 +1043,13 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                 {filledPositions < totalPositions
                   ? `${(
                       maxPotentialEarnings - totalDirectEarnings
-                    ).toLocaleString()} SAT (${satToWBTC(
-                      maxPotentialEarnings - totalDirectEarnings
-                    )} wBTC / $${satToUSD(
-                      maxPotentialEarnings - totalDirectEarnings
-                    )} USD) more potential earnings`
+                    ).toLocaleString()} $  more potential earnings`
                   : "Congratulations! Your matrix is complete."}
               </div>
             </CardContent>
           </Card>
-        </div> */}
-        <div
-          onClick={() => {
-            router.push(
-              `${window.location.origin}/dashboard?Address=${adress}`
-            );
-          }}
-        >
-          <ArrowLeft />
-        </div>
-        <div className="flex justify-center items-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-[#00a3ff] via-[#36a2ff] to-[#9333EA] bg-clip-text text-transparent">
-            Completed Matrix
-          </h1>
-        </div>
-        <div className="flex justify-center items-center gap-3 p-3">
-          <select
-            className=" border p-2 rounded-xs "
-            aria-label="Default select example"
-            value={selected}
-            onChange={(e) => setSelected(e.target.value)}
-          >
-            <option className="bg-black text-white" value="" disabled>
-              Select level
-            </option>
-            {Array.from({ length: lvlnum }, (_, i) => (
-              <option className="bg-black text-white" key={i + 1} value={i + 1}>
-                Level {i + 1}
-              </option>
-            ))}
-          </select>
-          <select
-            className=" border p-2 rounded-xs "
-            aria-label="Default select example"
-            value={selectedMat}
-            // onChange={(e) => setSelectedMat(e.target.value)}
-            onChange={(e) => setSelectedMat(e.target.value)}
-          >
-            {selected !== "" ? (
-              <>
-                {matrixes !== 0 ? (
-                  <>
-                    <option className="bg-black text-white" value="" disabled>
-                      Select Matrix
-                    </option>
-                    {Array.from({ length: matrixes ?? 0 }, (_, i) => (
-                      <option
-                        className="bg-black text-white"
-                        key={i + 1}
-                        value={i + 1}
-                      >
-                        matrix {i + 1}
-                      </option>
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    <option>no matrix on this level</option>
-                  </>
-                )}
-              </>
-            ) : (
-              <>
-                <option>select level first</option>
-              </>
-            )}
-          </select>
         </div>
         {/* Matrix visualization */}
-
         <div className="mb-10">
           <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg border border-gray-700 p-6">
             <div className="flex items-center justify-between mb-6">
@@ -1056,11 +1102,11 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             {/* Level 1 Matrix - 3 triangles */}
             <div className="mb-12">
               <h3 className="text-lg font-medium text-gray-300 mb-6 text-center">
-                {activeMembershipLevel === 1 && "Bronze"}
-                {activeMembershipLevel === 2 && "Silver"}
-                {activeMembershipLevel === 3 && "Gold"}
-                {activeMembershipLevel === 4 && "Platinum"}
-                {activeMembershipLevel === 5 && "Diamond"} Level 1 Matrix
+                {activeMembershipLevel === 1 && "Spark"}
+                {activeMembershipLevel === 2 && "Pulse"}
+                {activeMembershipLevel === 3 && "Surge"}
+                {activeMembershipLevel === 4 && "Velocity"}
+                {activeMembershipLevel === 5 && "Apex"} Level 1 Matrix
                 (Loading Phase)
               </h3>
               <div className="flex justify-around items-center flex-wrap">
@@ -1111,11 +1157,11 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             {/* Level 2 Matrix - 3 inverted triangles */}
             <div>
               <h3 className="text-lg font-medium text-gray-300 mb-6 text-center">
-                {activeMembershipLevel === 1 && "Bronze"}
-                {activeMembershipLevel === 2 && "Silver"}
-                {activeMembershipLevel === 3 && "Gold"}
-                {activeMembershipLevel === 4 && "Platinum"}
-                {activeMembershipLevel === 5 && "Diamond"} Level 2 Matrix
+                {activeMembershipLevel === 1 && "Spark"}
+                {activeMembershipLevel === 2 && "Pulse"}
+                {activeMembershipLevel === 3 && "Surge"}
+                {activeMembershipLevel === 4 && "Velocity"}
+                {activeMembershipLevel === 5 && "Apex"} Level 2 Matrix
                 (Payout Phase)
               </h3>
               <div className="flex justify-around items-center flex-wrap">
@@ -1165,7 +1211,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
           </div>
         </div>
         {/* Matrix Cycles Card */}
-        {/* <div className="mb-10">
+        <div className="mb-10">
           <Card className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border border-gray-700">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-4">
@@ -1209,7 +1255,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                       } text-center`}
                     >
                       <div className="text-xl font-bold">{allFive[0]}</div>
-                      <div className="text-xs text-gray-400">Bronze</div>
+                      <div className="text-xs text-gray-400">Spark</div>
                     </div>
                     <div
                       className={`p-4 rounded-lg border ${
@@ -1219,7 +1265,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                       } text-center`}
                     >
                       <div className="text-xl font-bold">{allFive[1]}</div>
-                      <div className="text-xs text-gray-400">Silver</div>
+                      <div className="text-xs text-gray-400">Pulse</div>
                     </div>
                     <div
                       className={`p-4 rounded-lg border ${
@@ -1229,7 +1275,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                       } text-center`}
                     >
                       <div className="text-xl font-bold">{allFive[2]}</div>
-                      <div className="text-xs text-gray-400">Gold</div>
+                      <div className="text-xs text-gray-400">Surge</div>
                     </div>
                     <div
                       className={`p-4 rounded-lg border ${
@@ -1239,7 +1285,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                       } text-center`}
                     >
                       <div className="text-xl font-bold">{allFive[3]}</div>
-                      <div className="text-xs text-gray-400">Platinum</div>
+                      <div className="text-xs text-gray-400">Velocity</div>
                     </div>
                     <div
                       className={`p-4 rounded-lg border ${
@@ -1249,7 +1295,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                       } text-center`}
                     >
                       <div className="text-xl font-bold">{allFive[4]}</div>
-                      <div className="text-xs text-gray-400">Diamond</div>
+                      <div className="text-xs text-gray-400">Apex</div>
                     </div>
                   </div>
                 </div>
@@ -1263,26 +1309,26 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                     <li>
                       Each completed cycle pays{" "}
                       <span className={membershipColor.text}>
-                        {(payoutPerPosition * 6).toLocaleString()} SAT
-                      </span>{" "}
-                      (
-                      <span className={membershipColor.text}>
+                        {(payoutPerPosition * 6).toLocaleString()} $
+                      </span>
+                      
+                      {/* <span className={membershipColor.text}>
                         {satToWBTC(payoutPerPosition * 6)} wBTC / $
                         {satToUSD(payoutPerPosition * 6)} USD
-                      </span>
-                      ) total
+                      </span> */}
+                       total
                     </li>
                     <li>Position 12 triggers automatic matrix recycling</li>
                     <li>Option to continue in same level or upgrade</li>
-                    <li>Cycles build your rank in the Satoshi Matrix system</li>
+                    <li>Cycles build your rank in the USDC Circle Matrix </li>
                   </ul>
                 </div>
               </div>
             </CardContent>
           </Card>
-        </div> */}
+        </div>
         {/* Payment Structure Card */}
-        {/* <div className="mb-10">
+        <div className="mb-10">
           <Card className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border border-gray-700">
             <CardContent className="pt-6">
               <h3 className="text-xl font-semibold mb-4">Payment Structure</h3>
@@ -1295,10 +1341,10 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                   <ul className="space-y-2 list-disc pl-5 text-gray-300">
                     <li>Spots 1 & 3 pay upline (the person above YOU)</li>
                     <li>
-                      Spot 2 (middle) pays YOU directly (
-                      {payoutPerPosition.toLocaleString()} SAT /{" "}
-                      {satToWBTC(payoutPerPosition)} wBTC / $
-                      {satToUSD(payoutPerPosition)} USD)
+                      Spot 2 (middle) pays YOU directly 
+                      {payoutPerPosition.toLocaleString()} $
+                      {/* {satToWBTC(payoutPerPosition)} wBTC / $
+                      {satToUSD(payoutPerPosition)} USD) */}
                     </li>
                     <li>Must fill all 3 positions to activate Level 2</li>
                     <li>Each position pays 100% of tier value</li>
@@ -1312,9 +1358,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                   <ul className="space-y-2 list-disc pl-5 text-gray-300">
                     <li>
                       Positions 1 & 3 of every triangle pay YOU directly (5 ×{" "}
-                      {payoutPerPosition.toLocaleString()} SAT /{" "}
-                      {satToWBTC(payoutPerPosition)} wBTC / $
-                      {satToUSD(payoutPerPosition)} USD)
+                      {payoutPerPosition.toLocaleString()} $ )
                     </li>
                     <li>
                       Position 2 (middle) in each triangle pays person above
@@ -1322,13 +1366,13 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
                     <li>Position 12 is the special recycle trigger position</li>
                     <li>
                       Each position pays 100% of tier value (
-                      {payoutPerPosition.toLocaleString()} SAT /{" "}
-                      {satToWBTC(payoutPerPosition)} wBTC / $
-                      {satToUSD(payoutPerPosition)} USD)
+                      {payoutPerPosition.toLocaleString()} $)
                     </li>
                   </ul>
                 </div>
               </div>
+
+              {/* Color Legend */}
               <div className="mt-6 grid grid-cols-1 md:grid-cols-5 gap-3">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 border border-blue-400"></div>
@@ -1371,7 +1415,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
               </div>
             </CardContent>
           </Card>
-        </div> */}
+        </div>
         {/* User list */}
         {/* <div>
           <h2 className="text-xl font-semibold text-white mb-4">
@@ -1438,7 +1482,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       </div>
 
       {/* Add "View Full Matrix" link when embedded */}
-      {/* {embedded && (
+      {embedded && (
         <div className="mt-8 mb-12 text-center">
           <a
             href="/active-matrix"
@@ -1447,7 +1491,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
             View Full Matrix <ArrowUpRight className="h-4 w-4" />
           </a>
         </div>
-      )} */}
+      )}
     </div>
   );
 };
@@ -1779,4 +1823,4 @@ const PositionNode: React.FC<PositionNodeProps> = ({
   );
 };
 
-export default MatrixVisualize;
+export default USDCactiveMatrixVisualize;

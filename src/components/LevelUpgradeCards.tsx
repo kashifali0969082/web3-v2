@@ -324,7 +324,7 @@ export const LevelUpgradeCards: React.FC<Props> = ({
       <Card className="bg-[#152042] border-gray-700">
         <CardContent className="p-4 pt-4">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Sonic S Level Upgrades</h2>
+            <h2 className="text-xl font-bold">Sonic S Matrix</h2>
             <Badge className="bg-green-600">
               Recommended: Start with Levels 1–5 (310 Sonic S)
             </Badge>

@@ -86,7 +86,7 @@ const CounterStyled = styled.div`
 const generateTimeDisplay = (): TimeDisplayValuesType => {
   const now = new Date();
   const currentYear = now.getFullYear();
-  const juneFirst = new Date(`june 4,  ${currentYear} 00:00:00`);
+  const juneFirst = new Date(`june 4, ${currentYear} 00:00:00`);
   const nowTime = now.getTime();
   const targetTime = juneFirst.getTime();
 

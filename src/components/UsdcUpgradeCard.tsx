@@ -3,21 +3,22 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "./UI/card";
 // import { Badge } from '@/components/ui/badge';
 import { Badge } from "lucide-react";
-import { WbtcLvl4to5UpFunction } from "../../wagmi/method";
+import { USDCLvl4to5UpFunction } from "../../wagmi/method";
 // import { Button } from '@/components/ui/button';
 import { Button } from "./UI/button";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
-  ApproveWBTC,
+  ApproveUSDC,
   getTxn,
-  WbtcLvl1UpFunction,
-  WbtcUserFun,
+  USDCLvl1UpFunction,
+  USDCUserFun,
 } from "../../wagmi/method";
-import { wbtcAdress, Web3MLMAddress } from "../../wagmi/export";
+import { wbtcAdress, USDCMLMAddress } from "../../wagmi/export";
 import {
   Bitcoin,
   Shield,
+  BadgeDollarSign,
   Zap,
   Star,
   Award,
@@ -44,6 +45,7 @@ interface WBTCLevelCardProps {
   icon: React.ReactNode;
   isActive?: boolean;
   isCurrentLevel?: number;
+  button: string;
   onUpgrade: () => void;
   isProcessing?: boolean;
 }
@@ -58,6 +60,7 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
   icon,
   isActive,
   isCurrentLevel,
+  button,
   onUpgrade,
   isProcessing,
 }) => {
@@ -133,54 +136,14 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
             <Badge className={`ml-2 ${tagStyle}`}>{tag}</Badge>
           </div>
           <div className="text-sm text-gray-400">
-            {satAmount.toLocaleString()} SAT
+            {satAmount.toLocaleString()}$
           </div>
-          <div className="text-xs text-amber-300">
+          {/* <div className="text-xs text-amber-300">
             {btcPrice ? `≈ $${usdValue.toFixed(2)} USD` : "Loading..."}
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="text-xs text-gray-300 mb-3">{description}</div>
-      {/* <Button
-        variant={"default"}
-        size="sm"
-        className={`w-full ${"bg-amber-600 hover:bg-amber-700"}`}
-        disabled={isProcessing}
-        onClick={onUpgrade}
-      >
-        {isProcessing ? (
-          <>
-            <svg
-              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Processing...
-          </>
-        ) : (
-           <>
-                      <CheckSquare className="h-3.5 w-3.5 mr-1" />
-                      Activated
-                    </>
-          // <div>upgrade</div>
-        )}
-      </Button> */}
-
       <Button
         variant={isActive ? "outline" : "default"}
         size="sm"
@@ -194,7 +157,7 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
           if (isProcessing) return;
           if (isActive) {
             router.push(
-              `${window.location.origin}/active-matrix?Address=${adress}`
+              `${window.location.origin}/USDC-active-matrix?Address=${adress}`
             );
           } else {
             onUpgrade();
@@ -231,14 +194,14 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
             Activated
           </>
         ) : (
-          "Upgrade"
+          <>{button}</>
         )}
       </Button>
     </div>
   );
 };
 
-export const WBTCUpgradeCards: React.FC = () => {
+export const UsdcUpgradeCard: React.FC = () => {
   const { toast } = useToast();
   //   const { address } = useWeb3();
   const [userWBTCLevel, setUserWBTCLevel] = useState<number>(0);
@@ -255,22 +218,22 @@ export const WBTCUpgradeCards: React.FC = () => {
     try {
       setProcessingLevel(targetLevel);
       if (targetLevel === 1) {
-        let hash = await ApproveWBTC(Web3MLMAddress, amount.toString());
+        let hash = await ApproveUSDC(USDCMLMAddress, amount.toString());
         if (hash) {
           let approved = await getTxn(hash);
           if (approved) {
-            let final = await WbtcLvl1UpFunction();
+            let final = await USDCLvl1UpFunction();
             setReload(!reload);
           }
         }
       } else {
         console.log("target level is ", targetLevel);
         console.log("amount is ", amount);
-        let hash = await ApproveWBTC(Web3MLMAddress, amount.toString());
+        let hash = await ApproveUSDC(USDCMLMAddress, amount.toString());
         if (hash) {
           let approved = await getTxn(hash);
           if (approved) {
-            let final = await WbtcLvl4to5UpFunction(targetLevel.toString());
+            let final = await USDCLvl4to5UpFunction(targetLevel.toString());
             setReload(!reload);
           }
         }
@@ -289,7 +252,7 @@ export const WBTCUpgradeCards: React.FC = () => {
   }, [adress, reload]);
   const gettingUserVal = async () => {
     try {
-      let resp = (await WbtcUserFun(adress)) as (string | bigint)[];
+      let resp = (await USDCUserFun(adress)) as (string | bigint)[];
       // console.log("function is getting desired values",resp);
       setActivated(Number(resp[3]));
     } catch (error) {
@@ -301,48 +264,53 @@ export const WBTCUpgradeCards: React.FC = () => {
   const wbtcLevelData = [
     {
       level: 1,
-      title: "Activate AI Agent",
-      satAmount: 10000,
+      title: "Spark",
+      satAmount: 25,
       tag: "Entry",
-      tagStyle: "bg-amber-600 text-white",
-      description: "Start your wBTC journey with basic blockchain benefits",
-      icon: <Bitcoin className="h-4 w-4 text-amber-400" />,
+      tagStyle: "bg-[#1358c1] text-white",
+      description: "The spark that ignites your Web3 journey",
+      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+      button: "Spark Upgrade",
     },
     {
       level: 2,
-      title: "Train AI Agent",
-      satAmount: 100000,
+      title: "Pulse",
+      satAmount: 250,
       tag: "Intermediate",
-      tagStyle: "bg-amber-600 text-white",
-      description: "Unlock enhanced wBTC rewards and bonuses and our AI Agent",
-      icon: <Bitcoin className="h-4 w-4 text-amber-400" />,
+      tagStyle: "bg-[#1358c1] text-white",
+      description: "Feel the pulse of real momentum",
+      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+      button: "Pulse Upgrade",
     },
     {
       level: 3,
-      title: "Upgrade AI Agent",
-      satAmount: 500000,
+      title: "Surge",
+      satAmount: 2500,
       tag: "Advanced",
-      tagStyle: "bg-amber-600 text-white",
-      description: "Access exclusive wBTC features and higher rewards",
-      icon: <Bitcoin className="h-4 w-4 text-amber-400" />,
+      tagStyle: "bg-[#1358c1] text-white",
+      description: "Serious financial leverage begins here",
+      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+      button: "Surge Upgrade",
     },
     {
       level: 4,
-      title: "Automate AI Agent",
-      satAmount: 1000000,
+      title: "Velocity",
+      satAmount: 5000,
       tag: "Expert",
-      tagStyle: "bg-amber-600 text-white",
-      description: "Premium wBTC benefits with maximum earning potential",
-      icon: <Bitcoin className="h-4 w-4 text-amber-400" />,
+      tagStyle: "bg-[#1358c1] text-white",
+      description: "Accelerating your income and scaling faster",
+      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+      button: "Velocity Upgrade",
     },
     {
       level: 5,
-      title: "Enhance AI Agent",
-      satAmount: 10000000,
+      title: "Apex",
+      satAmount: 25000,
       tag: "Master",
-      tagStyle: "bg-amber-600 text-white",
-      description: "Master wBTC level with elite blockchain privileges",
-      icon: <Bitcoin className="h-4 w-4 text-amber-400" />,
+      tagStyle: "bg-[#1358c1] text-white",
+      description: "Ultimate financial freedom",
+      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+      button: "Apex Upgrade",
     },
   ];
 
@@ -351,14 +319,14 @@ export const WBTCUpgradeCards: React.FC = () => {
       <CardContent className="p-4 pt-4 pointer-cursor">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold flex items-center">
-            <Bitcoin className="h-5 w-5 mr-2 text-amber-500" />
-            wBTC Satoshi Matrix (3x2)
+            <BadgeDollarSign className="h-5 w-5 mr-2 text-[#1358c1]" />
+            USDC Circle Matrix (3x2)
           </h2>
-          <Badge className="bg-amber-600">New Feature</Badge>
+          <Badge className="bg-[#1358c1]">New Feature</Badge>
         </div>
 
         <p className="text-gray-300 text-sm mb-5 text-center">
-          Upgrade your AI Agent capabilities with Bitcoin-powered technology to
+          Upgrade your Spark capabilities with USDC-powered technology to
           enhance productivity and insights.
         </p>
 
@@ -385,4 +353,4 @@ export const WBTCUpgradeCards: React.FC = () => {
   );
 };
 
-export default WBTCUpgradeCards;
+export default UsdcUpgradeCard;

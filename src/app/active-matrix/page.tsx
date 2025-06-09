@@ -11,6 +11,8 @@ import { TabsContent } from "@radix-ui/react-tabs";
 
 export default function Page() {
   const [activeMembershipLevel, setActiveMembershipLevel] = useState(1);
+  console.log("arrow is working", activeMembershipLevel);
+
   return (
     <Tabs
       defaultValue={activeMembershipLevel.toString()}

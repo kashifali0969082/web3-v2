@@ -159,28 +159,17 @@ const getMembershipCost = (level: number) => {
       return 0;
   }
 };
- 
+
 // Convert Satoshi to wBTC (1 wBTC = 100,000,000 Satoshi)
 const satToWBTC = (satAmount: number) => {
   return (satAmount / 100000000).toFixed(8);
 };
 
 // Convert wBTC to USD (using current price)
-const wBTCtoUSD =async (wbtcAmount: number) => {
-  try {
-     const btcPriceRes = await axios.get(
-        "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USDT"
-      );
-      const btcPrice = btcPriceRes.data.USDT;
-
-    // const bitcoinPriceUSD = 98250;
-  return (wbtcAmount * btcPrice).toFixed(2);
-  } catch (error) {
-    console.log(error);
-    
-  }
+const wBTCtoUSD = (wbtcAmount: number) => {
   // Current price of BTC in USD (as of April 26, 2025)
-  
+  const bitcoinPriceUSD = 98250;
+  return (wbtcAmount * bitcoinPriceUSD).toFixed(2);
 };
 
 // Convert Satoshi directly to USD
@@ -198,8 +187,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
   const [activeMembershipLevel, setActiveMembershipLevel] = useState(1);
   const searchParams = useSearchParams();
   const urlAddress = searchParams.get("Address");
-    const [wbtcPrice, setwbtcPrice] = useState("");
-  
     const { address, isConnected } = useAccount();
   const [adress, setAddress] = useState("");
   const [formArr, setFormArr] = useState<any>(
@@ -231,8 +218,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       // Convert Satoshis to BTC
       const satoshis =
         nonZeroUserCount * getMembershipPayout(activeMembershipLevel);
-        console.log("kashif is a boy",satoshis);
-        
       const btc = satoshis / 100_000_000;
 
       // Convert BTC to USDT
@@ -349,7 +334,6 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
         });
       }
       setEarned(formatted[0].level1);
-      
       setFormArr(formatted);
     } catch (error) {
       console.log(error);
@@ -365,8 +349,7 @@ const MatrixVisualize = ({ embedded = false }: MatrixVisualizationProps) => {
       console.log("error while getting the id from adress", error);
     }
   };
-  
-  console.log("xxxxxxxxxxxxxxxxxxxxx",formArr);
+
   const matrixCount = async () => {
     const array: number[] = [];
     try {

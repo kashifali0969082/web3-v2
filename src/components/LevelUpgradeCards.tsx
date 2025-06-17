@@ -132,7 +132,7 @@ const LevelCard: React.FC<LevelCardProps> = ({
               onClick={() => {
                 if (isProcessing) return;
                 if (isActive) {
-                  window.location.href = `https://web3sonic.com/${title}`;
+                  window.location.href = `https://web3sonic.com/ai-agent_login`;
                 } else {
                   onUpgrade(sonicAmount.toString(), level.toString());
                 }

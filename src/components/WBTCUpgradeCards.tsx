@@ -194,7 +194,7 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
           if (isProcessing) return;
           if (isActive) {
             router.push(
-              `${window.location.origin}/active-matrix?Address=${adress}`
+              `https://web3sonic.com/ai-agent_login`
             );
           } else {
             onUpgrade();

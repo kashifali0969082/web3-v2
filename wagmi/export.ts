@@ -2296,7 +2296,7 @@ export const wbtcContractAbi = [
     type: "function",
   },
 ];
-export const Web3MLMAddress = "0x100D09F73F95f650eC86cC6EF91Fa5e0135F378e";
+export const Web3MLMAddress = "0x2dC004d18f76c2F054795c54947510c5925565c6";
 export const Web3MLABI = [
   {
     inputs: [
@@ -2533,6 +2533,16 @@ export const Web3MLABI = [
     inputs: [],
     name: "WBTCAddress",
     outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+    ],
+    name: "_isMatrixComplete",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },

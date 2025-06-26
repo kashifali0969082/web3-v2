@@ -591,7 +591,7 @@ const Dashboard = () => {
               className="w-full justify-start"
               onClick={() =>
                 window.open(
-                  `https://sonicscan.org/address/0x100D09F73F95f650eC86cC6EF91Fa5e0135F378e`,
+                  `https://sonicscan.org/address/0x2dC004d18f76c2F054795c54947510c5925565c6`,
                   "_blank"
                 )
               }

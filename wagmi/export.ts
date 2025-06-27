@@ -2296,7 +2296,7 @@ export const wbtcContractAbi = [
     type: "function",
   },
 ];
-export const Web3MLMAddress = "0x2dC004d18f76c2F054795c54947510c5925565c6";
+export const Web3MLMAddress = "0x41e7C215DFa992d457b2Df5252d0a1a2dA583d21";
 export const Web3MLABI = [
   {
     inputs: [

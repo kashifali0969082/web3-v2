@@ -2296,7 +2296,7 @@ export const wbtcContractAbi = [
     type: "function",
   },
 ];
-export const Web3MLMAddress = "0x09Fa7D569bAA56eB24Ad9b3b6C0393A8726b0FEC";
+export const Web3MLMAddress = "0xF26D6af4ddcC14C771Fe9c6558e60835f320EA99";
 export const Web3MLABI = [
   {
     inputs: [
@@ -2435,6 +2435,32 @@ export const Web3MLABI = [
   {
     anonymous: false,
     inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "level",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newUpliner",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "MatrixRecycled",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
       {
         indexed: false,
         internalType: "uint256",
@@ -2524,6 +2550,20 @@ export const Web3MLABI = [
   },
   {
     inputs: [],
+    name: "MATRIX_CAPACITY",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "MAX_RECYCLE_ITERATIONS",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "TOTAL_LEVELS",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
@@ -2537,12 +2577,50 @@ export const Web3MLABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "currentRecycleLevel",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       { internalType: "address", name: "user", type: "address" },
       { internalType: "uint256", name: "level", type: "uint256" },
     ],
     name: "findEligibleUplinerForLevel",
     outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+    ],
+    name: "getCompletedMatrixCount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+      { internalType: "uint256", name: "index", type: "uint256" },
+    ],
+    name: "getCompletedMatrixDetails",
+    outputs: [
+      { internalType: "address[3]", name: "level1", type: "address[3]" },
+      { internalType: "address[9]", name: "level2", type: "address[9]" },
+      { internalType: "uint256", name: "timestamp", type: "uint256" },
+      { internalType: "address", name: "lastMatrixUser", type: "address" },
+      {
+        internalType: "address",
+        name: "completedMatrixUpliner",
+        type: "address",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -2558,22 +2636,39 @@ export const Web3MLABI = [
       { internalType: "address", name: "user", type: "address" },
       { internalType: "uint256", name: "level", type: "uint256" },
     ],
-    name: "getUserHierarchy",
+    name: "getMatrixSnapshot",
+    outputs: [{ internalType: "address[12]", name: "", type: "address[12]" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTransactionHistory",
     outputs: [
       {
         components: [
-          { internalType: "address", name: "upliner", type: "address" },
-          { internalType: "address[3]", name: "level1", type: "address[3]" },
-          {
-            internalType: "address[3][3]",
-            name: "level2",
-            type: "address[3][3]",
-          },
+          { internalType: "address", name: "sender", type: "address" },
+          { internalType: "uint256", name: "amount", type: "uint256" },
+          { internalType: "uint256", name: "timestamp", type: "uint256" },
         ],
-        internalType: "struct WBTCSonic.Hierarchy",
+        internalType: "struct WBTCSonic.Transaction[20]",
         name: "",
-        type: "tuple",
+        type: "tuple[20]",
       },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+    ],
+    name: "getUserHierarchy",
+    outputs: [
+      { internalType: "address", name: "upliner", type: "address" },
+      { internalType: "address[3]", name: "level1", type: "address[3]" },
+      { internalType: "address[3][3]", name: "level2", type: "address[3][3]" },
     ],
     stateMutability: "view",
     type: "function",
@@ -2588,6 +2683,13 @@ export const Web3MLABI = [
   {
     inputs: [],
     name: "isHistoryFull",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "isProcessingMatrix",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
@@ -2621,6 +2723,36 @@ export const Web3MLABI = [
     type: "function",
   },
   {
+    inputs: [
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    name: "matricesToRecycle",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    name: "matrixActive",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    name: "matrixFillCount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "nextUserId",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
@@ -2647,6 +2779,13 @@ export const Web3MLABI = [
   {
     inputs: [],
     name: "placeInMatrix",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "processPendingRecycles",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -512,7 +512,7 @@ const Dashboard = () => {
               className="w-full justify-start text-gray-400"
               onClick={() =>
                 router.push(
-                  `${window.location.origin}/active-matrix?Address=${adress}`
+                  `https://web3sonic.com/matrix-dashboard`
                 )
               }
             >
@@ -534,7 +534,7 @@ const Dashboard = () => {
               USDC Active matrix
             </Button> */}
 
-            <Button
+            {/* <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
               className="w-full justify-start"
               onClick={() => {
@@ -545,7 +545,7 @@ const Dashboard = () => {
             >
               <Component className="h-4 w-4 mr-2" />
               Completed Matrix
-            </Button>
+            </Button> */}
                  {/* <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
               className="w-full justify-start"
@@ -586,7 +586,7 @@ const Dashboard = () => {
               Sonic Contract
             </Button>
 
-            <Button
+            {/* <Button
               variant={activeTab === "referrals" ? "secondary" : "ghost"}
               className="w-full justify-start"
               onClick={() =>
@@ -598,7 +598,7 @@ const Dashboard = () => {
             >
               <Wallet className="h-4 w-4 mr-2" />
               Bitcoin Contract
-            </Button>
+            </Button> */}
               <Button
               variant={activeTab === "referrals" ? "secondary" : "ghost"}
               className="w-full justify-start"

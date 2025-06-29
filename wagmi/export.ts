@@ -2296,7 +2296,7 @@ export const wbtcContractAbi = [
     type: "function",
   },
 ];
-export const Web3MLMAddress = "0xDd972aC83f8C53779440596fE5cA75EC59B2AFCA";
+export const Web3MLMAddress = "0x5A2ecad13e5C7051537c524584a4Ec28d4A76fbb";
 export const Web3MLABI = [
   {
     inputs: [
@@ -2344,6 +2344,38 @@ export const Web3MLABI = [
       },
     ],
     name: "ContractAddressUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "level",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "cycleNumber",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "cycleIncome",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "CycleCompleted",
     type: "event",
   },
   {
@@ -2415,26 +2447,6 @@ export const Web3MLABI = [
       },
     ],
     name: "LevelUpgraded",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: "address", name: "user", type: "address" },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "level",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "completedCount",
-        type: "uint256",
-      },
-    ],
-    name: "MatrixCompleted",
     type: "event",
   },
   {
@@ -2955,6 +2967,49 @@ export const Web3MLABI = [
       { internalType: "address", name: "upliner", type: "address" },
       { internalType: "address[3]", name: "level1", type: "address[3]" },
       { internalType: "address[3][3]", name: "level2", type: "address[3][3]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+      { internalType: "uint256", name: "index", type: "uint256" },
+    ],
+    name: "viewCompletedMatrix",
+    outputs: [
+      {
+        components: [
+          {
+            components: [
+              { internalType: "address", name: "userAddress", type: "address" },
+              { internalType: "uint256", name: "userId", type: "uint256" },
+            ],
+            internalType: "struct WBTCSonic.EnhancedMatrixUser[3]",
+            name: "level1",
+            type: "tuple[3]",
+          },
+          {
+            components: [
+              { internalType: "address", name: "userAddress", type: "address" },
+              { internalType: "uint256", name: "userId", type: "uint256" },
+            ],
+            internalType: "struct WBTCSonic.EnhancedMatrixUser[9]",
+            name: "level2",
+            type: "tuple[9]",
+          },
+          { internalType: "uint256", name: "timestamp", type: "uint256" },
+          {
+            internalType: "address",
+            name: "completedMatrixUpliner",
+            type: "address",
+          },
+        ],
+        internalType: "struct WBTCSonic.EnhancedCompletedMatrix",
+        name: "",
+        type: "tuple",
+      },
     ],
     stateMutability: "view",
     type: "function",

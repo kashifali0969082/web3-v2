@@ -181,7 +181,7 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
         )}
       </Button> */}
 
-      {/* <Button
+       <Button
         variant={isActive ? "outline" : "default"}
         size="sm"
         className={`w-full ${
@@ -233,7 +233,7 @@ const WBTCLevelCard: React.FC<WBTCLevelCardProps> = ({
         ) : (
           "Upgrade"
         )}
-      </Button> */}
+      </Button> 
     </div>
   );
 };

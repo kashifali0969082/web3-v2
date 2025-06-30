@@ -3042,13 +3042,18 @@ export const Web3MLABI = [
   },
   { stateMutability: "payable", type: "receive" },
 ];
-export const WBTCOLD = "0xDA7Db3b5006D266D1D3DE9Cb48C558727B5ab90e";
+export const WBTCOLD = "0x396763842a5A4C0F48D4dA165104D376f6f2eF8d";
 export const WBTCOLDABI = [
   {
     inputs: [
-      { internalType: "address", name: "_Registration", type: "address" },
-      { internalType: "address", name: "_Web3Sonic", type: "address" },
-      { internalType: "address", name: "_WBTCAddress", type: "address" },
+      { internalType: "address", name: "initialOwner", type: "address" },
+      {
+        internalType: "address",
+        name: "registrationContract",
+        type: "address",
+      },
+      { internalType: "address", name: "_web3SonicContract", type: "address" },
+      { internalType: "address", name: "wbtcTokenAddress", type: "address" },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -3072,7 +3077,7 @@ export const WBTCOLDABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "string",
         name: "contractType",
         type: "string",
@@ -3083,6 +3088,32 @@ export const WBTCOLDABI = [
         name: "newAddress",
         type: "address",
       },
+    ],
+    name: "ContractAddressUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "level",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "cycleNumber",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "cycleIncome",
+        type: "uint256",
+      },
       {
         indexed: false,
         internalType: "uint256",
@@ -3090,7 +3121,7 @@ export const WBTCOLDABI = [
         type: "uint256",
       },
     ],
-    name: "ContractAddressUpdated",
+    name: "CycleCompleted",
     type: "event",
   },
   {
@@ -3108,12 +3139,6 @@ export const WBTCOLDABI = [
         name: "newPrice",
         type: "uint256",
       },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "timestamp",
-        type: "uint256",
-      },
     ],
     name: "LevelPriceUpdated",
     type: "event",
@@ -3121,7 +3146,13 @@ export const WBTCOLDABI = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "referrer",
+        type: "address",
+      },
       {
         indexed: false,
         internalType: "uint256",
@@ -3131,7 +3162,7 @@ export const WBTCOLDABI = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "timestamp",
+        name: "price",
         type: "uint256",
       },
     ],
@@ -3143,6 +3174,12 @@ export const WBTCOLDABI = [
     inputs: [
       { indexed: true, internalType: "address", name: "user", type: "address" },
       {
+        indexed: true,
+        internalType: "address",
+        name: "upliner",
+        type: "address",
+      },
+      {
         indexed: false,
         internalType: "uint256",
         name: "newLevel",
@@ -3151,7 +3188,7 @@ export const WBTCOLDABI = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "timestamp",
+        name: "price",
         type: "uint256",
       },
     ],
@@ -3170,12 +3207,12 @@ export const WBTCOLDABI = [
       },
       {
         indexed: false,
-        internalType: "uint256",
-        name: "timestamp",
-        type: "uint256",
+        internalType: "address",
+        name: "newUpliner",
+        type: "address",
       },
     ],
-    name: "MatrixCompleted",
+    name: "MatrixRecycled",
     type: "event",
   },
   {
@@ -3185,12 +3222,6 @@ export const WBTCOLDABI = [
         indexed: false,
         internalType: "uint256",
         name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "timestamp",
         type: "uint256",
       },
     ],
@@ -3220,6 +3251,19 @@ export const WBTCOLDABI = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "Paused",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "token",
@@ -3229,12 +3273,6 @@ export const WBTCOLDABI = [
         indexed: false,
         internalType: "uint256",
         name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "timestamp",
         type: "uint256",
       },
     ],
@@ -3262,8 +3300,35 @@ export const WBTCOLDABI = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "Unpaused",
+    type: "event",
+  },
+  {
     inputs: [],
     name: "LEVEL_1_PRICE",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "MAX_BATCH_RECYCLES",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "MAX_UPLINE_CHECK",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -3284,6 +3349,32 @@ export const WBTCOLDABI = [
   },
   {
     inputs: [
+      { internalType: "uint256", name: "maxDaysInactive", type: "uint256" },
+    ],
+    name: "checkInactiveUsers",
+    outputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "currentRecycleLevel",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+    ],
+    name: "findEligibleUplinerForLevel",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
       { internalType: "address", name: "user", type: "address" },
       { internalType: "uint256", name: "level", type: "uint256" },
     ],
@@ -3296,7 +3387,7 @@ export const WBTCOLDABI = [
     inputs: [
       { internalType: "address", name: "user", type: "address" },
       { internalType: "uint256", name: "level", type: "uint256" },
-      { internalType: "uint256", name: "matrixId", type: "uint256" },
+      { internalType: "uint256", name: "index", type: "uint256" },
     ],
     name: "getCompletedMatrixDetails",
     outputs: [
@@ -3305,36 +3396,16 @@ export const WBTCOLDABI = [
           { internalType: "address[3]", name: "level1", type: "address[3]" },
           { internalType: "address[9]", name: "level2", type: "address[9]" },
           { internalType: "uint256", name: "timestamp", type: "uint256" },
+          {
+            internalType: "address",
+            name: "completedMatrixUpliner",
+            type: "address",
+          },
         ],
         internalType: "struct WBTCSonic.CompletedMatrix",
         name: "",
         type: "tuple",
       },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "user", type: "address" },
-      { internalType: "uint256", name: "level", type: "uint256" },
-    ],
-    name: "getCurrentMatrixDetails",
-    outputs: [
-      { internalType: "uint256", name: "slotCount", type: "uint256" },
-      { internalType: "uint256", name: "level1Count", type: "uint256" },
-      { internalType: "uint256", name: "level2Count", type: "uint256" },
-      { internalType: "bool", name: "isRecycled", type: "bool" },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getLastUser",
-    outputs: [
-      { internalType: "address", name: "", type: "address" },
-      { internalType: "uint256", name: "", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
@@ -3348,24 +3419,38 @@ export const WBTCOLDABI = [
   },
   {
     inputs: [
-      { internalType: "address", name: "user", type: "address" },
+      { internalType: "address", name: "_user", type: "address" },
       { internalType: "uint256", name: "level", type: "uint256" },
     ],
-    name: "getUserHierarchy",
+    name: "getMatrixOwner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getRecycleQueueStatus",
+    outputs: [
+      { internalType: "uint256", name: "currentLvl", type: "uint256" },
+      { internalType: "uint256[]", name: "queueSizes", type: "uint256[]" },
+      { internalType: "uint256", name: "totalPending", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTransactionHistory",
     outputs: [
       {
         components: [
-          { internalType: "address", name: "upliner", type: "address" },
-          { internalType: "address[3]", name: "level1", type: "address[3]" },
-          {
-            internalType: "address[3][3]",
-            name: "level2",
-            type: "address[3][3]",
-          },
+          { internalType: "address", name: "sender", type: "address" },
+          { internalType: "uint256", name: "amount", type: "uint256" },
+          { internalType: "uint256", name: "timestamp", type: "uint256" },
         ],
-        internalType: "struct WBTCSonic.Hierarchy",
-        name: "hierarchy",
-        type: "tuple",
+        internalType: "struct WBTCSonic.Transaction[]",
+        name: "",
+        type: "tuple[]",
       },
     ],
     stateMutability: "view",
@@ -3376,8 +3461,12 @@ export const WBTCOLDABI = [
       { internalType: "address", name: "user", type: "address" },
       { internalType: "uint256", name: "level", type: "uint256" },
     ],
-    name: "getUserLevelIncome",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "getUserHierarchy",
+    outputs: [
+      { internalType: "address", name: "upliner", type: "address" },
+      { internalType: "address[3]", name: "level1", type: "address[3]" },
+      { internalType: "address[3][3]", name: "level2", type: "address[3][3]" },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -3385,6 +3474,23 @@ export const WBTCOLDABI = [
     inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "idToAddress",
     outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+    ],
+    name: "isLevelActive",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "isProcessingMatrix",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
@@ -3404,7 +3510,21 @@ export const WBTCOLDABI = [
   },
   {
     inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "levelMatricesCompleted",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "levelPrices",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "levelUserCount",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -3428,6 +3548,16 @@ export const WBTCOLDABI = [
       { internalType: "address", name: "user", type: "address" },
       { internalType: "uint256", name: "level", type: "uint256" },
     ],
+    name: "ownerManualRecycle",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+    ],
     name: "ownerPlaceOrUpgradeUser",
     outputs: [],
     stateMutability: "nonpayable",
@@ -3435,9 +3565,30 @@ export const WBTCOLDABI = [
   },
   {
     inputs: [],
+    name: "paused",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "placeInMatrix",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "processPendingRecycles",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "recycleQueueHead",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -3465,35 +3616,43 @@ export const WBTCOLDABI = [
     type: "function",
   },
   {
-    inputs: [
-      { internalType: "address", name: "_regContractAddress", type: "address" },
-    ],
+    inputs: [{ internalType: "bool", name: "shouldPause", type: "bool" }],
+    name: "setPaused",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "reg", type: "address" }],
     name: "setRegistrationAddress",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      { internalType: "address", name: "_WBTCAddress", type: "address" },
-    ],
-    name: "setWBTCAddress",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "_web3SonicAddress", type: "address" },
-    ],
+    inputs: [{ internalType: "address", name: "web3Sonic", type: "address" }],
     name: "setWeb3SonicAddress",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "totalIncomePerLevel",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
-    name: "totalTransaction",
+    name: "totalMatricesCompleted",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalTransactions",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -3501,6 +3660,24 @@ export const WBTCOLDABI = [
   {
     inputs: [],
     name: "totalWBTCRaised",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "transactionHistory",
+    outputs: [
+      { internalType: "address", name: "sender", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+      { internalType: "uint256", name: "timestamp", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "transactionIndex",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -3514,45 +3691,88 @@ export const WBTCOLDABI = [
   },
   {
     inputs: [
-      { internalType: "contract IERC20", name: "_token", type: "address" },
+      { internalType: "address[]", name: "userList", type: "address[]" },
+      { internalType: "uint256[]", name: "levels", type: "uint256[]" },
     ],
-    name: "updateToken",
+    name: "transferUsers",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "_nextLevel", type: "uint256" }],
+    inputs: [{ internalType: "uint256", name: "nextLevel", type: "uint256" }],
     name: "upgradeLevel",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      { internalType: "address", name: "_user", type: "address" },
-      { internalType: "uint256", name: "_level", type: "uint256" },
-    ],
-    name: "userMatrixInfo",
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "users",
     outputs: [
-      { internalType: "uint256", name: "_slots", type: "uint256" },
-      { internalType: "uint256", name: "_level1Slots", type: "uint256" },
-      { internalType: "uint256", name: "_level2Slots", type: "uint256" },
-      { internalType: "bool", name: "_recicle", type: "bool" },
+      { internalType: "uint256", name: "id", type: "uint256" },
+      { internalType: "address", name: "referrer", type: "address" },
+      { internalType: "uint256", name: "currentLevel", type: "uint256" },
+      { internalType: "uint256", name: "wbtcReceived", type: "uint256" },
+      { internalType: "uint256", name: "activationDate", type: "uint256" },
+      { internalType: "uint256", name: "lastActivity", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "", type: "address" }],
-    name: "users",
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+    ],
+    name: "viewActiveMatrix",
     outputs: [
-      { internalType: "address", name: "referrer", type: "address" },
       { internalType: "address", name: "upliner", type: "address" },
-      { internalType: "uint256", name: "id", type: "uint256" },
-      { internalType: "uint256", name: "currentLevel", type: "uint256" },
-      { internalType: "uint256", name: "WBTCReceived", type: "uint256" },
-      { internalType: "uint256", name: "ActivationDate", type: "uint256" },
+      { internalType: "address[3]", name: "level1", type: "address[3]" },
+      { internalType: "address[3][3]", name: "level2", type: "address[3][3]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "level", type: "uint256" },
+      { internalType: "uint256", name: "index", type: "uint256" },
+    ],
+    name: "viewCompletedMatrix",
+    outputs: [
+      {
+        components: [
+          {
+            components: [
+              { internalType: "address", name: "userAddress", type: "address" },
+              { internalType: "uint256", name: "userId", type: "uint256" },
+            ],
+            internalType: "struct WBTCSonic.EnhancedMatrixUser[3]",
+            name: "level1",
+            type: "tuple[3]",
+          },
+          {
+            components: [
+              { internalType: "address", name: "userAddress", type: "address" },
+              { internalType: "uint256", name: "userId", type: "uint256" },
+            ],
+            internalType: "struct WBTCSonic.EnhancedMatrixUser[9]",
+            name: "level2",
+            type: "tuple[9]",
+          },
+          { internalType: "uint256", name: "timestamp", type: "uint256" },
+          {
+            internalType: "address",
+            name: "completedMatrixUpliner",
+            type: "address",
+          },
+        ],
+        internalType: "struct WBTCSonic.EnhancedCompletedMatrix",
+        name: "",
+        type: "tuple",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -3567,15 +3787,15 @@ export const WBTCOLDABI = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-    name: "withdrawNativeCurrency",
+    inputs: [],
+    name: "withdrawNative",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "address", name: "tokenAddress", type: "address" },
+      { internalType: "address", name: "token", type: "address" },
       { internalType: "uint256", name: "amount", type: "uint256" },
     ],
     name: "withdrawTokens",

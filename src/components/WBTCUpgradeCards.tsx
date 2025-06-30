@@ -299,6 +299,7 @@ export const WBTCUpgradeCards: React.FC = () => {
 
   // Define all wBTC levels data
   const wbtcLevelData = [
+    {}
     // {
     //   level: 1,
     //   title: "Activate AI Agent",
@@ -364,7 +365,7 @@ export const WBTCUpgradeCards: React.FC = () => {
 
         <div className="mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mt-4">
-            {wbtcLevelData.map((data) => (
+            {/* {wbtcLevelData.map((data) => (
               <WBTCLevelCard
                 key={`wbtc-level-${data.level}`}
                 {...data}
@@ -377,7 +378,7 @@ export const WBTCUpgradeCards: React.FC = () => {
                 onUpgrade={() => handleUpgrade(data.level, data.satAmount)}
                 isProcessing={processingLevel === data.level}
               />
-            ))}
+            ))} */}
           </div>
         </div>
       </CardContent>

@@ -599,7 +599,7 @@ const Dashboard = () => {
               <Wallet className="h-4 w-4 mr-2" />
               Bitcoin Contract
             </Button> */}
-              <Button
+              {/* <Button
               variant={activeTab === "referrals" ? "secondary" : "ghost"}
               className="w-full justify-start"
               onClick={() =>
@@ -611,7 +611,7 @@ const Dashboard = () => {
             >
               <Wallet className="h-4 w-4 mr-2" />
               USDC Contract
-            </Button>
+            </Button> */}
             <Button
               variant={activeTab === "network" ? "secondary" : "ghost"}
               className="w-full justify-start"

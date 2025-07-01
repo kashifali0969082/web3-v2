@@ -261,58 +261,58 @@ export const UsdcUpgradeCard: React.FC = () => {
   };
 
   // Define all wBTC levels data
-  const wbtcLevelData = [
-    {
-      level: 1,
-      title: "Spark",
-      satAmount: 25,
-      tag: "Entry",
-      tagStyle: "bg-[#1358c1] text-white",
-      description: "The spark that ignites your Web3 journey",
-      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
-      button: "Spark Upgrade",
-    },
-    {
-      level: 2,
-      title: "Pulse",
-      satAmount: 250,
-      tag: "Intermediate",
-      tagStyle: "bg-[#1358c1] text-white",
-      description: "Feel the pulse of real momentum",
-      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
-      button: "Pulse Upgrade",
-    },
-    {
-      level: 3,
-      title: "Surge",
-      satAmount: 2500,
-      tag: "Advanced",
-      tagStyle: "bg-[#1358c1] text-white",
-      description: "Serious financial leverage begins here",
-      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
-      button: "Surge Upgrade",
-    },
-    {
-      level: 4,
-      title: "Velocity",
-      satAmount: 5000,
-      tag: "Expert",
-      tagStyle: "bg-[#1358c1] text-white",
-      description: "Accelerating your income and scaling faster",
-      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
-      button: "Velocity Upgrade",
-    },
-    {
-      level: 5,
-      title: "Apex",
-      satAmount: 25000,
-      tag: "Master",
-      tagStyle: "bg-[#1358c1] text-white",
-      description: "Ultimate financial freedom",
-      icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
-      button: "Apex Upgrade",
-    },
-  ];
+  // const wbtcLevelData = [
+  //   {
+  //     level: 1,
+  //     title: "Spark",
+  //     satAmount: 25,
+  //     tag: "Entry",
+  //     tagStyle: "bg-[#1358c1] text-white",
+  //     description: "The spark that ignites your Web3 journey",
+  //     icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+  //     button: "Spark Upgrade",
+  //   },
+  //   {
+  //     level: 2,
+  //     title: "Pulse",
+  //     satAmount: 250,
+  //     tag: "Intermediate",
+  //     tagStyle: "bg-[#1358c1] text-white",
+  //     description: "Feel the pulse of real momentum",
+  //     icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+  //     button: "Pulse Upgrade",
+  //   },
+  //   {
+  //     level: 3,
+  //     title: "Surge",
+  //     satAmount: 2500,
+  //     tag: "Advanced",
+  //     tagStyle: "bg-[#1358c1] text-white",
+  //     description: "Serious financial leverage begins here",
+  //     icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+  //     button: "Surge Upgrade",
+  //   },
+  //   {
+  //     level: 4,
+  //     title: "Velocity",
+  //     satAmount: 5000,
+  //     tag: "Expert",
+  //     tagStyle: "bg-[#1358c1] text-white",
+  //     description: "Accelerating your income and scaling faster",
+  //     icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+  //     button: "Velocity Upgrade",
+  //   },
+  //   {
+  //     level: 5,
+  //     title: "Apex",
+  //     satAmount: 25000,
+  //     tag: "Master",
+  //     tagStyle: "bg-[#1358c1] text-white",
+  //     description: "Ultimate financial freedom",
+  //     icon: <BadgeDollarSign className="h-4 w-4 text-[#1358c1]" />,
+  //     button: "Apex Upgrade",
+  //   },
+  // ];
 
   return (
     <Card className="relative bg-[#271e0b] border-amber-900/50 overflow-hidden">
@@ -332,7 +332,7 @@ export const UsdcUpgradeCard: React.FC = () => {
 
         <div className="mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mt-4">
-            {wbtcLevelData.map((data) => (
+            {/* {wbtcLevelData.map((data) => (
               <WBTCLevelCard
                 key={`wbtc-level-${data.level}`}
                 {...data}
@@ -345,7 +345,7 @@ export const UsdcUpgradeCard: React.FC = () => {
                 onUpgrade={() => handleUpgrade(data.level, data.satAmount)}
                 isProcessing={processingLevel === data.level}
               />
-            ))}
+            ))} */}
           </div>
         </div>
       </CardContent>

@@ -1068,18 +1068,18 @@ const Dashboard = () => {
                     </div>
 
                     {/* wBTC Upgrade Cards - New Bitcoin-based upgrade system */}
-                    <div className="mb-8 w-full">
+                    {/* <div className="mb-8 w-full">
                       <ErrorBoundary>
-                        <WBTCUpgradeCards />
-                        {/* cards */}
+                        {/* <WBTCUpgradeCards /> */}
+                        {/* cards 
                       </ErrorBoundary>
-                    </div>
-
+                    </div> */}
+{/* 
                     <div className="mb-8 w-full">
                       <ErrorBoundary>
                         <UsdcUpgradeCard />
                       </ErrorBoundary>
-                    </div>
+                    </div> */}
 
                     {/* Improved Badges for Total Income, Team Income, and Sonic Points */}
                     <div className="mb-8 w-full">
@@ -1107,17 +1107,20 @@ const Dashboard = () => {
                   </div>
 
                   {/* Mobile-only wBTC Upgrade Cards */}
-                  <div className="lg:hidden w-full mb-6">
+                  {/* <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
-                      <WBTCUpgradeCards />
-                      {/* cards */}
+                      {/* <WBTCUpgradeCards /> */}
+                      {/* cards 
+                      <div>
+
+                      </div>
                     </ErrorBoundary>
-                  </div>
-                  <div className="lg:hidden w-full mb-6">
+                  </div> */}
+                  {/* <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
                       <UsdcUpgradeCard />
                     </ErrorBoundary>
-                  </div>
+                  </div> */}
                   <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
                       <NewYearCountdown />

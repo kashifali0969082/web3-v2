@@ -3,11 +3,11 @@
 export const dynamic = 'force-dynamic';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import {
-  RainbowKitProvider,
-  darkTheme,
-  getDefaultWallets,
-} from "@rainbow-me/rainbowkit";
+  import {
+    RainbowKitProvider,
+    darkTheme,
+    getDefaultWallets,
+  } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
 import { config } from "../../wagmi/config";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

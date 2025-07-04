@@ -92,6 +92,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import NewYearCountdown from "@/components/UI/Counter";
+import { MatrixNavigationTabs } from "@/components/TopCards";
 const Dashboard = () => {
   const [level, setLevel] = useState<number>(0);
   // const [loadingLevel, setLoadingLevel] = useState<number | null>(null);
@@ -940,6 +941,10 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </header>
+
+<div>
+  <MatrixNavigationTabs referralId={"126"}/>
+</div>
 
                   {/* Mobile Live Stream Button Only */}
                   <div className="lg:hidden mb-4">

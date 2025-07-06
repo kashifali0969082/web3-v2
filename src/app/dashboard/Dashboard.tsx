@@ -512,17 +512,14 @@ const Dashboard = () => {
               variant="ghost"
               className="w-full justify-start text-gray-400"
               onClick={() =>
-                router.push(
-                  `https://web3sonic.com/matrix-dashboard`
-                )
+                router.push(`https://web3sonic.com/matrix-dashboard`)
               }
             >
               <Network className="h-4 w-4 mr-2" />
               Active matrix
             </Button>
 
-
-               {/* <Button
+            {/* <Button
               variant="ghost"
               className="w-full justify-start text-gray-400"
               onClick={() =>
@@ -547,7 +544,7 @@ const Dashboard = () => {
               <Component className="h-4 w-4 mr-2" />
               Completed Matrix
             </Button> */}
-                 {/* <Button
+            {/* <Button
               variant={activeTab === "wallet" ? "secondary" : "ghost"}
               className="w-full justify-start"
               onClick={() => {
@@ -600,7 +597,7 @@ const Dashboard = () => {
               <Wallet className="h-4 w-4 mr-2" />
               Bitcoin Contract
             </Button> */}
-              {/* <Button
+            {/* <Button
               variant={activeTab === "referrals" ? "secondary" : "ghost"}
               className="w-full justify-start"
               onClick={() =>
@@ -683,7 +680,7 @@ const Dashboard = () => {
               Sonic Points
             </Button>
             <Button
-            onClick={() =>
+              onClick={() =>
                 window.open("https://web3sonic.com/grimface-scale", "_blank")
               }
               variant="ghost"
@@ -942,9 +939,15 @@ const Dashboard = () => {
                     </div>
                   </header>
 
-<div>
-  <MatrixNavigationTabs referralId={"126"}/>
-</div>
+                  <div>
+                    <iframe
+                      src="https://web3sonic.com/matrix-tabs"
+                      width="100%"
+                      height="600"
+                      style={{ border: "none" }}
+                      title="Matrix Tabs"
+                    />
+                  </div>
 
                   {/* Mobile Live Stream Button Only */}
                   <div className="lg:hidden mb-4">
@@ -1076,10 +1079,10 @@ const Dashboard = () => {
                     {/* <div className="mb-8 w-full">
                       <ErrorBoundary>
                         {/* <WBTCUpgradeCards /> */}
-                        {/* cards 
+                    {/* cards 
                       </ErrorBoundary>
                     </div> */}
-{/* 
+                    {/* 
                     <div className="mb-8 w-full">
                       <ErrorBoundary>
                         <UsdcUpgradeCard />
@@ -1115,7 +1118,7 @@ const Dashboard = () => {
                   {/* <div className="lg:hidden w-full mb-6">
                     <ErrorBoundary>
                       {/* <WBTCUpgradeCards /> */}
-                      {/* cards 
+                  {/* cards 
                       <div>
 
                       </div>

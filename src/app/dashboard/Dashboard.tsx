@@ -943,7 +943,7 @@ const Dashboard = () => {
                     <iframe
                       src="https://web3sonic.com/matrix-tabs"
                       width="100%"
-                      height="600"
+                      height="300"
                       style={{ border: "none" }}
                       title="Matrix Tabs"
                     />

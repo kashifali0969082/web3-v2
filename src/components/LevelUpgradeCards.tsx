@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useToast } from "./hooks/use-toast";
 import { useAccount } from "wagmi";
-import { PurchaseLevel } from "../../wagmi/method";
+import { getUSERLEVEL, PurchaseLevel } from "../../wagmi/method";
 import { ToastContainer, toast } from "react-toastify";
 
 interface LevelCardProps {
@@ -302,6 +302,36 @@ export const LevelUpgradeCards: React.FC<Props> = ({
   );
   const handleLevelUpgrade = async (amount: string, level: string) => {
     const num = Number(level);
+  if(num===1){
+console.log("upgrading level is 1");
+    setLoadingLevel(num);
+    try {
+      setProcessingLevel(Number(level));
+      if (isConnected) {
+        let data=await getUSERLEVEL(String(address))
+        if(data===0){
+console.log("upgrading data is",data);
+
+          let resp = await PurchaseLevel(amount, level);
+          setUpdateState(!updateState);
+        }
+        else{
+          alert("You are already at level 1, please upgrade to level 2 or higher.");
+          // return;
+        }
+        // console.log(resp);
+      } else {
+        // toast.error("Connect wallet to continue");
+      }
+      setProcessingLevel(null);
+    } catch (error) {
+      console.log("error while upgrading level", error);
+      setProcessingLevel(null);
+    }
+    setLoadingLevel(null);
+  }
+  else{
+
     setLoadingLevel(num);
     try {
       setProcessingLevel(Number(level));
@@ -318,6 +348,7 @@ export const LevelUpgradeCards: React.FC<Props> = ({
       setProcessingLevel(null);
     }
     setLoadingLevel(null);
+  }
   };
   return (
     <>
